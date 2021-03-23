@@ -3,6 +3,20 @@
 zn "%SYS"
 Do ##class(Security.Users).UnExpireUserPasswords("*")
 
+zn "%SYS" \
+write "Create web application ...",!
+set webName = "/api/config"
+set webProperties("NameSpace") = "USER"
+set webProperties("Enabled") = 1
+set webProperties("CSPZENEnabled") = 1
+set webProperties("AutheEnabled") = 32
+set webProperties("iKnowEnabled") = 1
+set webProperties("DeepSeeEnabled") = 1
+set webProperties("DispatchClass") = "Api.Config.REST.disp"
+set sc = ##class(Security.Applications).Create(webName, .webProperties)
+write "Web application "_webName_" has been created!",! 
+
 zn "USER"
+zpm "install swagger-ui"
 zpm "load /opt/irisbuild/ -v":1:1
 halt
