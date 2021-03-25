@@ -36,6 +36,7 @@ ClassMethod Get(Namespace As %String, Name As %String) As %Library.DynamicObject
 	Quit:'..Exists(Namespace,Name) ""
 	$$$switchNSSys
 	$$$ThrowOnError(##class(Config.MapPackages).Get(Namespace,Name,.properties))
+	Set properties("Namespace") = Namespace, properties("Name") = Name
 	Quit ..ToDynamic(.properties)
 }
 

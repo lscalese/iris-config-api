@@ -6,7 +6,6 @@ Class Api.Config.Services.ConfigFile [ ProcedureBlock ]
 ClassMethod CheckModel(model As %Library.DynamicObject) As %Status
 {
 	Set sc = $$$OK
-	Set:model.Name="" sc = $$$ADDSC(sc,$$$ERROR(5001, "Name property is mandatory."))
 	Set:model.Version="" sc = $$$ADDSC(sc,$$$ERROR(5001, "Version property is mandatory."))
 	Quit sc
 }

@@ -12,11 +12,11 @@
       "contact":{
         "name":"Lorenzo Scalese",
         "email":"lorenzo.scalese@gmail.com",
-        "url":"https://github.com/lscalese/Iris-Deploy-Utils-API/"
+        "url":"https://github.com/lscalese/iris-config-api/"
       },
       "license":{
         "name":"MIT",
-        "url":"https://github.com/lscalese/Iris-Deploy-Utils-API/blob/master/LICENSE"
+        "url":"https://github.com/lscalese/iris-config-api/blob/master/LICENSE"
       }
     },
     "produces":[
@@ -37,8 +37,9 @@
           }
         }
       },
-      "/cluster/":{
+      "/cluster":{
         "get":{
+          "tags": ["Others"],
           "operationId":"GetCluster",
           "description":"Get Cluster.",
           "parameters":[
@@ -59,6 +60,7 @@
           }
         },
         "put":{
+          "tags": ["Others"],
           "operationId":"PutCluster",
           "description":"Update Cluster.",
           "parameters":[
@@ -85,8 +87,9 @@
           }
         }
       },
-      "/configfile/":{
+      "/configfile":{
         "get":{
+          "tags": ["Systems"],
           "operationId":"GetConfigFile",
           "description":"Get ConfigFile.",
           "parameters":[
@@ -107,6 +110,7 @@
           }
         },
         "put":{
+          "tags": ["Systems"],
           "operationId":"PutConfigFile",
           "description":"Update ConfigFile.",
           "parameters":[
@@ -129,6 +133,182 @@
             },
             "404":{
               "description":"ConfigFile to update not found."
+            }
+          }
+        }
+      },
+      "/directory": {
+        "get":{
+          "tags": ["Databases"],
+          "operationId": "GetListOfDirectory",
+          "description": "Get list of databases directory",
+          "parameters": [],
+          "responses": {
+            "200":{
+              "description": "OK",
+              "schema":{
+                "$ref": "#/definitions/ListOfDirectory"
+              }
+            }
+          }
+        },
+        "post":{
+          "tags":[
+            "Databases"
+          ],
+          "operationId":"PostDirectory",
+          "description":"Create a new database.",
+          "parameters":[
+            {
+              "name":"directory",
+              "description":"Database directory to create.",
+              "in":"body",
+              "schema":{
+                "$ref":"#/definitions/Directory"
+              }
+            }
+          ],
+          "responses":{
+            "201":{
+              "description":"Database created",
+              "headers":{
+                "Location":{
+                  "type":"string"
+                }
+              }
+            },
+            "409":{
+              "description":"Database already exists."
+            }
+          }
+        }
+      },
+      "/directory/{directory}/mounted": {
+        "put":{
+          "tags": ["Databases"],
+          "operationId": "PutDirectoryMount",
+          "description": "Mount database.",
+          "parameters": [
+            {
+              "name":"directory",
+              "in":"path",
+              "type":"string",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200":{
+              "description": "OK"
+              
+            }
+          }
+        },
+        "delete":{
+          "tags": ["Databases"],
+          "operationId": "DeleteDirectoryMount",
+          "description": "Dismount database.",
+          "parameters": [
+            {
+              "name":"directory",
+              "in":"path",
+              "type":"string",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200":{
+              "description": "OK"
+              
+            }
+          }
+        }
+      },
+      "/directory/{directory}":{
+        "get":{
+          "tags":[
+            "Databases"
+          ],
+          "operationId":"GetDirectory",
+          "description":"Get database directory details.",
+          "parameters":[
+            {
+              "name":"directory",
+              "description":"Database directory.",
+              "in":"path",
+              "type":"string",
+              "required":true
+            }
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/Directory"
+              }
+            },
+            "404":{
+              "description":"Database directory not found."
+            }
+          }
+        },
+        "put":{
+          "tags":[
+            "Databases"
+          ],
+          "operationId":"PutDirectory",
+          "description":"Update an existing database directory.",
+          "parameters":[
+            {
+              "name":"directory",
+              "description":"Database directory.",
+              "in":"path",
+              "type":"string",
+              "required":true
+            },
+            {
+              "name":"DirectoryModel",
+              "description":"Database to update.",
+              "in":"body",
+              "schema":{
+                "$ref": "#/definitions/Directory"
+              }
+            }
+          ],
+          "responses":{
+            "201":{
+              "description":"Database updated.",
+              "headers":{
+                "Location":{
+                  "type":"string"
+                }
+              }
+            },
+            "404":{
+              "description":"Database to update not found."
+            }
+          }
+        },
+        "delete":{
+          "tags":[
+            "Databases"
+          ],
+          "operationId":"DeleteDirectory",
+          "description":"Delete database directory.",
+          "parameters":[
+            {
+              "name":"directory",
+              "description":"Database directory to delete.",
+              "in":"path",
+              "type":"string",
+              "required":true
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"Database deleted."
+            },
+            "404":{
+              "description":"Database to delete not found."
             }
           }
         }
@@ -196,10 +376,10 @@
             }
           }
         },
-        "post":{
+        "delete":{
           "tags":["Databases"],
-          "operationId":"PostDatabases",
-          "description":"Create Databases.",
+          "operationId":"DeleteDatabases",
+          "description":"Delete Databases.",
           "parameters":[
             {
               "name":"name",
@@ -207,7 +387,44 @@
               "in":"path",
               "type":"string",
               "required":true
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"Databases deleted."
             },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"Databases not found."
+            }
+          }
+        }
+      },
+      "/databases":{
+        "get":{
+          "tags":["Databases"],
+          "operationId":"GetListDatabases",
+          "description":"Get List Of Databases.",
+          "parameters":[],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/ListOfDatabases"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            }
+          }
+        },
+        "post":{
+          "tags":["Databases"],
+          "operationId":"PostDatabases",
+          "description":"Create Databases.",
+          "parameters":[
             {
               "name":"model",
               "description":"Databases to create.",
@@ -235,55 +452,11 @@
               "description":"Databases already exists."
             }
           }
-        },
-        "delete":{
-          "tags":["Databases"],
-          "operationId":"DeleteDatabases",
-          "description":"Delete Databases.",
-          "parameters":[
-            {
-              "name":"name",
-              "description":"Name of the object instance.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"Databases deleted."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"Databases not found."
-            }
-          }
-        }
-      },
-      "/databases/":{
-        "get":{
-          "tags":["Databases"],
-          "operationId":"GetListDatabases",
-          "description":"Get List Of Databases.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/ListOfDatabases"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            }
-          }
         }
       },
       "/debug/{name}":{
         "get":{
+          "tags": ["Others"],
           "operationId":"GetDebug",
           "description":"Get Debug.",
           "parameters":[
@@ -311,6 +484,7 @@
           }
         },
         "put":{
+          "tags": ["Others"],
           "operationId":"PutDebug",
           "description":"Update Debug.",
           "parameters":[
@@ -343,9 +517,10 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostDebug",
-          "description":"Create Debug.",
+        "delete":{
+          "tags": ["Others"],
+          "operationId":"DeleteDebug",
+          "description":"Delete Debug.",
           "parameters":[
             {
               "name":"name",
@@ -353,7 +528,45 @@
               "in":"path",
               "type":"string",
               "required":true
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"Debug deleted."
             },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"Debug not found."
+            }
+          }
+        }
+      },
+      "/debug":{
+        "get":{
+          "tags": ["Others"],
+          "operationId":"GetListDebug",
+          "description":"Get List Of Debug.",
+          "parameters":[
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/ListOfDebug"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            }
+          }
+        },
+        "post":{
+          "tags": ["Others"],
+          "operationId":"PostDebug",
+          "description":"Create Debug.",
+          "parameters":[
             {
               "name":"model",
               "description":"Debug to create.",
@@ -381,53 +594,11 @@
               "description":"Debug already exists."
             }
           }
-        },
-        "delete":{
-          "operationId":"DeleteDebug",
-          "description":"Delete Debug.",
-          "parameters":[
-            {
-              "name":"name",
-              "description":"Name of the object instance.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"Debug deleted."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"Debug not found."
-            }
-          }
-        }
-      },
-      "/debug/":{
-        "get":{
-          "operationId":"GetListDebug",
-          "description":"Get List Of Debug.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/ListOfDebug"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            }
-          }
         }
       },
       "/devicesubtypes/{name}":{
         "get":{
+          "tags": ["Devices"],
           "operationId":"GetDeviceSubTypes",
           "description":"Get DeviceSubTypes.",
           "parameters":[
@@ -455,6 +626,7 @@
           }
         },
         "put":{
+          "tags": ["Devices"],
           "operationId":"PutDeviceSubTypes",
           "description":"Update DeviceSubTypes.",
           "parameters":[
@@ -487,9 +659,10 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostDeviceSubTypes",
-          "description":"Create DeviceSubTypes.",
+        "delete":{
+          "tags": ["Devices"],
+          "operationId":"DeleteDeviceSubTypes",
+          "description":"Delete DeviceSubTypes.",
           "parameters":[
             {
               "name":"name",
@@ -497,7 +670,45 @@
               "in":"path",
               "type":"string",
               "required":true
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"DeviceSubTypes deleted."
             },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"DeviceSubTypes not found."
+            }
+          }
+        }
+      },
+      "/devicesubtypes":{
+        "get":{
+          "tags": ["Devices"],
+          "operationId":"GetListDeviceSubTypes",
+          "description":"Get List Of DeviceSubTypes.",
+          "parameters":[
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/ListOfDeviceSubTypes"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            }
+          }
+        },
+        "post":{
+          "tags": ["Devices"],
+          "operationId":"PostDeviceSubTypes",
+          "description":"Create DeviceSubTypes.",
+          "parameters":[
             {
               "name":"model",
               "description":"DeviceSubTypes to create.",
@@ -525,53 +736,11 @@
               "description":"DeviceSubTypes already exists."
             }
           }
-        },
-        "delete":{
-          "operationId":"DeleteDeviceSubTypes",
-          "description":"Delete DeviceSubTypes.",
-          "parameters":[
-            {
-              "name":"name",
-              "description":"Name of the object instance.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"DeviceSubTypes deleted."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"DeviceSubTypes not found."
-            }
-          }
-        }
-      },
-      "/devicesubtypes/":{
-        "get":{
-          "operationId":"GetListDeviceSubTypes",
-          "description":"Get List Of DeviceSubTypes.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/ListOfDeviceSubTypes"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            }
-          }
         }
       },
       "/devices/{name}":{
         "get":{
+          "tags": ["Devices"],
           "operationId":"GetDevices",
           "description":"Get Devices.",
           "parameters":[
@@ -599,6 +768,7 @@
           }
         },
         "put":{
+          "tags": ["Devices"],
           "operationId":"PutDevices",
           "description":"Update Devices.",
           "parameters":[
@@ -631,9 +801,10 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostDevices",
-          "description":"Create Devices.",
+        "delete":{
+          "tags": ["Devices"],
+          "operationId":"DeleteDevices",
+          "description":"Delete Devices.",
           "parameters":[
             {
               "name":"name",
@@ -641,7 +812,45 @@
               "in":"path",
               "type":"string",
               "required":true
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"Devices deleted."
             },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"Devices not found."
+            }
+          }
+        }
+      },
+      "/devices":{
+        "get":{
+          "tags": ["Devices"],
+          "operationId":"GetListDevices",
+          "description":"Get List Of Devices.",
+          "parameters":[
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/ListOfDevices"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            }
+          }
+        },
+        "post":{
+          "tags": ["Devices"],
+          "operationId":"PostDevices",
+          "description":"Create Devices.",
+          "parameters":[
             {
               "name":"model",
               "description":"Devices to create.",
@@ -669,53 +878,11 @@
               "description":"Devices already exists."
             }
           }
-        },
-        "delete":{
-          "operationId":"DeleteDevices",
-          "description":"Delete Devices.",
-          "parameters":[
-            {
-              "name":"name",
-              "description":"Name of the object instance.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"Devices deleted."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"Devices not found."
-            }
-          }
         }
       },
-      "/devices/":{
+      "/ecp":{
         "get":{
-          "operationId":"GetListDevices",
-          "description":"Get List Of Devices.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/ListOfDevices"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            }
-          }
-        }
-      },
-      "/ecp/":{
-        "get":{
+          "tags": ["ECP"],
           "operationId":"GetECP",
           "description":"Get ECP.",
           "parameters":[
@@ -736,6 +903,7 @@
           }
         },
         "put":{
+          "tags": ["ECP"],
           "operationId":"PutECP",
           "description":"Update ECP.",
           "parameters":[
@@ -764,6 +932,7 @@
       },
       "/ecpservers/{name}":{
         "get":{
+          "tags": ["ECP"],
           "operationId":"GetECPServers",
           "description":"Get ECPServers.",
           "parameters":[
@@ -791,6 +960,7 @@
           }
         },
         "put":{
+          "tags": ["ECP"],
           "operationId":"PutECPServers",
           "description":"Update ECPServers.",
           "parameters":[
@@ -823,9 +993,10 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostECPServers",
-          "description":"Create ECPServers.",
+        "delete":{
+          "tags": ["ECP"],
+          "operationId":"DeleteECPServers",
+          "description":"Delete ECPServers.",
           "parameters":[
             {
               "name":"name",
@@ -833,7 +1004,45 @@
               "in":"path",
               "type":"string",
               "required":true
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"ECPServers deleted."
             },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"ECPServers not found."
+            }
+          }
+        }
+      },
+      "/ecpservers":{
+        "get":{
+          "tags": ["ECP"],
+          "operationId":"GetListECPServers",
+          "description":"Get List Of ECPServers.",
+          "parameters":[
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/ListOfECPServers"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            }
+          }
+        },
+        "post":{
+          "tags": ["ECP"],
+          "operationId":"PostECPServers",
+          "description":"Create ECPServers.",
+          "parameters":[
             {
               "name":"model",
               "description":"ECPServers to create.",
@@ -861,53 +1070,11 @@
               "description":"ECPServers already exists."
             }
           }
-        },
-        "delete":{
-          "operationId":"DeleteECPServers",
-          "description":"Delete ECPServers.",
-          "parameters":[
-            {
-              "name":"name",
-              "description":"Name of the object instance.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"ECPServers deleted."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"ECPServers not found."
-            }
-          }
         }
       },
-      "/ecpservers/":{
+      "/io":{
         "get":{
-          "operationId":"GetListECPServers",
-          "description":"Get List Of ECPServers.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/ListOfECPServers"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            }
-          }
-        }
-      },
-      "/io/":{
-        "get":{
+          "tags": ["Devices"],
           "operationId":"GetIO",
           "description":"Get IO.",
           "parameters":[
@@ -928,6 +1095,7 @@
           }
         },
         "put":{
+          "tags": ["Devices"],
           "operationId":"PutIO",
           "description":"Update IO.",
           "parameters":[
@@ -954,8 +1122,9 @@
           }
         }
       },
-      "/journal/":{
+      "/journal":{
         "get":{
+          "tags": ["Systems"],
           "operationId":"GetJournal",
           "description":"Get Journal.",
           "parameters":[
@@ -976,6 +1145,7 @@
           }
         },
         "put":{
+          "tags": ["Systems"],
           "operationId":"PutJournal",
           "description":"Update Journal.",
           "parameters":[
@@ -1004,6 +1174,7 @@
       },
       "/licenseservers/{name}":{
         "get":{
+          "tags": ["Others"],
           "operationId":"GetLicenseServers",
           "description":"Get LicenseServers.",
           "parameters":[
@@ -1031,6 +1202,7 @@
           }
         },
         "put":{
+          "tags": ["Others"],
           "operationId":"PutLicenseServers",
           "description":"Update LicenseServers.",
           "parameters":[
@@ -1063,9 +1235,10 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostLicenseServers",
-          "description":"Create LicenseServers.",
+        "delete":{
+          "tags": ["Others"],
+          "operationId":"DeleteLicenseServers",
+          "description":"Delete LicenseServers.",
           "parameters":[
             {
               "name":"name",
@@ -1073,7 +1246,45 @@
               "in":"path",
               "type":"string",
               "required":true
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"LicenseServers deleted."
             },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"LicenseServers not found."
+            }
+          }
+        }
+      },
+      "/licenseservers":{
+        "get":{
+          "tags": ["Others"],
+          "operationId":"GetListLicenseServers",
+          "description":"Get List Of LicenseServers.",
+          "parameters":[
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/ListOfLicenseServers"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            }
+          }
+        },
+        "post":{
+          "tags": ["Others"],
+          "operationId":"PostLicenseServers",
+          "description":"Create LicenseServers.",
+          "parameters":[
             {
               "name":"model",
               "description":"LicenseServers to create.",
@@ -1101,53 +1312,11 @@
               "description":"LicenseServers already exists."
             }
           }
-        },
-        "delete":{
-          "operationId":"DeleteLicenseServers",
-          "description":"Delete LicenseServers.",
-          "parameters":[
-            {
-              "name":"name",
-              "description":"Name of the object instance.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"LicenseServers deleted."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"LicenseServers not found."
-            }
-          }
-        }
-      },
-      "/licenseservers/":{
-        "get":{
-          "operationId":"GetListLicenseServers",
-          "description":"Get List Of LicenseServers.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/ListOfLicenseServers"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            }
-          }
         }
       },
       "/magtapes/{name}":{
         "get":{
+          "tags": ["Devices"],
           "operationId":"GetMagTapes",
           "description":"Get MagTapes.",
           "parameters":[
@@ -1175,6 +1344,7 @@
           }
         },
         "put":{
+          "tags": ["Devices"],
           "operationId":"PutMagTapes",
           "description":"Update MagTapes.",
           "parameters":[
@@ -1207,9 +1377,10 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostMagTapes",
-          "description":"Create MagTapes.",
+        "delete":{
+          "tags": ["Devices"],
+          "operationId":"DeleteMagTapes",
+          "description":"Delete MagTapes.",
           "parameters":[
             {
               "name":"name",
@@ -1217,7 +1388,45 @@
               "in":"path",
               "type":"string",
               "required":true
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"MagTapes deleted."
             },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"MagTapes not found."
+            }
+          }
+        }
+      },
+      "/magtapes":{
+        "get":{
+          "tags": ["Devices"],
+          "operationId":"GetListMagTapes",
+          "description":"Get List Of MagTapes.",
+          "parameters":[
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/ListOfMagTapes"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            }
+          }
+        },
+        "post":{
+          "tags": ["Devices"],
+          "operationId":"PostMagTapes",
+          "description":"Create MagTapes.",
+          "parameters":[
             {
               "name":"model",
               "description":"MagTapes to create.",
@@ -1245,53 +1454,11 @@
               "description":"MagTapes already exists."
             }
           }
-        },
-        "delete":{
-          "operationId":"DeleteMagTapes",
-          "description":"Delete MagTapes.",
-          "parameters":[
-            {
-              "name":"name",
-              "description":"Name of the object instance.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"MagTapes deleted."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"MagTapes not found."
-            }
-          }
-        }
-      },
-      "/magtapes/":{
-        "get":{
-          "operationId":"GetListMagTapes",
-          "description":"Get List Of MagTapes.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/ListOfMagTapes"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            }
-          }
         }
       },
       "/mapglobals/{namespace}/{name}":{
         "get":{
+          "tags": ["Namespaces"],
           "operationId":"GetMapGlobals",
           "description":"Get MapGlobals.",
           "parameters":[
@@ -1326,6 +1493,7 @@
           }
         },
         "put":{
+          "tags": ["Namespaces"],
           "operationId":"PutMapGlobals",
           "description":"Update MapGlobals.",
           "parameters":[
@@ -1365,53 +1533,8 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostMapGlobals",
-          "description":"Create MapGlobals.",
-          "parameters":[
-            {
-              "name":"namespace",
-              "description":"Namespace where the mapping is.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            },
-            {
-              "name":"name",
-              "description":"Name of the mapping.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            },
-            {
-              "name":"model",
-              "description":"MapGlobals to create.",
-              "in":"body",
-              "required":true,
-              "schema":{
-                "$ref":"#/definitions/MapGlobals"
-              }
-            }
-          ],
-          "responses":{
-            "201":{
-              "description":"MapGlobals created.",
-              "headers":{
-                "Location":{
-                  "type":"string",
-                  "description":"Created ressource location."
-                }
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "409":{
-              "description":"MapGlobals already exists."
-            }
-          }
-        },
         "delete":{
+          "tags": ["Namespaces"],
           "operationId":"DeleteMapGlobals",
           "description":"Delete MapGlobals.",
           "parameters":[
@@ -1443,8 +1566,9 @@
           }
         }
       },
-      "/mapglobals/{namespace}/":{
+      "/mapglobals/{namespace}":{
         "get":{
+          "tags": ["Namespaces"],
           "operationId":"GetListMapGlobals",
           "description":"Get List Of MapGlobals.",
           "parameters":[
@@ -1467,10 +1591,51 @@
               "description":"Bad request, can occurs if mandatory parameters are missing or empty."
             }
           }
+        },
+        "post":{
+          "tags": ["Namespaces"],
+          "operationId":"PostMapGlobals",
+          "description":"Create MapGlobals.",
+          "parameters":[
+            {
+              "name":"namespace",
+              "description":"Namespace where the mapping is.<br>",
+              "in":"path",
+              "type":"string",
+              "required":true
+            },
+            {
+              "name":"model",
+              "description":"MapGlobals to create.",
+              "in":"body",
+              "required":true,
+              "schema":{
+                "$ref":"#/definitions/MapGlobals"
+              }
+            }
+          ],
+          "responses":{
+            "201":{
+              "description":"MapGlobals created.",
+              "headers":{
+                "Location":{
+                  "type":"string",
+                  "description":"Created ressource location."
+                }
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "409":{
+              "description":"MapGlobals already exists."
+            }
+          }
         }
       },
       "/mapmirrors/{id}/{name}":{
         "get":{
+          "tags": ["Mirrors"],
           "operationId":"GetMapMirrors",
           "description":"Get MapMirrors.",
           "parameters":[
@@ -1505,6 +1670,7 @@
           }
         },
         "put":{
+          "tags": ["Mirrors"],
           "operationId":"PutMapMirrors",
           "description":"Update MapMirrors.",
           "parameters":[
@@ -1544,53 +1710,8 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostMapMirrors",
-          "description":"Create MapMirrors.",
-          "parameters":[
-            {
-              "name":"id",
-              "description":"ID where the mapping is.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            },
-            {
-              "name":"name",
-              "description":"This is the name of this instance in the mirror. Mirror system names\r\nmust be unique (enforced by Enterprise Manager) across all of the mirrors which \r\nthe EM manages, as an instance has a single mirror system name which \r\nmay appear in multiple mirror sets (eg. a reporting member may connect\r\nto multiple mirrors). For the most part the <property>GUID </property>\r\nis used to identify a mirror member, the Name is used for display \r\npurposes. \r\n<br><br>\r\nThe name must not contain a colon (':') and is converted to uppercase before\r\nsaving.",
-              "in":"path",
-              "type":"string",
-              "required":true
-            },
-            {
-              "name":"model",
-              "description":"MapMirrors to create.",
-              "in":"body",
-              "required":true,
-              "schema":{
-                "$ref":"#/definitions/MapMirrors"
-              }
-            }
-          ],
-          "responses":{
-            "201":{
-              "description":"MapMirrors created.",
-              "headers":{
-                "Location":{
-                  "type":"string",
-                  "description":"Created ressource location."
-                }
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "409":{
-              "description":"MapMirrors already exists."
-            }
-          }
-        },
         "delete":{
+          "tags": ["Mirrors"],
           "operationId":"DeleteMapMirrors",
           "description":"Delete MapMirrors.",
           "parameters":[
@@ -1622,11 +1743,19 @@
           }
         }
       },
-      "/mapmirrors/":{
+      "/mapmirrors/{id}":{
         "get":{
+          "tags": ["Mirrors"],
           "operationId":"GetListMapMirrors",
           "description":"Get List Of MapMirrors.",
           "parameters":[
+            {
+              "name":"id",
+              "description":"ID where the mapping is.<br>",
+              "in":"path",
+              "type":"string",
+              "required":true
+            }
           ],
           "responses":{
             "200":{
@@ -1639,10 +1768,51 @@
               "description":"Bad request, can occurs if mandatory parameters are missing or empty."
             }
           }
+        },
+        "post":{
+          "tags": ["Mirrors"],
+          "operationId":"PostMapMirrors",
+          "description":"Create MapMirrors.",
+          "parameters":[
+            {
+              "name":"id",
+              "description":"ID where the mapping is.<br>",
+              "in":"path",
+              "type":"string",
+              "required":true
+            },
+            {
+              "name":"model",
+              "description":"MapMirrors to create.",
+              "in":"body",
+              "required":true,
+              "schema":{
+                "$ref":"#/definitions/MapMirrors"
+              }
+            }
+          ],
+          "responses":{
+            "201":{
+              "description":"MapMirrors created.",
+              "headers":{
+                "Location":{
+                  "type":"string",
+                  "description":"Created ressource location."
+                }
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "409":{
+              "description":"MapMirrors already exists."
+            }
+          }
         }
       },
       "/mappackages/{namespace}/{name}":{
         "get":{
+          "tags": ["Namespaces"],
           "operationId":"GetMapPackages",
           "description":"Get MapPackages.",
           "parameters":[
@@ -1677,6 +1847,7 @@
           }
         },
         "put":{
+          "tags": ["Namespaces"],
           "operationId":"PutMapPackages",
           "description":"Update MapPackages.",
           "parameters":[
@@ -1716,53 +1887,8 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostMapPackages",
-          "description":"Create MapPackages.",
-          "parameters":[
-            {
-              "name":"namespace",
-              "description":"Namespace where the mapping is.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            },
-            {
-              "name":"name",
-              "description":"Name of the mapping.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            },
-            {
-              "name":"model",
-              "description":"MapPackages to create.",
-              "in":"body",
-              "required":true,
-              "schema":{
-                "$ref":"#/definitions/MapPackages"
-              }
-            }
-          ],
-          "responses":{
-            "201":{
-              "description":"MapPackages created.",
-              "headers":{
-                "Location":{
-                  "type":"string",
-                  "description":"Created ressource location."
-                }
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "409":{
-              "description":"MapPackages already exists."
-            }
-          }
-        },
         "delete":{
+          "tags": ["Namespaces"],
           "operationId":"DeleteMapPackages",
           "description":"Delete MapPackages.",
           "parameters":[
@@ -1794,8 +1920,9 @@
           }
         }
       },
-      "/mappackages/{namespace}/":{
+      "/mappackages/{namespace}":{
         "get":{
+          "tags": ["Namespaces"],
           "operationId":"GetListMapPackages",
           "description":"Get List Of MapPackages.",
           "parameters":[
@@ -1818,10 +1945,51 @@
               "description":"Bad request, can occurs if mandatory parameters are missing or empty."
             }
           }
+        },
+        "post":{
+          "tags": ["Namespaces"],
+          "operationId":"PostMapPackages",
+          "description":"Create MapPackages.",
+          "parameters":[
+            {
+              "name":"namespace",
+              "description":"Namespace where the mapping is.<br>",
+              "in":"path",
+              "type":"string",
+              "required":true
+            },
+            {
+              "name":"model",
+              "description":"MapPackages to create.",
+              "in":"body",
+              "required":true,
+              "schema":{
+                "$ref":"#/definitions/MapPackages"
+              }
+            }
+          ],
+          "responses":{
+            "201":{
+              "description":"MapPackages created.",
+              "headers":{
+                "Location":{
+                  "type":"string",
+                  "description":"Created ressource location."
+                }
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "409":{
+              "description":"MapPackages already exists."
+            }
+          }
         }
       },
       "/maproutines/{namespace}/{name}":{
         "get":{
+          "tags": ["Namespaces"],
           "operationId":"GetMapRoutines",
           "description":"Get MapRoutines.",
           "parameters":[
@@ -1856,6 +2024,7 @@
           }
         },
         "put":{
+          "tags": ["Namespaces"],
           "operationId":"PutMapRoutines",
           "description":"Update MapRoutines.",
           "parameters":[
@@ -1895,53 +2064,8 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostMapRoutines",
-          "description":"Create MapRoutines.",
-          "parameters":[
-            {
-              "name":"namespace",
-              "description":"Namespace where the mapping is.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            },
-            {
-              "name":"name",
-              "description":"Name of the mapping.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            },
-            {
-              "name":"model",
-              "description":"MapRoutines to create.",
-              "in":"body",
-              "required":true,
-              "schema":{
-                "$ref":"#/definitions/MapRoutines"
-              }
-            }
-          ],
-          "responses":{
-            "201":{
-              "description":"MapRoutines created.",
-              "headers":{
-                "Location":{
-                  "type":"string",
-                  "description":"Created ressource location."
-                }
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "409":{
-              "description":"MapRoutines already exists."
-            }
-          }
-        },
         "delete":{
+          "tags": ["Namespaces"],
           "operationId":"DeleteMapRoutines",
           "description":"Delete MapRoutines.",
           "parameters":[
@@ -1973,8 +2097,9 @@
           }
         }
       },
-      "/maproutines/{namespace}/":{
+      "/maproutines/{namespace}":{
         "get":{
+          "tags": ["Namespaces"],
           "operationId":"GetListMapRoutines",
           "description":"Get List Of MapRoutines.",
           "parameters":[
@@ -1997,10 +2122,51 @@
               "description":"Bad request, can occurs if mandatory parameters are missing or empty."
             }
           }
+        },
+        "post":{
+          "tags": ["Namespaces"],
+          "operationId":"PostMapRoutines",
+          "description":"Create MapRoutines.",
+          "parameters":[
+            {
+              "name":"namespace",
+              "description":"Namespace where the mapping is.<br>",
+              "in":"path",
+              "type":"string",
+              "required":true
+            },
+            {
+              "name":"model",
+              "description":"MapRoutines to create.",
+              "in":"body",
+              "required":true,
+              "schema":{
+                "$ref":"#/definitions/MapRoutines"
+              }
+            }
+          ],
+          "responses":{
+            "201":{
+              "description":"MapRoutines created.",
+              "headers":{
+                "Location":{
+                  "type":"string",
+                  "description":"Created ressource location."
+                }
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "409":{
+              "description":"MapRoutines already exists."
+            }
+          }
         }
       },
       "/mapshadows/{id}/{name}":{
         "get":{
+          "tags": ["Shadows"],
           "operationId":"GetMapShadows",
           "description":"Get MapShadows.",
           "parameters":[
@@ -2035,6 +2201,7 @@
           }
         },
         "put":{
+          "tags": ["Shadows"],
           "operationId":"PutMapShadows",
           "description":"Update MapShadows.",
           "parameters":[
@@ -2074,53 +2241,8 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostMapShadows",
-          "description":"Create MapShadows.",
-          "parameters":[
-            {
-              "name":"id",
-              "description":"ID where the mapping is.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            },
-            {
-              "name":"name",
-              "description":"Name of the mapping.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            },
-            {
-              "name":"model",
-              "description":"MapShadows to create.",
-              "in":"body",
-              "required":true,
-              "schema":{
-                "$ref":"#/definitions/MapShadows"
-              }
-            }
-          ],
-          "responses":{
-            "201":{
-              "description":"MapShadows created.",
-              "headers":{
-                "Location":{
-                  "type":"string",
-                  "description":"Created ressource location."
-                }
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "409":{
-              "description":"MapShadows already exists."
-            }
-          }
-        },
         "delete":{
+          "tags": ["Shadows"],
           "operationId":"DeleteMapShadows",
           "description":"Delete MapShadows.",
           "parameters":[
@@ -2152,11 +2274,19 @@
           }
         }
       },
-      "/mapshadows/":{
+      "/mapshadows/{id}":{
         "get":{
+          "tags": ["Shadows"],
           "operationId":"GetListMapShadows",
           "description":"Get List Of MapShadows.",
           "parameters":[
+            {
+              "name":"id",
+              "description":"ID where the mapping is.<br>",
+              "in":"path",
+              "type":"string",
+              "required":true
+            }
           ],
           "responses":{
             "200":{
@@ -2169,10 +2299,51 @@
               "description":"Bad request, can occurs if mandatory parameters are missing or empty."
             }
           }
+        },
+        "post":{
+          "tags": ["Shadows"],
+          "operationId":"PostMapShadows",
+          "description":"Create MapShadows.",
+          "parameters":[
+            {
+              "name":"id",
+              "description":"ID where the mapping is.<br>",
+              "in":"path",
+              "type":"string",
+              "required":true
+            },
+            {
+              "name":"model",
+              "description":"MapShadows to create.",
+              "in":"body",
+              "required":true,
+              "schema":{
+                "$ref":"#/definitions/MapShadows"
+              }
+            }
+          ],
+          "responses":{
+            "201":{
+              "description":"MapShadows created.",
+              "headers":{
+                "Location":{
+                  "type":"string",
+                  "description":"Created ressource location."
+                }
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "409":{
+              "description":"MapShadows already exists."
+            }
+          }
         }
       },
-      "/mirrormember/":{
+      "/mirrormember":{
         "get":{
+          "tags": ["Mirrors"],
           "operationId":"GetMirrorMember",
           "description":"Get MirrorMember.",
           "parameters":[
@@ -2193,6 +2364,7 @@
           }
         },
         "put":{
+          "tags": ["Mirrors"],
           "operationId":"PutMirrorMember",
           "description":"Update MirrorMember.",
           "parameters":[
@@ -2221,6 +2393,7 @@
       },
       "/mirrors/{name}":{
         "get":{
+          "tags": ["Mirrors"],
           "operationId":"GetMirrors",
           "description":"Get Mirrors.",
           "parameters":[
@@ -2248,6 +2421,7 @@
           }
         },
         "put":{
+          "tags": ["Mirrors"],
           "operationId":"PutMirrors",
           "description":"Update Mirrors.",
           "parameters":[
@@ -2280,9 +2454,10 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostMirrors",
-          "description":"Create Mirrors.",
+        "delete":{
+          "tags": ["Mirrors"],
+          "operationId":"DeleteMirrors",
+          "description":"Delete Mirrors.",
           "parameters":[
             {
               "name":"name",
@@ -2290,7 +2465,45 @@
               "in":"path",
               "type":"string",
               "required":true
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"Mirrors deleted."
             },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"Mirrors not found."
+            }
+          }
+        }
+      },
+      "/mirrors":{
+        "get":{
+          "tags": ["Mirrors"],
+          "operationId":"GetListMirrors",
+          "description":"Get List Of Mirrors.",
+          "parameters":[
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/ListOfMirrors"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            }
+          }
+        },
+        "post":{
+          "tags": ["Mirrors"],
+          "operationId":"PostMirrors",
+          "description":"Create Mirrors.",
+          "parameters":[
             {
               "name":"model",
               "description":"Mirrors to create.",
@@ -2318,53 +2531,11 @@
               "description":"Mirrors already exists."
             }
           }
-        },
-        "delete":{
-          "operationId":"DeleteMirrors",
-          "description":"Delete Mirrors.",
-          "parameters":[
-            {
-              "name":"name",
-              "description":"Mirror names are uppercase (alphanumeric)\r\nName of the mirror, restricted to 15 uppercase alphanumeric characters. \r\nMust be unique across the mirrors managed by the EMS",
-              "in":"path",
-              "type":"string",
-              "required":true
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"Mirrors deleted."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"Mirrors not found."
-            }
-          }
         }
       },
-      "/mirrors/":{
+      "/miscellaneous":{
         "get":{
-          "operationId":"GetListMirrors",
-          "description":"Get List Of Mirrors.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/ListOfMirrors"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            }
-          }
-        }
-      },
-      "/miscellaneous/":{
-        "get":{
+          "tags": ["Systems"],
           "operationId":"GetMiscellaneous",
           "description":"Get Miscellaneous.",
           "parameters":[
@@ -2385,6 +2556,7 @@
           }
         },
         "put":{
+          "tags": ["Systems"],
           "operationId":"PutMiscellaneous",
           "description":"Update Miscellaneous.",
           "parameters":[
@@ -2411,8 +2583,9 @@
           }
         }
       },
-      "/monitor/":{
+      "/monitor":{
         "get":{
+          "tags": ["Others"],
           "operationId":"GetMonitor",
           "description":"Get Monitor.",
           "parameters":[
@@ -2433,6 +2606,7 @@
           }
         },
         "put":{
+          "tags": ["Others"],
           "operationId":"PutMonitor",
           "description":"Update Monitor.",
           "parameters":[
@@ -2461,6 +2635,7 @@
       },
       "/namespaces/{name}":{
         "get":{
+          "tags": ["Namespaces"],
           "operationId":"GetNamespaces",
           "description":"Get Namespaces.",
           "parameters":[
@@ -2488,6 +2663,7 @@
           }
         },
         "put":{
+          "tags": ["Namespaces"],
           "operationId":"PutNamespaces",
           "description":"Update Namespaces.",
           "parameters":[
@@ -2520,9 +2696,10 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostNamespaces",
-          "description":"Create Namespaces.",
+        "delete":{
+          "tags": ["Namespaces"],
+          "operationId":"DeleteNamespaces",
+          "description":"Delete Namespaces.",
           "parameters":[
             {
               "name":"name",
@@ -2530,7 +2707,45 @@
               "in":"path",
               "type":"string",
               "required":true
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"Namespaces deleted."
             },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"Namespaces not found."
+            }
+          }
+        }
+      },
+      "/namespaces":{
+        "get":{
+          "tags": ["Namespaces"],
+          "operationId":"GetListNamespaces",
+          "description":"Get List Of Namespaces.",
+          "parameters":[
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/ListOfNamespaces"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            }
+          }
+        },
+        "post":{
+          "tags": ["Namespaces"],
+          "operationId":"PostNamespaces",
+          "description":"Create Namespaces.",
+          "parameters":[
             {
               "name":"model",
               "description":"Namespaces to create.",
@@ -2558,53 +2773,11 @@
               "description":"Namespaces already exists."
             }
           }
-        },
-        "delete":{
-          "operationId":"DeleteNamespaces",
-          "description":"Delete Namespaces.",
-          "parameters":[
-            {
-              "name":"name",
-              "description":"Name of the object instance.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"Namespaces deleted."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"Namespaces not found."
-            }
-          }
         }
       },
-      "/namespaces/":{
+      "/sql":{
         "get":{
-          "operationId":"GetListNamespaces",
-          "description":"Get List Of Namespaces.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/ListOfNamespaces"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            }
-          }
-        }
-      },
-      "/sql/":{
-        "get":{
+          "tags": ["SQL"],
           "operationId":"GetSQL",
           "description":"Get SQL.",
           "parameters":[
@@ -2625,6 +2798,7 @@
           }
         },
         "put":{
+          "tags": ["SQL"],
           "operationId":"PutSQL",
           "description":"Update SQL.",
           "parameters":[
@@ -2653,6 +2827,7 @@
       },
       "/shadows/{name}":{
         "get":{
+          "tags": ["Shadows"],
           "operationId":"GetShadows",
           "description":"Get Shadows.",
           "parameters":[
@@ -2680,6 +2855,7 @@
           }
         },
         "put":{
+          "tags": ["Shadows"],
           "operationId":"PutShadows",
           "description":"Update Shadows.",
           "parameters":[
@@ -2712,9 +2888,10 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostShadows",
-          "description":"Create Shadows.",
+        "delete":{
+          "tags": ["Shadows"],
+          "operationId":"DeleteShadows",
+          "description":"Delete Shadows.",
           "parameters":[
             {
               "name":"name",
@@ -2722,7 +2899,45 @@
               "in":"path",
               "type":"string",
               "required":true
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"Shadows deleted."
             },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"Shadows not found."
+            }
+          }
+        }
+      },
+      "/shadows":{
+        "get":{
+          "tags": ["Shadows"],
+          "operationId":"GetListShadows",
+          "description":"Get List Of Shadows.",
+          "parameters":[
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/ListOfShadows"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            }
+          }
+        },
+        "post":{
+          "tags": ["Shadows"],
+          "operationId":"PostShadows",
+          "description":"Create Shadows.",
+          "parameters":[
             {
               "name":"model",
               "description":"Shadows to create.",
@@ -2750,53 +2965,11 @@
               "description":"Shadows already exists."
             }
           }
-        },
-        "delete":{
-          "operationId":"DeleteShadows",
-          "description":"Delete Shadows.",
-          "parameters":[
-            {
-              "name":"name",
-              "description":"Name of the object instance.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"Shadows deleted."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"Shadows not found."
-            }
-          }
-        }
-      },
-      "/shadows/":{
-        "get":{
-          "operationId":"GetListShadows",
-          "description":"Get List Of Shadows.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/ListOfShadows"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            }
-          }
         }
       },
       "/sqlsysdatatypes/{name}":{
         "get":{
+          "tags": ["SQL"],
           "operationId":"GetSqlSysDatatypes",
           "description":"Get SqlSysDatatypes.",
           "parameters":[
@@ -2824,6 +2997,7 @@
           }
         },
         "put":{
+          "tags": ["SQL"],
           "operationId":"PutSqlSysDatatypes",
           "description":"Update SqlSysDatatypes.",
           "parameters":[
@@ -2856,9 +3030,10 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostSqlSysDatatypes",
-          "description":"Create SqlSysDatatypes.",
+        "delete":{
+          "tags": ["SQL"],
+          "operationId":"DeleteSqlSysDatatypes",
+          "description":"Delete SqlSysDatatypes.",
           "parameters":[
             {
               "name":"name",
@@ -2866,7 +3041,45 @@
               "in":"path",
               "type":"string",
               "required":true
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"SqlSysDatatypes deleted."
             },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"SqlSysDatatypes not found."
+            }
+          }
+        }
+      },
+      "/sqlsysdatatypes":{
+        "get":{
+          "tags": ["SQL"],
+          "operationId":"GetListSqlSysDatatypes",
+          "description":"Get List Of SqlSysDatatypes.",
+          "parameters":[
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/ListOfSqlSysDatatypes"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            }
+          }
+        },
+        "post":{
+          "tags": ["SQL"],
+          "operationId":"PostSqlSysDatatypes",
+          "description":"Create SqlSysDatatypes.",
+          "parameters":[
             {
               "name":"model",
               "description":"SqlSysDatatypes to create.",
@@ -2894,53 +3107,11 @@
               "description":"SqlSysDatatypes already exists."
             }
           }
-        },
-        "delete":{
-          "operationId":"DeleteSqlSysDatatypes",
-          "description":"Delete SqlSysDatatypes.",
-          "parameters":[
-            {
-              "name":"name",
-              "description":"Name of the object instance.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"SqlSysDatatypes deleted."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"SqlSysDatatypes not found."
-            }
-          }
-        }
-      },
-      "/sqlsysdatatypes/":{
-        "get":{
-          "operationId":"GetListSqlSysDatatypes",
-          "description":"Get List Of SqlSysDatatypes.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/ListOfSqlSysDatatypes"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            }
-          }
         }
       },
       "/sqluserdatatypes/{name}":{
         "get":{
+          "tags": ["SQL"],
           "operationId":"GetSqlUserDatatypes",
           "description":"Get SqlUserDatatypes.",
           "parameters":[
@@ -2968,6 +3139,7 @@
           }
         },
         "put":{
+          "tags": ["SQL"],
           "operationId":"PutSqlUserDatatypes",
           "description":"Update SqlUserDatatypes.",
           "parameters":[
@@ -3000,9 +3172,10 @@
             }
           }
         },
-        "post":{
-          "operationId":"PostSqlUserDatatypes",
-          "description":"Create SqlUserDatatypes.",
+        "delete":{
+          "tags": ["SQL"],
+          "operationId":"DeleteSqlUserDatatypes",
+          "description":"Delete SqlUserDatatypes.",
           "parameters":[
             {
               "name":"name",
@@ -3010,7 +3183,45 @@
               "in":"path",
               "type":"string",
               "required":true
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"SqlUserDatatypes deleted."
             },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"SqlUserDatatypes not found."
+            }
+          }
+        }
+      },
+      "/sqluserdatatypes":{
+        "get":{
+          "tags": ["SQL"],
+          "operationId":"GetListSqlUserDatatypes",
+          "description":"Get List Of SqlUserDatatypes.",
+          "parameters":[
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/ListOfSqlUserDatatypes"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            }
+          }
+        },
+        "post":{
+          "tags": ["SQL"],
+          "operationId":"PostSqlUserDatatypes",
+          "description":"Create SqlUserDatatypes.",
+          "parameters":[
             {
               "name":"model",
               "description":"SqlUserDatatypes to create.",
@@ -3038,53 +3249,11 @@
               "description":"SqlUserDatatypes already exists."
             }
           }
-        },
-        "delete":{
-          "operationId":"DeleteSqlUserDatatypes",
-          "description":"Delete SqlUserDatatypes.",
-          "parameters":[
-            {
-              "name":"name",
-              "description":"Name of the object instance.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"SqlUserDatatypes deleted."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"SqlUserDatatypes not found."
-            }
-          }
         }
       },
-      "/sqluserdatatypes/":{
+      "/startup":{
         "get":{
-          "operationId":"GetListSqlUserDatatypes",
-          "description":"Get List Of SqlUserDatatypes.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/ListOfSqlUserDatatypes"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            }
-          }
-        }
-      },
-      "/startup/":{
-        "get":{
+          "tags": ["Systems"],
           "operationId":"GetStartup",
           "description":"Get Startup.",
           "parameters":[
@@ -3105,6 +3274,7 @@
           }
         },
         "put":{
+          "tags": ["Systems"],
           "operationId":"PutStartup",
           "description":"Update Startup.",
           "parameters":[
@@ -3131,8 +3301,9 @@
           }
         }
       },
-      "/telnet/":{
+      "/telnet":{
         "get":{
+          "tags": ["Systems"],
           "operationId":"GetTelnet",
           "description":"Get Telnet.",
           "parameters":[
@@ -3153,6 +3324,7 @@
           }
         },
         "put":{
+          "tags": ["Systems"],
           "operationId":"PutTelnet",
           "description":"Update Telnet.",
           "parameters":[
@@ -3179,8 +3351,9 @@
           }
         }
       },
-      "/config/":{
+      "/config":{
         "get":{
+          "tags": ["Systems"],
           "operationId":"Getconfig",
           "description":"Get config.",
           "parameters":[
@@ -3201,6 +3374,7 @@
           }
         },
         "put":{
+          "tags": ["Systems"],
           "operationId":"Putconfig",
           "description":"Update config.",
           "parameters":[
@@ -3229,6 +3403,220 @@
       }
     },
     "definitions":{
+      "ListOfDirectory":{
+        "type":"object",
+        "properties":{
+          "ListOfDirectory":{
+            "type":"array",
+            "items":{
+              "$ref":"#/definitions/Directory"
+            }
+          }
+        }
+      },
+      "Directory":{
+        "type":"object",
+        "properties":{
+          "BlockFormat":{
+            "type":"integer",
+            "default":2
+          },
+          "BlockSize":{
+            "type":"integer",
+            "default":""
+          },
+          "Blocks":{
+            "type":"integer",
+            "default":0
+          },
+          "BlocksPerMap":{
+            "type":"integer",
+            "default":0
+          },
+          "ClusterMountMode":{
+            "type":"boolean",
+            "default":0
+          },
+          "ClusterMounted":{
+            "type":"boolean",
+            "default":0
+          },
+          "CompressionEngine":{
+            "type":"integer",
+            "default":0
+          },
+          "CurrentMaps":{
+            "type":"integer",
+            "default":""
+          },
+          "Directory":{
+            "type":"string",
+            "default":""
+          },
+          "DirectoryBlock":{
+            "type":"integer",
+            "default":3
+          },
+          "EncryptedDB":{
+            "type":"boolean",
+            "default":0
+          },
+          "EncryptionKeyID":{
+            "type":"string",
+            "default":""
+          },
+          "Expanding":{
+            "type":"boolean",
+            "default":0
+          },
+          "ExpansionSize":{
+            "type":"integer",
+            "default":0
+          },
+          "Full":{
+            "type":"boolean",
+            "default":0
+          },
+          "GlobalJournalState":{
+            "type":"string",
+            "default":""
+          },
+          "InActiveMirror":{
+            "type":"boolean",
+            "default":0
+          },
+          "LastExpansionTime":{
+            "type":"string",
+            "default":0
+          },
+          "MaxSize":{
+            "type":"integer",
+            "default":0
+          },
+          "MirrorActivationRequired":{
+            "type":"boolean",
+            "default":0
+          },
+          "MirrorDBCatchup":{
+            "type":"boolean",
+            "default":0
+          },
+          "MirrorDBCreatedNew":{
+            "type":"boolean",
+            "default":0
+          },
+          "MirrorDBName":{
+            "type":"string",
+            "default":""
+          },
+          "MirrorDBPaused":{
+            "type":"boolean",
+            "default":0
+          },
+          "MirrorFailoverDB":{
+            "type":"boolean",
+            "default":0
+          },
+          "MirrorNoWrite":{
+            "type":"boolean",
+            "default":0
+          },
+          "MirrorObsolete":{
+            "type":"boolean",
+            "default":0
+          },
+          "MirrorSetName":{
+            "type":"string",
+            "default":""
+          },
+          "Mirrored":{
+            "type":"boolean",
+            "default":0
+          },
+          "Mounted":{
+            "type":"boolean",
+            "default":0
+          },
+          "NewGlobalCollation":{
+            "type":"string",
+            "default":5
+          },
+          "NewGlobalGrowthBlock":{
+            "type":"integer",
+            "default":50
+          },
+          "NewGlobalIsKeep":{
+            "type":"boolean",
+            "default":0
+          },
+          "NewGlobalPointerBlock":{
+            "type":"integer",
+            "default":16
+          },
+          "NumberOfConfigDB":{
+            "type":"integer",
+            "default":0
+          },
+          "ROReasonCode":{
+            "type":"integer",
+            "default":0
+          },
+          "ROReasonText":{
+            "type":"string",
+            "default":""
+          },
+          "ReCreate":{
+            "type":"boolean",
+            "default":0
+          },
+          "ReadOnly":{
+            "type":"boolean",
+            "default":0
+          },
+          "ReadOnlyMounted":{
+            "type":"boolean",
+            "default":0
+          },
+          "Reinitialize":{
+            "type":"boolean",
+            "default":0
+          },
+          "RequestSize":{
+            "type":"integer",
+            "default":0
+          },
+          "ResourceName":{
+            "type":"string",
+            "default":""
+          },
+          "RunCatchupDBOnCreate":{
+            "type":"boolean",
+            "default":1
+          },
+          "SFN":{
+            "type":"integer",
+            "default":""
+          },
+          "Size":{
+            "type":"integer",
+            "default":1
+          },
+          "Skeleton":{
+            "type":"boolean",
+            "default":0
+          },
+          "SparseDB":{
+            "type":"boolean",
+            "default":0
+          }
+        },
+        "example":{
+          "Directory":"/usr/irissys/mgr/user/ztestapidata/",
+          "ExpansionSize":0,
+          "NewGlobalCollation":"5",
+          "ReadOnly":false
+        }
+      },
       "Cluster":{
         "type":"object",
         "properties":{
@@ -3267,7 +3655,8 @@
           "Name"
         ],
         "example":{
-          "Name":""
+            "CommIPAddress": "",
+            "JoinCluster": false
         }
       },
       "ConfigFile":{
@@ -3309,8 +3698,8 @@
           "Version"
         ],
         "example":{
-          "Name":"",
-          "Version":""
+          "Product": "IRIS",
+          "Version": "2020.4"
         }
       },
       "Databases":{
@@ -3372,8 +3761,13 @@
           "Name"
         ],
         "example":{
-          "Directory":"",
-          "Name":""
+          "ClusterMountMode": false,
+          "Directory": "/usr/irissys/mgr/user/",
+          "MountAtStartup": false,
+          "MountRequired": false,
+          "Name": "USER",
+          "Server": "",
+          "StreamLocation": ""
         }
       },
       "ListOfDatabases":{
@@ -3502,7 +3896,16 @@
           "Name"
         ],
         "example":{
-          "Name":""
+          "Backspace": "",
+          "CursorControl": "",
+          "EraseEOF": "",
+          "EraseEOL": "",
+          "FormFeed": "",
+          "Name": "ZDEVSUB",
+          "RightMargin": 80,
+          "ScreenLength": 0,
+          "ZU22Backspace": "",
+          "ZU22FormFeed": ""
         }
       },
       "ListOfDeviceSubTypes":{
@@ -3762,7 +4165,10 @@
           "Name"
         ],
         "example":{
-          "Name":""
+          "File": "^%X364",
+          "MagTape": "^%XMAG",
+          "Other": "^%X364",
+          "Terminal": "^%X364"
         }
       },
       "Journal":{
@@ -3833,7 +4239,14 @@
           "Name"
         ],
         "example":{
-          "Name":""
+          "AlternateDirectory": "/usr/irissys/mgr/journal/",
+          "BackupsBeforePurge": 2,
+          "CurrentDirectory": "/usr/irissys/mgr/journal/",
+          "DaysBeforePurge": 2,
+          "FileSizeLimit": 1024,
+          "FreezeOnError": false,
+          "JournalFilePrefix": "",
+          "JournalcspSession": false
         }
       },
       "LicenseServers":{
@@ -3879,7 +4292,9 @@
           "Name"
         ],
         "example":{
-          "Name":""
+          "Address": "127.0.0.1",
+          "KeyDirectory": "",
+          "Port": 4002
         }
       },
       "ListOfLicenseServers":{
@@ -3927,8 +4342,8 @@
           "SystemDevice"
         ],
         "example":{
-          "Name":"",
-          "SystemDevice":""
+          "Name": "54",
+          "SystemDevice": "/dev/st1m"
         }
       },
       "ListOfMagTapes":{
@@ -3992,9 +4407,11 @@
           "Namespace"
         ],
         "example":{
-          "Database":"",
-          "Name":"",
-          "Namespace":""
+          "Collation": 5,
+          "Database": "ENSLIB",
+          "LockDatabase": "ENSLIB",
+          "Name": "EnsDICOM.Dictionary",
+          "Namespace": "USER"
         }
       },
       "ListOfMapGlobals":{
@@ -4170,9 +4587,9 @@
           "Namespace"
         ],
         "example":{
-          "Database":"",
-          "Name":"",
-          "Namespace":""
+          "Database": "ENSLIB",
+          "Name": "EnsLib",
+          "Namespace": "USER"
         }
       },
       "ListOfMapPackages":{
@@ -4226,9 +4643,9 @@
           "Namespace"
         ],
         "example":{
-          "Database":"",
-          "Name":"",
-          "Namespace":""
+          "Database": "ENSLIB",
+          "Name": "Ens*",
+          "Namespace": "USER"
         }
       },
       "ListOfMapRoutines":{
@@ -4361,7 +4778,13 @@
           "Name"
         ],
         "example":{
-          "Name":""
+          "AgentAddress": "",
+          "AsyncMemberGUID": "",
+          "AsyncMemberType": 0,
+          "AsyncUseSystemPurgeInterval": false,
+          "JoinMirror": false,
+          "SystemName": "",
+          "VirtualAddressInterface": ""
         }
       },
       "Mirrors":{
@@ -4651,7 +5074,37 @@
           "Name"
         ],
         "example":{
-          "Name":""
+          "AsyncDisconnectErr": false,
+          "AsynchError": true,
+          "BreakMode": true,
+          "CollectResourceStats": false,
+          "DisconnectErr": false,
+          "FileMode": false,
+          "GlobalKillEnabled": true,
+          "IEEEError": true,
+          "LineRecall": true,
+          "ListFormat": 0,
+          "LogRollback": false,
+          "MVDefined": false,
+          "NodeNameInPid": false,
+          "NullSubscripts": false,
+          "OldZU5": false,
+          "OpenMode": 0,
+          "PopError": false,
+          "RefInKind": false,
+          "ScientificNotation": true,
+          "SetZEOF": false,
+          "ShutDownLogErrors": false,
+          "StopID": false,
+          "SwitchOSdir": false,
+          "SynchCommit": false,
+          "TelnetNUL": false,
+          "TruncateOverflow": false,
+          "Undefined": 0,
+          "UseNagleAlgorithm": false,
+          "ViewPastData": false,
+          "ZDateNull": false,
+          "ZaMode": false
         }
       },
       "Monitor":{
@@ -4712,7 +5165,12 @@
           "Name"
         ],
         "example":{
-          "Name":""
+          "PatrolCollectionInterval": 30,
+          "PatrolDisplayMode": 0,
+          "PatrolEnabled": false,
+          "PatrolTopProcesses": 20,
+          "SNMPEnabled": false,
+          "WMIEnabled": false
         }
       },
       "Namespaces":{
@@ -4760,9 +5218,10 @@
           "Routines"
         ],
         "example":{
-          "Globals":"",
-          "Name":"",
-          "Routines":""
+          "Globals": "USER",
+          "Name": "USER",
+          "Routines": "USER",
+          "TempGlobals": "IRISTEMP"
         }
       },
       "ListOfNamespaces":{
@@ -5024,7 +5483,50 @@
           "Name"
         ],
         "example":{
-          "Name":""
+          "ANSIPrecedence": true,
+          "AllowRowIDUpdate": false,
+          "AutoParallel": true,
+          "AutoParallelThreshold": 3200,
+          "BiasQueriesAsOutlier": false,
+          "Comment": true,
+          "DBMSSecurity": true,
+          "DDLDefineBitmapExtent": true,
+          "DDLFinal": true,
+          "DDLNo201": false,
+          "DDLNo30": false,
+          "DDLNo307": false,
+          "DDLNo311": false,
+          "DDLNo315": false,
+          "DDLNo324": false,
+          "DDLNo333": false,
+          "DDLSQLOnlyCompile": false,
+          "DDLUseExtentSet": true,
+          "DDLUseSequence": true,
+          "DefaultSchema": "SQLUser",
+          "DelimitedIds": true,
+          "DropDelete": true,
+          "ECPSync": false,
+          "ExtrinsicFunctions": false,
+          "FastDistinct": true,
+          "IdKey": true,
+          "IdTrxFrom": "~ `!@#$%^&*()_+-=[]\\{}|;':\",./<>?",
+          "IdTrxTo": "",
+          "JDBCGatewayJVMArgs": "",
+          "JDBCGatewayLog": "",
+          "JDBCGatewayPort": 53773,
+          "JDBCGatewayUsePassphrase": false,
+          "JavaClassPath": "",
+          "JavaHome": "",
+          "LockThreshold": 1000,
+          "LockTimeout": 10,
+          "ODBCVarcharMaxlen": 4096,
+          "QueryProcedures": false,
+          "RTPC": false,
+          "ReferentialChecks": true,
+          "SaveMAC": false,
+          "TCPKeepAlive": 300,
+          "TODATEDefaultFormat": "DD MON YYYY",
+          "TimePrecision": 0
         }
       },
       "Shadows":{
@@ -5437,7 +5939,46 @@
           "Name"
         ],
         "example":{
-          "Name":""
+          "ArbiterURL": "",
+          "CallinHalt": true,
+          "CallinStart": true,
+          "CliSysName": "",
+          "DBSizesAllowed": "8192",
+          "DefaultPort": 1972,
+          "DefaultPortBindAddress": "",
+          "EnableVSSBackup": false,
+          "EnsembleAutoStart": true,
+          "ErrorPurge": 30,
+          "FIPSMode": false,
+          "IPv6": false,
+          "JobHalt": true,
+          "JobServers": 0,
+          "JobStart": true,
+          "LicenseID": "",
+          "MaxConsoleLogSize": 5,
+          "MaxIRISTempSizeAtStart": 0,
+          "MirrorMember": "",
+          "MirrorPrimary": "",
+          "MirrorSetName": "",
+          "PasswordHash": "",
+          "ProcessHalt": true,
+          "ProcessStart": true,
+          "ShardClusterURL": "",
+          "ShardMasterRegexp": "-0$",
+          "ShardMirrorMember": "",
+          "ShardRegexp": "-[0-9]+$",
+          "ShardRole": "",
+          "ShutdownTimeout": 300,
+          "SystemHalt": true,
+          "SystemMode": "",
+          "SystemStart": true,
+          "TempDirectory": "Temp",
+          "TerminalPrompt": "8,2",
+          "WebServer": true,
+          "WebServerName": "",
+          "WebServerPort": 52773,
+          "WebServerURLPrefix": "",
+          "ZSTU": true
         }
       },
       "Telnet":{
@@ -5478,7 +6019,8 @@
           "Name"
         ],
         "example":{
-          "Name":""
+          "DNSLookup": "ON",
+          "Port": 23
         }
       },
       "config":{
@@ -5704,7 +6246,39 @@
           "Name"
         ],
         "example":{
-          "Name":""
+            "BackoffDisabled": false,
+            "ConsoleFile": "",
+            "LargePagesDisabled": false,
+            "LargePagesRequired": false,
+            "LibPath": "",
+            "LineRecallBuffer": 1024,
+            "LineRecallEntries": 500,
+            "LockSharedMemory": false,
+            "LockTextSegment": false,
+            "MaxServerConn": 1,
+            "MaxServers": 2,
+            "VMSConsoleTerminal": "",
+            "ZFSize": 0,
+            "ZFString": 0,
+            "bbsiz": 262144,
+            "errlog": 500,
+            "globals16kb": 0,
+            "globals32kb": 0,
+            "globals4kb": 0,
+            "globals64kb": 0,
+            "globals8kb": 0,
+            "gmheap": 37568,
+            "ijcbuff": 512,
+            "ijcnum": 16,
+            "jrnbufs": 64,
+            "locksiz": 16777216,
+            "netjob": true,
+            "nlstab": 50,
+            "pijdir": "",
+            "routines": "0",
+            "targwijsz": 0,
+            "udevtabsiz": 24576,
+            "wijdir": ""
         }
       }
     }

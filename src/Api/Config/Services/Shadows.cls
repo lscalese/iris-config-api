@@ -35,6 +35,7 @@ ClassMethod Get(Name As %String) As %Library.DynamicObject
 	Quit:'..Exists(Name) ""
 	$$$switchNSSys
 	$$$ThrowOnError(##class(Config.Shadows).Get(Name,.properties))
+	Set properties("Name") = Name
 	Quit ..ToDynamic(.properties)
 }
 

@@ -17,11 +17,11 @@ XData OpenAPI [ MimeType = application/json ]
     "contact":{
       "name":"Lorenzo Scalese",
       "email":"lorenzo.scalese@gmail.com",
-      "url":"https://github.com/lscalese/Iris-Deploy-Utils-API/"
+      "url":"https://github.com/lscalese/iris-config-api/"
     },
     "license":{
       "name":"MIT",
-      "url":"https://github.com/lscalese/Iris-Deploy-Utils-API/blob/master/LICENSE"
+      "url":"https://github.com/lscalese/iris-config-api/blob/master/LICENSE"
     }
   },
   "produces":[
@@ -44,6 +44,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/cluster/":{
       "get":{
+        "tags":[
+          "Others"
+        ],
         "operationId":"GetCluster",
         "description":"Get Cluster.",
         "parameters":[
@@ -64,6 +67,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Others"
+        ],
         "operationId":"PutCluster",
         "description":"Update Cluster.",
         "parameters":[
@@ -92,6 +98,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/configfile/":{
       "get":{
+        "tags":[
+          "Systems"
+        ],
         "operationId":"GetConfigFile",
         "description":"Get ConfigFile.",
         "parameters":[
@@ -112,6 +121,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Systems"
+        ],
         "operationId":"PutConfigFile",
         "description":"Update ConfigFile.",
         "parameters":[
@@ -140,6 +152,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/databases/{name}":{
       "get":{
+        "tags":[
+          "Databases"
+        ],
         "operationId":"GetDatabases",
         "description":"Get Databases.",
         "parameters":[
@@ -167,6 +182,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Databases"
+        ],
         "operationId":"PutDatabases",
         "description":"Update Databases.",
         "parameters":[
@@ -200,6 +218,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "Databases"
+        ],
         "operationId":"PostDatabases",
         "description":"Create Databases.",
         "parameters":[
@@ -239,6 +260,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "Databases"
+        ],
         "operationId":"DeleteDatabases",
         "description":"Delete Databases.",
         "parameters":[
@@ -265,6 +289,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/databases/":{
       "get":{
+        "tags":[
+          "Databases"
+        ],
         "operationId":"GetListDatabases",
         "description":"Get List Of Databases.",
         "parameters":[
@@ -284,6 +311,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/debug/{name}":{
       "get":{
+        "tags":[
+          "Others"
+        ],
         "operationId":"GetDebug",
         "description":"Get Debug.",
         "parameters":[
@@ -311,6 +341,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Others"
+        ],
         "operationId":"PutDebug",
         "description":"Update Debug.",
         "parameters":[
@@ -344,6 +377,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "Others"
+        ],
         "operationId":"PostDebug",
         "description":"Create Debug.",
         "parameters":[
@@ -383,6 +419,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "Others"
+        ],
         "operationId":"DeleteDebug",
         "description":"Delete Debug.",
         "parameters":[
@@ -409,6 +448,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/debug/":{
       "get":{
+        "tags":[
+          "Others"
+        ],
         "operationId":"GetListDebug",
         "description":"Get List Of Debug.",
         "parameters":[
@@ -428,6 +470,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/devicesubtypes/{name}":{
       "get":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"GetDeviceSubTypes",
         "description":"Get DeviceSubTypes.",
         "parameters":[
@@ -455,6 +500,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"PutDeviceSubTypes",
         "description":"Update DeviceSubTypes.",
         "parameters":[
@@ -488,6 +536,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"PostDeviceSubTypes",
         "description":"Create DeviceSubTypes.",
         "parameters":[
@@ -527,6 +578,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"DeleteDeviceSubTypes",
         "description":"Delete DeviceSubTypes.",
         "parameters":[
@@ -553,6 +607,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/devicesubtypes/":{
       "get":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"GetListDeviceSubTypes",
         "description":"Get List Of DeviceSubTypes.",
         "parameters":[
@@ -572,6 +629,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/devices/{name}":{
       "get":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"GetDevices",
         "description":"Get Devices.",
         "parameters":[
@@ -599,6 +659,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"PutDevices",
         "description":"Update Devices.",
         "parameters":[
@@ -632,6 +695,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"PostDevices",
         "description":"Create Devices.",
         "parameters":[
@@ -671,6 +737,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"DeleteDevices",
         "description":"Delete Devices.",
         "parameters":[
@@ -697,6 +766,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/devices/":{
       "get":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"GetListDevices",
         "description":"Get List Of Devices.",
         "parameters":[
@@ -716,6 +788,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/ecp/":{
       "get":{
+        "tags":[
+          "ECP"
+        ],
         "operationId":"GetECP",
         "description":"Get ECP.",
         "parameters":[
@@ -736,6 +811,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "ECP"
+        ],
         "operationId":"PutECP",
         "description":"Update ECP.",
         "parameters":[
@@ -764,6 +842,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/ecpservers/{name}":{
       "get":{
+        "tags":[
+          "ECP"
+        ],
         "operationId":"GetECPServers",
         "description":"Get ECPServers.",
         "parameters":[
@@ -791,6 +872,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "ECP"
+        ],
         "operationId":"PutECPServers",
         "description":"Update ECPServers.",
         "parameters":[
@@ -824,6 +908,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "ECP"
+        ],
         "operationId":"PostECPServers",
         "description":"Create ECPServers.",
         "parameters":[
@@ -863,6 +950,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "ECP"
+        ],
         "operationId":"DeleteECPServers",
         "description":"Delete ECPServers.",
         "parameters":[
@@ -889,6 +979,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/ecpservers/":{
       "get":{
+        "tags":[
+          "ECP"
+        ],
         "operationId":"GetListECPServers",
         "description":"Get List Of ECPServers.",
         "parameters":[
@@ -908,6 +1001,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/io/":{
       "get":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"GetIO",
         "description":"Get IO.",
         "parameters":[
@@ -928,6 +1024,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"PutIO",
         "description":"Update IO.",
         "parameters":[
@@ -956,6 +1055,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/journal/":{
       "get":{
+        "tags":[
+          "Systems"
+        ],
         "operationId":"GetJournal",
         "description":"Get Journal.",
         "parameters":[
@@ -976,6 +1078,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Systems"
+        ],
         "operationId":"PutJournal",
         "description":"Update Journal.",
         "parameters":[
@@ -1004,6 +1109,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/licenseservers/{name}":{
       "get":{
+        "tags":[
+          "Others"
+        ],
         "operationId":"GetLicenseServers",
         "description":"Get LicenseServers.",
         "parameters":[
@@ -1031,6 +1139,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Others"
+        ],
         "operationId":"PutLicenseServers",
         "description":"Update LicenseServers.",
         "parameters":[
@@ -1064,6 +1175,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "Others"
+        ],
         "operationId":"PostLicenseServers",
         "description":"Create LicenseServers.",
         "parameters":[
@@ -1103,6 +1217,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "Others"
+        ],
         "operationId":"DeleteLicenseServers",
         "description":"Delete LicenseServers.",
         "parameters":[
@@ -1129,6 +1246,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/licenseservers/":{
       "get":{
+        "tags":[
+          "Others"
+        ],
         "operationId":"GetListLicenseServers",
         "description":"Get List Of LicenseServers.",
         "parameters":[
@@ -1148,6 +1268,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/magtapes/{name}":{
       "get":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"GetMagTapes",
         "description":"Get MagTapes.",
         "parameters":[
@@ -1175,6 +1298,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"PutMagTapes",
         "description":"Update MagTapes.",
         "parameters":[
@@ -1208,6 +1334,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"PostMagTapes",
         "description":"Create MagTapes.",
         "parameters":[
@@ -1247,6 +1376,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"DeleteMagTapes",
         "description":"Delete MagTapes.",
         "parameters":[
@@ -1273,6 +1405,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/magtapes/":{
       "get":{
+        "tags":[
+          "Devices"
+        ],
         "operationId":"GetListMagTapes",
         "description":"Get List Of MagTapes.",
         "parameters":[
@@ -1292,6 +1427,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/mapglobals/{namespace}/{name}":{
       "get":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"GetMapGlobals",
         "description":"Get MapGlobals.",
         "parameters":[
@@ -1326,6 +1464,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"PutMapGlobals",
         "description":"Update MapGlobals.",
         "parameters":[
@@ -1366,6 +1507,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"PostMapGlobals",
         "description":"Create MapGlobals.",
         "parameters":[
@@ -1412,6 +1556,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"DeleteMapGlobals",
         "description":"Delete MapGlobals.",
         "parameters":[
@@ -1445,6 +1592,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/mapglobals/{namespace}/":{
       "get":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"GetListMapGlobals",
         "description":"Get List Of MapGlobals.",
         "parameters":[
@@ -1471,6 +1621,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/mapmirrors/{id}/{name}":{
       "get":{
+        "tags":[
+          "Mirrors"
+        ],
         "operationId":"GetMapMirrors",
         "description":"Get MapMirrors.",
         "parameters":[
@@ -1505,6 +1658,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Mirrors"
+        ],
         "operationId":"PutMapMirrors",
         "description":"Update MapMirrors.",
         "parameters":[
@@ -1545,6 +1701,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "Mirrors"
+        ],
         "operationId":"PostMapMirrors",
         "description":"Create MapMirrors.",
         "parameters":[
@@ -1591,6 +1750,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "Mirrors"
+        ],
         "operationId":"DeleteMapMirrors",
         "description":"Delete MapMirrors.",
         "parameters":[
@@ -1622,11 +1784,21 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/mapmirrors/":{
+    "/mapmirrors/{id}":{
       "get":{
+        "tags":[
+          "Mirrors"
+        ],
         "operationId":"GetListMapMirrors",
         "description":"Get List Of MapMirrors.",
         "parameters":[
+          {
+            "name":"id",
+            "description":"ID where the mapping is.<br>",
+            "in":"path",
+            "type":"string",
+            "required":true
+          }
         ],
         "responses":{
           "200":{
@@ -1643,6 +1815,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/mappackages/{namespace}/{name}":{
       "get":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"GetMapPackages",
         "description":"Get MapPackages.",
         "parameters":[
@@ -1677,6 +1852,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"PutMapPackages",
         "description":"Update MapPackages.",
         "parameters":[
@@ -1717,6 +1895,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"PostMapPackages",
         "description":"Create MapPackages.",
         "parameters":[
@@ -1763,6 +1944,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"DeleteMapPackages",
         "description":"Delete MapPackages.",
         "parameters":[
@@ -1796,6 +1980,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/mappackages/{namespace}/":{
       "get":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"GetListMapPackages",
         "description":"Get List Of MapPackages.",
         "parameters":[
@@ -1822,6 +2009,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/maproutines/{namespace}/{name}":{
       "get":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"GetMapRoutines",
         "description":"Get MapRoutines.",
         "parameters":[
@@ -1856,6 +2046,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"PutMapRoutines",
         "description":"Update MapRoutines.",
         "parameters":[
@@ -1896,6 +2089,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"PostMapRoutines",
         "description":"Create MapRoutines.",
         "parameters":[
@@ -1942,6 +2138,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"DeleteMapRoutines",
         "description":"Delete MapRoutines.",
         "parameters":[
@@ -1975,6 +2174,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/maproutines/{namespace}/":{
       "get":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"GetListMapRoutines",
         "description":"Get List Of MapRoutines.",
         "parameters":[
@@ -2001,6 +2203,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/mapshadows/{id}/{name}":{
       "get":{
+        "tags":[
+          "Shadows"
+        ],
         "operationId":"GetMapShadows",
         "description":"Get MapShadows.",
         "parameters":[
@@ -2035,6 +2240,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Shadows"
+        ],
         "operationId":"PutMapShadows",
         "description":"Update MapShadows.",
         "parameters":[
@@ -2075,6 +2283,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "Shadows"
+        ],
         "operationId":"PostMapShadows",
         "description":"Create MapShadows.",
         "parameters":[
@@ -2121,6 +2332,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "Shadows"
+        ],
         "operationId":"DeleteMapShadows",
         "description":"Delete MapShadows.",
         "parameters":[
@@ -2152,11 +2366,21 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/mapshadows/":{
+    "/mapshadows/{id}":{
       "get":{
+        "tags":[
+          "Shadows"
+        ],
         "operationId":"GetListMapShadows",
         "description":"Get List Of MapShadows.",
         "parameters":[
+          {
+            "name":"id",
+            "description":"ID where the mapping is.<br>",
+            "in":"path",
+            "type":"string",
+            "required":true
+          }
         ],
         "responses":{
           "200":{
@@ -2173,6 +2397,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/mirrormember/":{
       "get":{
+        "tags":[
+          "Mirrors"
+        ],
         "operationId":"GetMirrorMember",
         "description":"Get MirrorMember.",
         "parameters":[
@@ -2193,6 +2420,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Mirrors"
+        ],
         "operationId":"PutMirrorMember",
         "description":"Update MirrorMember.",
         "parameters":[
@@ -2221,6 +2451,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/mirrors/{name}":{
       "get":{
+        "tags":[
+          "Mirrors"
+        ],
         "operationId":"GetMirrors",
         "description":"Get Mirrors.",
         "parameters":[
@@ -2248,6 +2481,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Mirrors"
+        ],
         "operationId":"PutMirrors",
         "description":"Update Mirrors.",
         "parameters":[
@@ -2281,6 +2517,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "Mirrors"
+        ],
         "operationId":"PostMirrors",
         "description":"Create Mirrors.",
         "parameters":[
@@ -2320,6 +2559,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "Mirrors"
+        ],
         "operationId":"DeleteMirrors",
         "description":"Delete Mirrors.",
         "parameters":[
@@ -2346,6 +2588,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/mirrors/":{
       "get":{
+        "tags":[
+          "Mirrors"
+        ],
         "operationId":"GetListMirrors",
         "description":"Get List Of Mirrors.",
         "parameters":[
@@ -2365,6 +2610,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/miscellaneous/":{
       "get":{
+        "tags":[
+          "Systems"
+        ],
         "operationId":"GetMiscellaneous",
         "description":"Get Miscellaneous.",
         "parameters":[
@@ -2385,6 +2633,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Systems"
+        ],
         "operationId":"PutMiscellaneous",
         "description":"Update Miscellaneous.",
         "parameters":[
@@ -2413,6 +2664,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/monitor/":{
       "get":{
+        "tags":[
+          "Others"
+        ],
         "operationId":"GetMonitor",
         "description":"Get Monitor.",
         "parameters":[
@@ -2433,6 +2687,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Others"
+        ],
         "operationId":"PutMonitor",
         "description":"Update Monitor.",
         "parameters":[
@@ -2461,6 +2718,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/namespaces/{name}":{
       "get":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"GetNamespaces",
         "description":"Get Namespaces.",
         "parameters":[
@@ -2488,6 +2748,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"PutNamespaces",
         "description":"Update Namespaces.",
         "parameters":[
@@ -2521,6 +2784,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"PostNamespaces",
         "description":"Create Namespaces.",
         "parameters":[
@@ -2560,6 +2826,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"DeleteNamespaces",
         "description":"Delete Namespaces.",
         "parameters":[
@@ -2586,6 +2855,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/namespaces/":{
       "get":{
+        "tags":[
+          "Namespaces"
+        ],
         "operationId":"GetListNamespaces",
         "description":"Get List Of Namespaces.",
         "parameters":[
@@ -2605,6 +2877,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/sql/":{
       "get":{
+        "tags":[
+          "SQL"
+        ],
         "operationId":"GetSQL",
         "description":"Get SQL.",
         "parameters":[
@@ -2625,6 +2900,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "SQL"
+        ],
         "operationId":"PutSQL",
         "description":"Update SQL.",
         "parameters":[
@@ -2653,6 +2931,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/shadows/{name}":{
       "get":{
+        "tags":[
+          "Shadows"
+        ],
         "operationId":"GetShadows",
         "description":"Get Shadows.",
         "parameters":[
@@ -2680,6 +2961,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Shadows"
+        ],
         "operationId":"PutShadows",
         "description":"Update Shadows.",
         "parameters":[
@@ -2713,6 +2997,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "Shadows"
+        ],
         "operationId":"PostShadows",
         "description":"Create Shadows.",
         "parameters":[
@@ -2752,6 +3039,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "Shadows"
+        ],
         "operationId":"DeleteShadows",
         "description":"Delete Shadows.",
         "parameters":[
@@ -2778,6 +3068,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/shadows/":{
       "get":{
+        "tags":[
+          "Shadows"
+        ],
         "operationId":"GetListShadows",
         "description":"Get List Of Shadows.",
         "parameters":[
@@ -2797,6 +3090,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/sqlsysdatatypes/{name}":{
       "get":{
+        "tags":[
+          "SQL"
+        ],
         "operationId":"GetSqlSysDatatypes",
         "description":"Get SqlSysDatatypes.",
         "parameters":[
@@ -2824,6 +3120,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "SQL"
+        ],
         "operationId":"PutSqlSysDatatypes",
         "description":"Update SqlSysDatatypes.",
         "parameters":[
@@ -2857,6 +3156,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "SQL"
+        ],
         "operationId":"PostSqlSysDatatypes",
         "description":"Create SqlSysDatatypes.",
         "parameters":[
@@ -2896,6 +3198,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "SQL"
+        ],
         "operationId":"DeleteSqlSysDatatypes",
         "description":"Delete SqlSysDatatypes.",
         "parameters":[
@@ -2922,6 +3227,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/sqlsysdatatypes/":{
       "get":{
+        "tags":[
+          "SQL"
+        ],
         "operationId":"GetListSqlSysDatatypes",
         "description":"Get List Of SqlSysDatatypes.",
         "parameters":[
@@ -2941,6 +3249,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/sqluserdatatypes/{name}":{
       "get":{
+        "tags":[
+          "SQL"
+        ],
         "operationId":"GetSqlUserDatatypes",
         "description":"Get SqlUserDatatypes.",
         "parameters":[
@@ -2968,6 +3279,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "SQL"
+        ],
         "operationId":"PutSqlUserDatatypes",
         "description":"Update SqlUserDatatypes.",
         "parameters":[
@@ -3001,6 +3315,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "post":{
+        "tags":[
+          "SQL"
+        ],
         "operationId":"PostSqlUserDatatypes",
         "description":"Create SqlUserDatatypes.",
         "parameters":[
@@ -3040,6 +3357,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
+        "tags":[
+          "SQL"
+        ],
         "operationId":"DeleteSqlUserDatatypes",
         "description":"Delete SqlUserDatatypes.",
         "parameters":[
@@ -3066,6 +3386,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/sqluserdatatypes/":{
       "get":{
+        "tags":[
+          "SQL"
+        ],
         "operationId":"GetListSqlUserDatatypes",
         "description":"Get List Of SqlUserDatatypes.",
         "parameters":[
@@ -3085,6 +3408,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/startup/":{
       "get":{
+        "tags":[
+          "Systems"
+        ],
         "operationId":"GetStartup",
         "description":"Get Startup.",
         "parameters":[
@@ -3105,6 +3431,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Systems"
+        ],
         "operationId":"PutStartup",
         "description":"Update Startup.",
         "parameters":[
@@ -3133,6 +3462,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/telnet/":{
       "get":{
+        "tags":[
+          "Systems"
+        ],
         "operationId":"GetTelnet",
         "description":"Get Telnet.",
         "parameters":[
@@ -3153,6 +3485,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Systems"
+        ],
         "operationId":"PutTelnet",
         "description":"Update Telnet.",
         "parameters":[
@@ -3181,6 +3516,9 @@ XData OpenAPI [ MimeType = application/json ]
     },
     "/config/":{
       "get":{
+        "tags":[
+          "Systems"
+        ],
         "operationId":"Getconfig",
         "description":"Get config.",
         "parameters":[
@@ -3201,6 +3539,9 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "put":{
+        "tags":[
+          "Systems"
+        ],
         "operationId":"Putconfig",
         "description":"Update config.",
         "parameters":[
@@ -3267,7 +3608,8 @@ XData OpenAPI [ MimeType = application/json ]
         "Name"
       ],
       "example":{
-        "Name":""
+        "CommIPAddress":"",
+        "JoinCluster":false
       }
     },
     "ConfigFile":{
@@ -3309,8 +3651,8 @@ XData OpenAPI [ MimeType = application/json ]
         "Version"
       ],
       "example":{
-        "Name":"",
-        "Version":""
+        "Product":"IRIS",
+        "Version":"2020.4"
       }
     },
     "Databases":{
@@ -3372,8 +3714,13 @@ XData OpenAPI [ MimeType = application/json ]
         "Name"
       ],
       "example":{
-        "Directory":"",
-        "Name":""
+        "ClusterMountMode":false,
+        "Directory":"/usr/irissys/mgr/user/",
+        "MountAtStartup":false,
+        "MountRequired":false,
+        "Name":"USER",
+        "Server":"",
+        "StreamLocation":""
       }
     },
     "ListOfDatabases":{
@@ -3502,7 +3849,16 @@ XData OpenAPI [ MimeType = application/json ]
         "Name"
       ],
       "example":{
-        "Name":""
+        "Backspace":"",
+        "CursorControl":"",
+        "EraseEOF":"",
+        "EraseEOL":"",
+        "FormFeed":"",
+        "Name":"ZDEVSUB",
+        "RightMargin":80,
+        "ScreenLength":0,
+        "ZU22Backspace":"",
+        "ZU22FormFeed":""
       }
     },
     "ListOfDeviceSubTypes":{
@@ -3762,7 +4118,10 @@ XData OpenAPI [ MimeType = application/json ]
         "Name"
       ],
       "example":{
-        "Name":""
+        "File":"^%X364",
+        "MagTape":"^%XMAG",
+        "Other":"^%X364",
+        "Terminal":"^%X364"
       }
     },
     "Journal":{
@@ -3833,7 +4192,14 @@ XData OpenAPI [ MimeType = application/json ]
         "Name"
       ],
       "example":{
-        "Name":""
+        "AlternateDirectory":"/usr/irissys/mgr/journal/",
+        "BackupsBeforePurge":2,
+        "CurrentDirectory":"/usr/irissys/mgr/journal/",
+        "DaysBeforePurge":2,
+        "FileSizeLimit":1024,
+        "FreezeOnError":false,
+        "JournalFilePrefix":"",
+        "JournalcspSession":false
       }
     },
     "LicenseServers":{
@@ -3879,7 +4245,9 @@ XData OpenAPI [ MimeType = application/json ]
         "Name"
       ],
       "example":{
-        "Name":""
+        "Address":"127.0.0.1",
+        "KeyDirectory":"",
+        "Port":4002
       }
     },
     "ListOfLicenseServers":{
@@ -3927,8 +4295,8 @@ XData OpenAPI [ MimeType = application/json ]
         "SystemDevice"
       ],
       "example":{
-        "Name":"",
-        "SystemDevice":""
+        "Name":"54",
+        "SystemDevice":"/dev/st1m"
       }
     },
     "ListOfMagTapes":{
@@ -3992,9 +4360,11 @@ XData OpenAPI [ MimeType = application/json ]
         "Namespace"
       ],
       "example":{
-        "Database":"",
-        "Name":"",
-        "Namespace":""
+        "Collation":5,
+        "Database":"ENSLIB",
+        "LockDatabase":"ENSLIB",
+        "Name":"EnsDICOM.Dictionary",
+        "Namespace":"USER"
       }
     },
     "ListOfMapGlobals":{
@@ -4170,9 +4540,9 @@ XData OpenAPI [ MimeType = application/json ]
         "Namespace"
       ],
       "example":{
-        "Database":"",
-        "Name":"",
-        "Namespace":""
+        "Database":"ENSLIB",
+        "Name":"EnsLib",
+        "Namespace":"USER"
       }
     },
     "ListOfMapPackages":{
@@ -4226,9 +4596,9 @@ XData OpenAPI [ MimeType = application/json ]
         "Namespace"
       ],
       "example":{
-        "Database":"",
-        "Name":"",
-        "Namespace":""
+        "Database":"ENSLIB",
+        "Name":"Ens*",
+        "Namespace":"USER"
       }
     },
     "ListOfMapRoutines":{
@@ -4361,7 +4731,13 @@ XData OpenAPI [ MimeType = application/json ]
         "Name"
       ],
       "example":{
-        "Name":""
+        "AgentAddress":"",
+        "AsyncMemberGUID":"",
+        "AsyncMemberType":0,
+        "AsyncUseSystemPurgeInterval":false,
+        "JoinMirror":false,
+        "SystemName":"",
+        "VirtualAddressInterface":""
       }
     },
     "Mirrors":{
@@ -4651,7 +5027,37 @@ XData OpenAPI [ MimeType = application/json ]
         "Name"
       ],
       "example":{
-        "Name":""
+        "AsyncDisconnectErr":false,
+        "AsynchError":true,
+        "BreakMode":true,
+        "CollectResourceStats":false,
+        "DisconnectErr":false,
+        "FileMode":false,
+        "GlobalKillEnabled":true,
+        "IEEEError":true,
+        "LineRecall":true,
+        "ListFormat":0,
+        "LogRollback":false,
+        "MVDefined":false,
+        "NodeNameInPid":false,
+        "NullSubscripts":false,
+        "OldZU5":false,
+        "OpenMode":0,
+        "PopError":false,
+        "RefInKind":false,
+        "ScientificNotation":true,
+        "SetZEOF":false,
+        "ShutDownLogErrors":false,
+        "StopID":false,
+        "SwitchOSdir":false,
+        "SynchCommit":false,
+        "TelnetNUL":false,
+        "TruncateOverflow":false,
+        "Undefined":0,
+        "UseNagleAlgorithm":false,
+        "ViewPastData":false,
+        "ZDateNull":false,
+        "ZaMode":false
       }
     },
     "Monitor":{
@@ -4712,7 +5118,12 @@ XData OpenAPI [ MimeType = application/json ]
         "Name"
       ],
       "example":{
-        "Name":""
+        "PatrolCollectionInterval":30,
+        "PatrolDisplayMode":0,
+        "PatrolEnabled":false,
+        "PatrolTopProcesses":20,
+        "SNMPEnabled":false,
+        "WMIEnabled":false
       }
     },
     "Namespaces":{
@@ -4760,9 +5171,10 @@ XData OpenAPI [ MimeType = application/json ]
         "Routines"
       ],
       "example":{
-        "Globals":"",
-        "Name":"",
-        "Routines":""
+        "Globals":"USER",
+        "Name":"USER",
+        "Routines":"USER",
+        "TempGlobals":"IRISTEMP"
       }
     },
     "ListOfNamespaces":{
@@ -5437,7 +5849,46 @@ XData OpenAPI [ MimeType = application/json ]
         "Name"
       ],
       "example":{
-        "Name":""
+        "ArbiterURL":"",
+        "CallinHalt":true,
+        "CallinStart":true,
+        "CliSysName":"",
+        "DBSizesAllowed":"8192",
+        "DefaultPort":1972,
+        "DefaultPortBindAddress":"",
+        "EnableVSSBackup":false,
+        "EnsembleAutoStart":true,
+        "ErrorPurge":30,
+        "FIPSMode":false,
+        "IPv6":false,
+        "JobHalt":true,
+        "JobServers":0,
+        "JobStart":true,
+        "LicenseID":"",
+        "MaxConsoleLogSize":5,
+        "MaxIRISTempSizeAtStart":0,
+        "MirrorMember":"",
+        "MirrorPrimary":"",
+        "MirrorSetName":"",
+        "PasswordHash":"",
+        "ProcessHalt":true,
+        "ProcessStart":true,
+        "ShardClusterURL":"",
+        "ShardMasterRegexp":"-0$",
+        "ShardMirrorMember":"",
+        "ShardRegexp":"-[0-9]+$",
+        "ShardRole":"",
+        "ShutdownTimeout":300,
+        "SystemHalt":true,
+        "SystemMode":"",
+        "SystemStart":true,
+        "TempDirectory":"Temp",
+        "TerminalPrompt":"8,2",
+        "WebServer":true,
+        "WebServerName":"",
+        "WebServerPort":52773,
+        "WebServerURLPrefix":"",
+        "ZSTU":true
       }
     },
     "Telnet":{
@@ -5478,7 +5929,8 @@ XData OpenAPI [ MimeType = application/json ]
         "Name"
       ],
       "example":{
-        "Name":""
+        "DNSLookup":"ON",
+        "Port":23
       }
     },
     "config":{
@@ -5704,7 +6156,39 @@ XData OpenAPI [ MimeType = application/json ]
         "Name"
       ],
       "example":{
-        "Name":""
+        "BackoffDisabled":false,
+        "ConsoleFile":"",
+        "LargePagesDisabled":false,
+        "LargePagesRequired":false,
+        "LibPath":"",
+        "LineRecallBuffer":1024,
+        "LineRecallEntries":500,
+        "LockSharedMemory":false,
+        "LockTextSegment":false,
+        "MaxServerConn":1,
+        "MaxServers":2,
+        "VMSConsoleTerminal":"",
+        "ZFSize":0,
+        "ZFString":0,
+        "bbsiz":262144,
+        "errlog":500,
+        "globals16kb":0,
+        "globals32kb":0,
+        "globals4kb":0,
+        "globals64kb":0,
+        "globals8kb":0,
+        "gmheap":37568,
+        "ijcbuff":512,
+        "ijcnum":16,
+        "jrnbufs":64,
+        "locksiz":16777216,
+        "netjob":true,
+        "nlstab":50,
+        "pijdir":"",
+        "routines":"0",
+        "targwijsz":0,
+        "udevtabsiz":24576,
+        "wijdir":""
       }
     }
   }

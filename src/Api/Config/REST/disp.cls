@@ -76,7 +76,7 @@ XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
   <Route Url="/mapmirrors/:id/:name" Method="put" Call="PutMapMirrors" />
   <Route Url="/mapmirrors/:id/:name" Method="post" Call="PostMapMirrors" />
   <Route Url="/mapmirrors/:id/:name" Method="delete" Call="DeleteMapMirrors" />
-  <Route Url="/mapmirrors/" Method="get" Call="GetListMapMirrors" />
+  <Route Url="/mapmirrors/:id" Method="get" Call="GetListMapMirrors" />
   <Route Url="/mappackages/:namespace/:name" Method="get" Call="GetMapPackages" />
   <Route Url="/mappackages/:namespace/:name" Method="put" Call="PutMapPackages" />
   <Route Url="/mappackages/:namespace/:name" Method="post" Call="PostMapPackages" />
@@ -91,7 +91,7 @@ XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
   <Route Url="/mapshadows/:id/:name" Method="put" Call="PutMapShadows" />
   <Route Url="/mapshadows/:id/:name" Method="post" Call="PostMapShadows" />
   <Route Url="/mapshadows/:id/:name" Method="delete" Call="DeleteMapShadows" />
-  <Route Url="/mapshadows/" Method="get" Call="GetListMapShadows" />
+  <Route Url="/mapshadows/:id" Method="get" Call="GetListMapShadows" />
   <Route Url="/mirrormember/" Method="get" Call="GetMirrorMember" />
   <Route Url="/mirrormember/" Method="put" Call="PutMirrorMember" />
   <Route Url="/mirrors/:name" Method="get" Call="GetMirrors" />
@@ -895,12 +895,12 @@ ClassMethod DeleteMapMirrors(pid As %String, pname As %String) As %Status
     Quit $$$OK
 }
 
-ClassMethod GetListMapMirrors() As %Status
+ClassMethod GetListMapMirrors(pid As %String) As %Status
 {
     Try {
         Do ##class(%REST.Impl).%SetContentType("application/json")
         If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
-        Set response=##class(Api.Config.REST.impl).GetListMapMirrors()
+        Set response=##class(Api.Config.REST.impl).GetListMapMirrors(pid)
         Do ##class(Api.Config.REST.impl).%WriteResponse(response)
     } Catch (ex) {
         Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
@@ -1102,12 +1102,12 @@ ClassMethod DeleteMapShadows(pid As %String, pname As %String) As %Status
     Quit $$$OK
 }
 
-ClassMethod GetListMapShadows() As %Status
+ClassMethod GetListMapShadows(pid As %String) As %Status
 {
     Try {
         Do ##class(%REST.Impl).%SetContentType("application/json")
         If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
-        Set response=##class(Api.Config.REST.impl).GetListMapShadows()
+        Set response=##class(Api.Config.REST.impl).GetListMapShadows(pid)
         Do ##class(Api.Config.REST.impl).%WriteResponse(response)
     } Catch (ex) {
         Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))

@@ -6,7 +6,6 @@ Class Api.Config.Services.Mirrors [ ProcedureBlock ]
 ClassMethod CheckModel(model As %Library.DynamicObject) As %Status
 {
 	Set sc = $$$OK
-	Set:model.GUID="" sc = $$$ADDSC(sc,$$$ERROR(5001, "GUID property is mandatory."))
 	Set:model.Name="" sc = $$$ADDSC(sc,$$$ERROR(5001, "Name property is mandatory."))
 	Quit sc
 }
@@ -35,6 +34,7 @@ ClassMethod Get(Name As %String) As %Library.DynamicObject
 	Quit:'..Exists(Name) ""
 	$$$switchNSSys
 	$$$ThrowOnError(##class(Config.Mirrors).Get(Name,.properties))
+	Set properties("Name") = Name
 	Quit ..ToDynamic(.properties)
 }
 

@@ -5,9 +5,7 @@ Class Api.Config.Services.Telnet [ ProcedureBlock ]
 
 ClassMethod CheckModel(model As %Library.DynamicObject) As %Status
 {
-	Set sc = $$$OK
-	Set:model.Name="" sc = $$$ADDSC(sc,$$$ERROR(5001, "Name property is mandatory."))
-	Quit sc
+	Quit $$$OK
 }
 
 ClassMethod Get() As %Library.DynamicObject

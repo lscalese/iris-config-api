@@ -2,6 +2,11 @@
 This is a template for InterSystems ObjectScript Github repository.
 The template goes also with a few files which let you immedietly compile your ObjecScript files in InterSystems IRIS Community Edition in a docker container
 
+
+Set features("addPing")=0, new = "", error = ""
+Set sc = ##class(%REST.API).CreateApplication("Api.Config.REST","/irisrun/repo/swagger.json",.features,.new,.error)
+Write !,$SYSTEM.Status.GetOneErrorText(sc),!,new,!,error
+
 ## Prerequisites
 Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker desktop](https://www.docker.com/products/docker-desktop) installed.
 

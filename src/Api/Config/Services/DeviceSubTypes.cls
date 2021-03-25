@@ -34,10 +34,11 @@ ClassMethod Get(Name As %String) As %Library.DynamicObject
 	Quit:'..Exists(Name) ""
 	$$$switchNSSys
 	$$$ThrowOnError(##class(Config.DeviceSubTypes).Get(Name,.properties))
+	Set properties("Name") = Name
 	Quit ..ToDynamic(.properties)
 }
 
-ClassMethod List(Names As %String, CPFFile As %String = "", Flags As %Integer = 0, Format As %Integer = 0) As %DynamicArray
+ClassMethod List(Names As %String = "*", CPFFile As %String = "", Flags As %Integer = 0, Format As %Integer = 0) As %DynamicArray
 {
 	$$$switchNSSys
 	Set list = []

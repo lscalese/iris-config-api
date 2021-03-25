@@ -36,6 +36,7 @@ ClassMethod Get(Name As %String) As %Library.DynamicObject
 	Quit:'..Exists(Name) ""
 	$$$switchNSSys
 	$$$ThrowOnError(##class(Config.Namespaces).Get(Name,.properties))
+	Set properties("Name") = Name
 	Quit ..ToDynamic(.properties)
 }
 
@@ -47,7 +48,7 @@ ClassMethod List(Names As %String = "*", CPFFile As %String = "", Flags As %Inte
 		Set rs=##class(%Library.ResultSet).%New("Config.Namespaces:List")
 		Do rs.Execute(Names,CPFFile,Flags,Format)
 		While rs.Next() {
-			Do list.%Push(..Get(rs.Data("Name")))
+			Do list.%Push(..Get(rs.Data("Namespace")))
 		}
 		Do rs.Close()
 		$$$restoreNS

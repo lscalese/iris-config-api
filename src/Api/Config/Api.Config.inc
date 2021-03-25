@@ -18,3 +18,6 @@ ROUTINE Api.Config.inc [Type=INC]
 #Define CanSetProperty(%json,%property)         (%json.%IsDefined(%property)&&($Ascii(%json.%Get(%property))'=0))
 #Define fillJSONFromArray(%array,%json)         Do ##class(dc.deploy.Utils).fillJSONFromArray(.%array,.%json)
 #Define fillArrayFromJSON(%json,%array)         Do ##class(dc.deploy.Utils).fillArrayFromJSON(.%json,.%array)
+
+#Define DBSysUpdateProperties       $LISTBUILD("ReadOnly","Size","ExpansionSize","MaxSize","GlobalJournalState","NewGlobalCollation","NewGlobalIsKeep","NewGlobalGrowthBlock","NewGlobalPointerBlock","ClusterMountMode","ResourceName","CompressionEngine")
+#Define DBSysCreateProperties       $LISTBUILD("Directory","BlockSize","EncryptedDB","EncryptionKeyID","Size","ExpansionSize","MaxSize","MirrorDBName","MirrorSetName","GlobalJournalState","NewGlobalCollation","NewGlobalIsKeep","NewGlobalGrowthBlock","NewGlobalPointerBlock","ClusterMountMode","ResourceName","CompressionEngine")

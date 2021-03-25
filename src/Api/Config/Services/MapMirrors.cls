@@ -39,6 +39,7 @@ ClassMethod Get(ID As %String, Name As %String) As %Library.DynamicObject
 	Quit:'..Exists(ID,Name) ""
 	$$$switchNSSys
 	$$$ThrowOnError(##class(Config.MapMirrors).Get(ID,Name,.properties))
+	Set properties("ID") = ID, properties("Name") = Name
 	Quit ..ToDynamic(.properties)
 }
 
@@ -50,7 +51,7 @@ ClassMethod List(ID As %String, Names As %String = "*", CPFFile As %String = "",
 		Set rs=##class(%Library.ResultSet).%New("Config.MapMirrors:List")
 		Do rs.Execute(ID,Names,CPFFile,Flags,Format)
 		While rs.Next() {
-			Do list.%Push(..Get())
+			Do list.%Push(..Get(ID, rs.Data("Name")))
 		}
 		Do rs.Close()
 		$$$restoreNS
