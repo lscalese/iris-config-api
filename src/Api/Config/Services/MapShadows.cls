@@ -3,6 +3,10 @@ Include Api.Config.inc
 Class Api.Config.Services.MapShadows [ ProcedureBlock ]
 {
 
+Parameter ISMAP = 1;
+
+Parameter PIDENTIFIER = "ID,Name";
+
 ClassMethod CheckModel(model As %Library.DynamicObject) As %Status
 {
 	Set sc = $$$OK

@@ -1,7 +1,9 @@
 Include Api.Config.inc
 
-Class Api.Config.Services.Directory
+Class Api.Config.Services.SYS.Databases
 {
+
+Parameter PNAME = "Directory";
 
 ClassMethod Create(model As %Library.DynamicObject) As %Status
 {

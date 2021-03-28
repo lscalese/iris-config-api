@@ -30,6 +30,7 @@ XData OpenAPI [ MimeType = application/json ]
   "paths":{
     "/":{
       "get":{
+        "summary":"Swagger 2.0 specification",
         "tags":[
           "Developer"
         ],
@@ -42,7 +43,176 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/cluster/":{
+    "/loader":{
+      "put":{
+        "description":"Load configuration.",
+        "summary":"Load configuration.",
+        "operationId":"LoadConfiguration",
+        "parameters":[
+          {
+            "name":"model",
+            "description":"configuration in json format.",
+            "required":true,
+            "in":"body",
+            "schema":{
+            }
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"OK"
+          }
+        }
+      },
+      "delete":{
+        "tags":[
+          "TEST"
+        ],
+        "summary":"Delete configuration.",
+        "description":"WARNING Delete all namespaces, databases, webapps,... in configuration.",
+        "operationId":"DeleteConfiguration",
+        "parameters":[
+          {
+            "name":"model",
+            "description":"configuration in json format.",
+            "required":true,
+            "in":"body",
+            "schema":{
+            }
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"OK"
+          }
+        }
+      }
+    },
+    "/security/applications/${name}":{
+      "get":{
+        "summary":"Get Web application.",
+        "description":"Get Web application.",
+        "tags":[
+          "WebApplication"
+        ],
+        "operationId":"GetWebApp",
+        "parameters":[
+          {
+            "name":"name",
+            "description":"Web application url ex : /api/config don't forget to escape -> %2Fapi%2Fconfig",
+            "required":true,
+            "type":"string",
+            "in":"path"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"OK"
+          }
+        }
+      },
+      "put":{
+        "summary":"Update Web application.",
+        "description":"Update Web application.",
+        "tags":[
+          "WebApplication"
+        ],
+        "operationId":"PutWebApp",
+        "parameters":[
+          {
+            "name":"name",
+            "description":"Web application url ex : /api/config don't forget to escape -> %2Fapi%2Fconfig",
+            "required":true,
+            "type":"string",
+            "in":"path"
+          },
+          {
+            "name":"model",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/WebApplication"
+            }
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"OK"
+          }
+        }
+      },
+      "delete":{
+        "summary":"Delete Web application.",
+        "description":"Delete Web application.",
+        "tags":[
+          "WebApplication"
+        ],
+        "operationId":"DeleteWebApp",
+        "parameters":[
+          {
+            "name":"name",
+            "description":"Web application url ex : /api/config don't forget to escape -> %2Fapi%2Fconfig",
+            "required":true,
+            "type":"string",
+            "in":"path"
+          }
+        ],
+        "responses":{
+          "204":{
+            "description":"Web Application Deleted."
+          }
+        }
+      }
+    },
+    "/security/applications":{
+      "post":{
+        "summary":"Create a new web applications.",
+        "description":"Create a new web applications.",
+        "tags":[
+          "WebApplication"
+        ],
+        "operationId":"PostWebApp",
+        "parameters":[
+          {
+            "name":"model",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/WebApplication"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"OK",
+            "headers":{
+              "Location":{
+                "type":"string"
+              }
+            }
+          }
+        }
+      },
+      "get":{
+        "summary":"Get list of existings web applications.",
+        "description":"Get list of existings web applications.",
+        "tags":[
+          "WebApplication"
+        ],
+        "operationId":"GetListOfWebApps",
+        "parameters":[
+        ],
+        "responses":{
+          "200":{
+            "description":"OK",
+            "schema":{
+              "$ref":"#/definitions/ListOfWebApplication"
+            }
+          }
+        }
+      }
+    },
+    "/cluster":{
       "get":{
         "tags":[
           "Others"
@@ -96,7 +266,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/configfile/":{
+    "/configfile":{
       "get":{
         "tags":[
           "Systems"
@@ -146,6 +316,193 @@ XData OpenAPI [ MimeType = application/json ]
           },
           "404":{
             "description":"ConfigFile to update not found."
+          }
+        }
+      }
+    },
+    "/sys/databases":{
+      "get":{
+        "tags":[
+          "Databases"
+        ],
+        "summary":"Get list of databases directory.",
+        "operationId":"GetListOfDirectory",
+        "description":"Get list of databases directory.",
+        "parameters":[
+        ],
+        "responses":{
+          "200":{
+            "description":"OK",
+            "schema":{
+              "$ref":"#/definitions/ListOfDirectory"
+            }
+          }
+        }
+      },
+      "post":{
+        "tags":[
+          "Databases"
+        ],
+        "operationId":"PostDirectory",
+        "summary":"Create a new database directory.",
+        "description":"Create a new database directory.",
+        "parameters":[
+          {
+            "name":"directory",
+            "description":"Database directory to create.",
+            "in":"body",
+            "schema":{
+              "$ref":"#/definitions/Directory"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"Database created",
+            "headers":{
+              "Location":{
+                "type":"string"
+              }
+            }
+          },
+          "409":{
+            "description":"Database already exists."
+          }
+        }
+      }
+    },
+    "/sys/databases/{directory}/mounted":{
+      "put":{
+        "tags":[
+          "Databases"
+        ],
+        "operationId":"PutDirectoryMounted",
+        "summary":"Mount database.",
+        "description":"Mount database.",
+        "parameters":[
+          {
+            "name":"directory",
+            "in":"path",
+            "type":"string",
+            "required":true
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"OK"
+          }
+        }
+      },
+      "delete":{
+        "tags":[
+          "Databases"
+        ],
+        "operationId":"DeleteDirectoryMounted",
+        "summary":"Dismount database.",
+        "description":"Dismount database.",
+        "parameters":[
+          {
+            "name":"directory",
+            "in":"path",
+            "type":"string",
+            "required":true
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"OK"
+          }
+        }
+      }
+    },
+    "/sys/databases/{directory}":{
+      "get":{
+        "tags":[
+          "Databases"
+        ],
+        "operationId":"GetDirectory",
+        "summary":"Get database directory details",
+        "description":"Get database directory details.",
+        "parameters":[
+          {
+            "name":"directory",
+            "description":"Database directory ex: /usr/irissys/mgr/user/ don't forget to escape -> %2Fusr%2Firissys%2Fmgr%2Fuser%2F.",
+            "in":"path",
+            "type":"string",
+            "required":true
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"OK",
+            "schema":{
+              "$ref":"#/definitions/Directory"
+            }
+          },
+          "404":{
+            "description":"Database directory not found."
+          }
+        }
+      },
+      "put":{
+        "tags":[
+          "Databases"
+        ],
+        "operationId":"PutDirectory",
+        "summary":"Update details of an existing database directory.",
+        "description":"Update an existing database directory.",
+        "parameters":[
+          {
+            "name":"directory",
+            "description":"Database directory ex: /usr/irissys/mgr/user/ don't forget to escape -> %2Fusr%2Firissys%2Fmgr%2Fuser%2F.",
+            "in":"path",
+            "type":"string",
+            "required":true
+          },
+          {
+            "name":"DirectoryModel",
+            "description":"Database to update.",
+            "in":"body",
+            "schema":{
+              "$ref":"#/definitions/Directory"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"Database updated.",
+            "headers":{
+              "Location":{
+                "type":"string"
+              }
+            }
+          },
+          "404":{
+            "description":"Database to update not found."
+          }
+        }
+      },
+      "delete":{
+        "tags":[
+          "Databases"
+        ],
+        "operationId":"DeleteDirectory",
+        "description":"Delete database directory.",
+        "parameters":[
+          {
+            "name":"directory",
+            "description":"Database directory ex: /usr/irissys/mgr/user/ don't forget to escape -> %2Fusr%2Firissys%2Fmgr%2Fuser%2F.",
+            "in":"path",
+            "type":"string",
+            "required":true
+          }
+        ],
+        "responses":{
+          "204":{
+            "description":"Database deleted."
+          },
+          "404":{
+            "description":"Database to delete not found."
           }
         }
       }
@@ -217,48 +574,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "Databases"
-        ],
-        "operationId":"PostDatabases",
-        "description":"Create Databases.",
-        "parameters":[
-          {
-            "name":"name",
-            "description":"Name of the object instance.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"Databases to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/Databases"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"Databases created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"Databases already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "Databases"
@@ -287,7 +602,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/databases/":{
+    "/databases":{
       "get":{
         "tags":[
           "Databases"
@@ -305,6 +620,41 @@ XData OpenAPI [ MimeType = application/json ]
           },
           "400":{
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+          }
+        }
+      },
+      "post":{
+        "tags":[
+          "Databases"
+        ],
+        "operationId":"PostDatabases",
+        "description":"Create Databases.",
+        "parameters":[
+          {
+            "name":"model",
+            "description":"Databases to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/Databases"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"Databases created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"Databases already exists."
           }
         }
       }
@@ -376,48 +726,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "Others"
-        ],
-        "operationId":"PostDebug",
-        "description":"Create Debug.",
-        "parameters":[
-          {
-            "name":"name",
-            "description":"Name of the object instance.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"Debug to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/Debug"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"Debug created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"Debug already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "Others"
@@ -446,7 +754,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/debug/":{
+    "/debug":{
       "get":{
         "tags":[
           "Others"
@@ -464,6 +772,41 @@ XData OpenAPI [ MimeType = application/json ]
           },
           "400":{
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+          }
+        }
+      },
+      "post":{
+        "tags":[
+          "Others"
+        ],
+        "operationId":"PostDebug",
+        "description":"Create Debug.",
+        "parameters":[
+          {
+            "name":"model",
+            "description":"Debug to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/Debug"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"Debug created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"Debug already exists."
           }
         }
       }
@@ -535,48 +878,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "Devices"
-        ],
-        "operationId":"PostDeviceSubTypes",
-        "description":"Create DeviceSubTypes.",
-        "parameters":[
-          {
-            "name":"name",
-            "description":"Name of the object instance.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"DeviceSubTypes to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/DeviceSubTypes"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"DeviceSubTypes created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"DeviceSubTypes already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "Devices"
@@ -605,7 +906,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/devicesubtypes/":{
+    "/devicesubtypes":{
       "get":{
         "tags":[
           "Devices"
@@ -623,6 +924,41 @@ XData OpenAPI [ MimeType = application/json ]
           },
           "400":{
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+          }
+        }
+      },
+      "post":{
+        "tags":[
+          "Devices"
+        ],
+        "operationId":"PostDeviceSubTypes",
+        "description":"Create DeviceSubTypes.",
+        "parameters":[
+          {
+            "name":"model",
+            "description":"DeviceSubTypes to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/DeviceSubTypes"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"DeviceSubTypes created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"DeviceSubTypes already exists."
           }
         }
       }
@@ -694,48 +1030,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "Devices"
-        ],
-        "operationId":"PostDevices",
-        "description":"Create Devices.",
-        "parameters":[
-          {
-            "name":"name",
-            "description":"Name of the object instance.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"Devices to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/Devices"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"Devices created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"Devices already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "Devices"
@@ -764,7 +1058,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/devices/":{
+    "/devices":{
       "get":{
         "tags":[
           "Devices"
@@ -784,9 +1078,44 @@ XData OpenAPI [ MimeType = application/json ]
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
           }
         }
+      },
+      "post":{
+        "tags":[
+          "Devices"
+        ],
+        "operationId":"PostDevices",
+        "description":"Create Devices.",
+        "parameters":[
+          {
+            "name":"model",
+            "description":"Devices to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/Devices"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"Devices created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"Devices already exists."
+          }
+        }
       }
     },
-    "/ecp/":{
+    "/ecp":{
       "get":{
         "tags":[
           "ECP"
@@ -907,48 +1236,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "ECP"
-        ],
-        "operationId":"PostECPServers",
-        "description":"Create ECPServers.",
-        "parameters":[
-          {
-            "name":"name",
-            "description":"Name of the object instance.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"ECPServers to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/ECPServers"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"ECPServers created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"ECPServers already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "ECP"
@@ -977,7 +1264,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/ecpservers/":{
+    "/ecpservers":{
       "get":{
         "tags":[
           "ECP"
@@ -997,9 +1284,44 @@ XData OpenAPI [ MimeType = application/json ]
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
           }
         }
+      },
+      "post":{
+        "tags":[
+          "ECP"
+        ],
+        "operationId":"PostECPServers",
+        "description":"Create ECPServers.",
+        "parameters":[
+          {
+            "name":"model",
+            "description":"ECPServers to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/ECPServers"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"ECPServers created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"ECPServers already exists."
+          }
+        }
       }
     },
-    "/io/":{
+    "/io":{
       "get":{
         "tags":[
           "Devices"
@@ -1053,7 +1375,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/journal/":{
+    "/journal":{
       "get":{
         "tags":[
           "Systems"
@@ -1174,48 +1496,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "Others"
-        ],
-        "operationId":"PostLicenseServers",
-        "description":"Create LicenseServers.",
-        "parameters":[
-          {
-            "name":"name",
-            "description":"Name of the object instance.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"LicenseServers to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/LicenseServers"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"LicenseServers created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"LicenseServers already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "Others"
@@ -1244,7 +1524,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/licenseservers/":{
+    "/licenseservers":{
       "get":{
         "tags":[
           "Others"
@@ -1262,6 +1542,41 @@ XData OpenAPI [ MimeType = application/json ]
           },
           "400":{
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+          }
+        }
+      },
+      "post":{
+        "tags":[
+          "Others"
+        ],
+        "operationId":"PostLicenseServers",
+        "description":"Create LicenseServers.",
+        "parameters":[
+          {
+            "name":"model",
+            "description":"LicenseServers to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/LicenseServers"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"LicenseServers created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"LicenseServers already exists."
           }
         }
       }
@@ -1333,48 +1648,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "Devices"
-        ],
-        "operationId":"PostMagTapes",
-        "description":"Create MagTapes.",
-        "parameters":[
-          {
-            "name":"name",
-            "description":"Name of the object instance.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"MagTapes to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/MagTapes"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"MagTapes created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"MagTapes already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "Devices"
@@ -1403,7 +1676,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/magtapes/":{
+    "/magtapes":{
       "get":{
         "tags":[
           "Devices"
@@ -1421,6 +1694,41 @@ XData OpenAPI [ MimeType = application/json ]
           },
           "400":{
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+          }
+        }
+      },
+      "post":{
+        "tags":[
+          "Devices"
+        ],
+        "operationId":"PostMagTapes",
+        "description":"Create MagTapes.",
+        "parameters":[
+          {
+            "name":"model",
+            "description":"MagTapes to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/MagTapes"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"MagTapes created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"MagTapes already exists."
           }
         }
       }
@@ -1506,55 +1814,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "Namespaces"
-        ],
-        "operationId":"PostMapGlobals",
-        "description":"Create MapGlobals.",
-        "parameters":[
-          {
-            "name":"namespace",
-            "description":"Namespace where the mapping is.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"name",
-            "description":"Name of the mapping.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"MapGlobals to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/MapGlobals"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"MapGlobals created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"MapGlobals already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "Namespaces"
@@ -1590,7 +1849,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/mapglobals/{namespace}/":{
+    "/mapglobals/{namespace}":{
       "get":{
         "tags":[
           "Namespaces"
@@ -1615,6 +1874,48 @@ XData OpenAPI [ MimeType = application/json ]
           },
           "400":{
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+          }
+        }
+      },
+      "post":{
+        "tags":[
+          "Namespaces"
+        ],
+        "operationId":"PostMapGlobals",
+        "description":"Create MapGlobals.",
+        "parameters":[
+          {
+            "name":"namespace",
+            "description":"Namespace where the mapping is.<br>",
+            "in":"path",
+            "type":"string",
+            "required":true
+          },
+          {
+            "name":"model",
+            "description":"MapGlobals to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/MapGlobals"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"MapGlobals created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"MapGlobals already exists."
           }
         }
       }
@@ -1700,55 +2001,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "Mirrors"
-        ],
-        "operationId":"PostMapMirrors",
-        "description":"Create MapMirrors.",
-        "parameters":[
-          {
-            "name":"id",
-            "description":"ID where the mapping is.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"name",
-            "description":"This is the name of this instance in the mirror. Mirror system names\r\nmust be unique (enforced by Enterprise Manager) across all of the mirrors which \r\nthe EM manages, as an instance has a single mirror system name which \r\nmay appear in multiple mirror sets (eg. a reporting member may connect\r\nto multiple mirrors). For the most part the <property>GUID </property>\r\nis used to identify a mirror member, the Name is used for display \r\npurposes. \r\n<br><br>\r\nThe name must not contain a colon (':') and is converted to uppercase before\r\nsaving.",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"MapMirrors to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/MapMirrors"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"MapMirrors created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"MapMirrors already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "Mirrors"
@@ -1809,6 +2061,48 @@ XData OpenAPI [ MimeType = application/json ]
           },
           "400":{
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+          }
+        }
+      },
+      "post":{
+        "tags":[
+          "Mirrors"
+        ],
+        "operationId":"PostMapMirrors",
+        "description":"Create MapMirrors.",
+        "parameters":[
+          {
+            "name":"id",
+            "description":"ID where the mapping is.<br>",
+            "in":"path",
+            "type":"string",
+            "required":true
+          },
+          {
+            "name":"model",
+            "description":"MapMirrors to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/MapMirrors"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"MapMirrors created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"MapMirrors already exists."
           }
         }
       }
@@ -1894,55 +2188,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "Namespaces"
-        ],
-        "operationId":"PostMapPackages",
-        "description":"Create MapPackages.",
-        "parameters":[
-          {
-            "name":"namespace",
-            "description":"Namespace where the mapping is.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"name",
-            "description":"Name of the mapping.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"MapPackages to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/MapPackages"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"MapPackages created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"MapPackages already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "Namespaces"
@@ -1978,7 +2223,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/mappackages/{namespace}/":{
+    "/mappackages/{namespace}":{
       "get":{
         "tags":[
           "Namespaces"
@@ -2003,6 +2248,48 @@ XData OpenAPI [ MimeType = application/json ]
           },
           "400":{
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+          }
+        }
+      },
+      "post":{
+        "tags":[
+          "Namespaces"
+        ],
+        "operationId":"PostMapPackages",
+        "description":"Create MapPackages.",
+        "parameters":[
+          {
+            "name":"namespace",
+            "description":"Namespace where the mapping is.<br>",
+            "in":"path",
+            "type":"string",
+            "required":true
+          },
+          {
+            "name":"model",
+            "description":"MapPackages to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/MapPackages"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"MapPackages created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"MapPackages already exists."
           }
         }
       }
@@ -2088,55 +2375,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "Namespaces"
-        ],
-        "operationId":"PostMapRoutines",
-        "description":"Create MapRoutines.",
-        "parameters":[
-          {
-            "name":"namespace",
-            "description":"Namespace where the mapping is.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"name",
-            "description":"Name of the mapping.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"MapRoutines to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/MapRoutines"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"MapRoutines created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"MapRoutines already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "Namespaces"
@@ -2172,7 +2410,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/maproutines/{namespace}/":{
+    "/maproutines/{namespace}":{
       "get":{
         "tags":[
           "Namespaces"
@@ -2197,6 +2435,48 @@ XData OpenAPI [ MimeType = application/json ]
           },
           "400":{
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+          }
+        }
+      },
+      "post":{
+        "tags":[
+          "Namespaces"
+        ],
+        "operationId":"PostMapRoutines",
+        "description":"Create MapRoutines.",
+        "parameters":[
+          {
+            "name":"namespace",
+            "description":"Namespace where the mapping is.<br>",
+            "in":"path",
+            "type":"string",
+            "required":true
+          },
+          {
+            "name":"model",
+            "description":"MapRoutines to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/MapRoutines"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"MapRoutines created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"MapRoutines already exists."
           }
         }
       }
@@ -2282,55 +2562,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "Shadows"
-        ],
-        "operationId":"PostMapShadows",
-        "description":"Create MapShadows.",
-        "parameters":[
-          {
-            "name":"id",
-            "description":"ID where the mapping is.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"name",
-            "description":"Name of the mapping.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"MapShadows to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/MapShadows"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"MapShadows created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"MapShadows already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "Shadows"
@@ -2393,9 +2624,51 @@ XData OpenAPI [ MimeType = application/json ]
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
           }
         }
+      },
+      "post":{
+        "tags":[
+          "Shadows"
+        ],
+        "operationId":"PostMapShadows",
+        "description":"Create MapShadows.",
+        "parameters":[
+          {
+            "name":"id",
+            "description":"ID where the mapping is.<br>",
+            "in":"path",
+            "type":"string",
+            "required":true
+          },
+          {
+            "name":"model",
+            "description":"MapShadows to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/MapShadows"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"MapShadows created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"MapShadows already exists."
+          }
+        }
       }
     },
-    "/mirrormember/":{
+    "/mirrormember":{
       "get":{
         "tags":[
           "Mirrors"
@@ -2516,48 +2789,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "Mirrors"
-        ],
-        "operationId":"PostMirrors",
-        "description":"Create Mirrors.",
-        "parameters":[
-          {
-            "name":"name",
-            "description":"Mirror names are uppercase (alphanumeric)\r\nName of the mirror, restricted to 15 uppercase alphanumeric characters. \r\nMust be unique across the mirrors managed by the EMS",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"Mirrors to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/Mirrors"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"Mirrors created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"Mirrors already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "Mirrors"
@@ -2586,7 +2817,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/mirrors/":{
+    "/mirrors":{
       "get":{
         "tags":[
           "Mirrors"
@@ -2606,9 +2837,44 @@ XData OpenAPI [ MimeType = application/json ]
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
           }
         }
+      },
+      "post":{
+        "tags":[
+          "Mirrors"
+        ],
+        "operationId":"PostMirrors",
+        "description":"Create Mirrors.",
+        "parameters":[
+          {
+            "name":"model",
+            "description":"Mirrors to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/Mirrors"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"Mirrors created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"Mirrors already exists."
+          }
+        }
       }
     },
-    "/miscellaneous/":{
+    "/miscellaneous":{
       "get":{
         "tags":[
           "Systems"
@@ -2662,7 +2928,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/monitor/":{
+    "/monitor":{
       "get":{
         "tags":[
           "Others"
@@ -2783,48 +3049,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "Namespaces"
-        ],
-        "operationId":"PostNamespaces",
-        "description":"Create Namespaces.",
-        "parameters":[
-          {
-            "name":"name",
-            "description":"Name of the object instance.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"Namespaces to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/Namespaces"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"Namespaces created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"Namespaces already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "Namespaces"
@@ -2853,7 +3077,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/namespaces/":{
+    "/namespaces":{
       "get":{
         "tags":[
           "Namespaces"
@@ -2873,9 +3097,44 @@ XData OpenAPI [ MimeType = application/json ]
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
           }
         }
+      },
+      "post":{
+        "tags":[
+          "Namespaces"
+        ],
+        "operationId":"PostNamespaces",
+        "description":"Create Namespaces.",
+        "parameters":[
+          {
+            "name":"model",
+            "description":"Namespaces to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/Namespaces"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"Namespaces created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"Namespaces already exists."
+          }
+        }
       }
     },
-    "/sql/":{
+    "/sql":{
       "get":{
         "tags":[
           "SQL"
@@ -2996,48 +3255,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "Shadows"
-        ],
-        "operationId":"PostShadows",
-        "description":"Create Shadows.",
-        "parameters":[
-          {
-            "name":"name",
-            "description":"Name of the object instance.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"Shadows to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/Shadows"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"Shadows created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"Shadows already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "Shadows"
@@ -3066,7 +3283,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/shadows/":{
+    "/shadows":{
       "get":{
         "tags":[
           "Shadows"
@@ -3084,6 +3301,41 @@ XData OpenAPI [ MimeType = application/json ]
           },
           "400":{
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+          }
+        }
+      },
+      "post":{
+        "tags":[
+          "Shadows"
+        ],
+        "operationId":"PostShadows",
+        "description":"Create Shadows.",
+        "parameters":[
+          {
+            "name":"model",
+            "description":"Shadows to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/Shadows"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"Shadows created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"Shadows already exists."
           }
         }
       }
@@ -3155,48 +3407,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "SQL"
-        ],
-        "operationId":"PostSqlSysDatatypes",
-        "description":"Create SqlSysDatatypes.",
-        "parameters":[
-          {
-            "name":"name",
-            "description":"Name of the object instance.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"SqlSysDatatypes to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/SqlSysDatatypes"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"SqlSysDatatypes created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"SqlSysDatatypes already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "SQL"
@@ -3225,7 +3435,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/sqlsysdatatypes/":{
+    "/sqlsysdatatypes":{
       "get":{
         "tags":[
           "SQL"
@@ -3243,6 +3453,41 @@ XData OpenAPI [ MimeType = application/json ]
           },
           "400":{
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+          }
+        }
+      },
+      "post":{
+        "tags":[
+          "SQL"
+        ],
+        "operationId":"PostSqlSysDatatypes",
+        "description":"Create SqlSysDatatypes.",
+        "parameters":[
+          {
+            "name":"model",
+            "description":"SqlSysDatatypes to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/SqlSysDatatypes"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"SqlSysDatatypes created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"SqlSysDatatypes already exists."
           }
         }
       }
@@ -3314,48 +3559,6 @@ XData OpenAPI [ MimeType = application/json ]
           }
         }
       },
-      "post":{
-        "tags":[
-          "SQL"
-        ],
-        "operationId":"PostSqlUserDatatypes",
-        "description":"Create SqlUserDatatypes.",
-        "parameters":[
-          {
-            "name":"name",
-            "description":"Name of the object instance.<br>",
-            "in":"path",
-            "type":"string",
-            "required":true
-          },
-          {
-            "name":"model",
-            "description":"SqlUserDatatypes to create.",
-            "in":"body",
-            "required":true,
-            "schema":{
-              "$ref":"#/definitions/SqlUserDatatypes"
-            }
-          }
-        ],
-        "responses":{
-          "201":{
-            "description":"SqlUserDatatypes created.",
-            "headers":{
-              "Location":{
-                "type":"string",
-                "description":"Created ressource location."
-              }
-            }
-          },
-          "400":{
-            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-          },
-          "409":{
-            "description":"SqlUserDatatypes already exists."
-          }
-        }
-      },
       "delete":{
         "tags":[
           "SQL"
@@ -3384,7 +3587,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/sqluserdatatypes/":{
+    "/sqluserdatatypes":{
       "get":{
         "tags":[
           "SQL"
@@ -3404,9 +3607,44 @@ XData OpenAPI [ MimeType = application/json ]
             "description":"Bad request, can occurs if mandatory parameters are missing or empty."
           }
         }
+      },
+      "post":{
+        "tags":[
+          "SQL"
+        ],
+        "operationId":"PostSqlUserDatatypes",
+        "description":"Create SqlUserDatatypes.",
+        "parameters":[
+          {
+            "name":"model",
+            "description":"SqlUserDatatypes to create.",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/SqlUserDatatypes"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"SqlUserDatatypes created.",
+            "headers":{
+              "Location":{
+                "type":"string",
+                "description":"Created ressource location."
+              }
+            }
+          },
+          "400":{
+            "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+          },
+          "409":{
+            "description":"SqlUserDatatypes already exists."
+          }
+        }
       }
     },
-    "/startup/":{
+    "/startup":{
       "get":{
         "tags":[
           "Systems"
@@ -3460,7 +3698,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/telnet/":{
+    "/telnet":{
       "get":{
         "tags":[
           "Systems"
@@ -3514,7 +3752,7 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
-    "/config/":{
+    "/config":{
       "get":{
         "tags":[
           "Systems"
@@ -3570,6 +3808,455 @@ XData OpenAPI [ MimeType = application/json ]
     }
   },
   "definitions":{
+    "ListOfWebApplication":{
+      "type":"object",
+      "properties":{
+        "ListOfWebApps":{
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/WebApplication"
+          }
+        }
+      }
+    },
+    "WebApplication":{
+      "type":"object",
+      "properties":{
+        "AutheEnabled":{
+          "type":"string",
+          "default":64,
+          "description":"Authentication and Session mechanisms enabled (CSP Only).<br>\r\nBit 2 = AutheK5API<br>\r\nBit 5 - AutheCache<br>\r\nBit 6 = AutheUnauthenticated<br>\r\nBit 11 = AutheLDAP<br>\r\nBit 13 = AutheDelegated<br>\r\nBit 14 = LoginToken<br>\r\nBit 20 = TwoFactorSMS<br>\r\nBit 21 = TwoFactorPW<br>"
+        },
+        "AutoCompile":{
+          "type":"boolean",
+          "default":1,
+          "description":"This specifies whether CSP files should automatically compile or not (CSP Only).<br>\r\nIf this is turned on, then when a CSP file is more recent than its compiled class,<br>\r\nit is recompiled. This is normally something you would turn on in development environments<br>\r\nand turn off in production environments."
+        },
+        "CSPZENEnabled":{
+          "type":"boolean",
+          "default":1,
+          "description":"Indicates whether this application will process CSP/Zen Pages (CSP Only)."
+        },
+        "CSRFToken":{
+          "type":"boolean",
+          "default":0,
+          "description":"Prevent login CSRF attack (CSP only).<br>\r\nWhen enabled generate a token and cookie in the login page that is validated before accepting \r\nany username/password. Enabling this will prevent programatic access to pages in this application \r\nthat just pass in the username/password on the initial request. "
+        },
+        "ChangePasswordPage":{
+          "type":"string",
+          "default":"",
+          "description":"A predefined change password page that can be sent out to the browser if the user account requires<br>\r\nthat a password change is required(CSP Only).<br>"
+        },
+        "ClientApplications":{
+          "type":"string",
+          "default":"",
+          "description":"List of time stamps and hash values for valid executables (Client Applications Only).\r\nEach element is in the form $zdatetime($h,3)^HashValue"
+        },
+        "CookiePath":{
+          "type":"string",
+          "default":"",
+          "description":"Scope of the session cookie (CSP Only).<br>\r\nThis determines which urls the browser will send the session cookie back to InterSystems IRIS.<br>\r\nIf your application name is 'myapp', it defaults to '/myapp/' meaning it will only send<br>\r\nthe cookie for pages under '/myapp/'. You should restrict this to only what is required<br>\r\nby your application to prevent this session cookie being used by other CSP application<br>\r\non this machine, or from being seen by any other application on this web server.<br>"
+        },
+        "DeepSeeEnabled":{
+          "type":"boolean",
+          "default":0,
+          "description":"Indicates whether DeepSee access is enabled for this application"
+        },
+        "Description":{
+          "type":"string",
+          "default":"",
+          "description":"Application description.<br>"
+        },
+        "DispatchClass":{
+          "type":"string",
+          "default":"",
+          "description":"If defined this will dispatch all requests in this CSP application to this one class.\r\nThis will bypass the normal url to classname conversion so allowing the specified\r\nclass complete control over this dispatch of the page. A predefined dispatch class\r\nthat can be used is 'CSP.REST' which provides REST dispatch capabilities."
+        },
+        "Enabled":{
+          "type":"boolean",
+          "default":1,
+          "description":"Application is enabled.<br>"
+        },
+        "ErrorPage":{
+          "type":"string",
+          "default":"",
+          "description":"A CSP or CLS page that will be displayed if an error occurs when generating the page (CSP Only).<br>"
+        },
+        "EventClass":{
+          "type":"string",
+          "default":"",
+          "description":"This specifies the class whose methods are invoked for CSP application events,<br>\r\nsuch as a timeout (CSP Only)."
+        },
+        "GroupById":{
+          "type":"string",
+          "default":"",
+          "description":"Indicates whether this application's authentication will move in sync with other applications in the same id group (CSP Only)."
+        },
+        "InbndWebServicesEnabled":{
+          "type":"boolean",
+          "default":1,
+          "description":"Indicates whether this application will process Web Services (CSP Only)."
+        },
+        "IsNameSpaceDefault":{
+          "type":"boolean",
+          "default":0,
+          "description":"Indicates that this application is the default application for its namespace. \r\nAs such it will be returned by the call $System.CSP.GetDefaultApp()"
+        },
+        "LockCSPName":{
+          "type":"boolean",
+          "default":1,
+          "description":"Lock CSP Name (CSP Only). <br>\r\nIf true then you can only access this CSP page if the url you enter matches\r\nthe url stored in the CSPURL parameter value in the class. CSP pages have\r\nthe CSPURL set to the original url requested automatically when they are\r\ncompiled. If the url does not match you get a page not found error. For\r\nexample if you have two CSP applications defined that both map to the same\r\nnamespace and the same directory '/A' and '/B'. Then you view '/A/page.csp'\r\nthis will load this page and create the class 'csp.page' with the CSPURL\r\nparameter set to '/A/page.csp'. With this flag set you may only access this\r\npage using the url '/A/page.csp'. If this flag is false you may access it\r\nvia the pages '/B/page.csp', '/A/csp.page.cls', '/B/csp.page.cls'.  Note that the flag is checked on\r\nthe application associated with the CSPURL parameter, so even if the '/B'\r\napplication has the flag turned off, if the '/A' application has it turned\r\non you will get a page not found error from '/B/page.csp'. If you modify the\r\nCSP class and change the CSPURL=\"\" then this disables checking for this\r\npage."
+        },
+        "LoginPage":{
+          "type":"string",
+          "default":"",
+          "description":"A predefined login page that can be sent out to the browser if the application requires<br>\r\nan authenticated identity and one is not available yet (CSP Only).<br>"
+        },
+        "MatchRoles":{
+          "type":"string",
+          "default":"",
+          "description":"Mapping of Match Roles to added Target Roles.<br>\r\nMatchRoles are in the format:<br>\r\nMatchRole:TargetRole1:TargetRole2<br>\r\nTo specify a role to always be granted to an application, set\r\nMatchRole=\"\", i.e. (:TargetRole1)<br>"
+        },
+        "Name":{
+          "type":"string",
+          "default":"",
+          "description":"Short Name for Application. \r\nWeb applications should start with a  \"/\".<br>\r\nClient Applications are in the format AppName.EXE.<br>\r\nPrivileged routines can be any format.<br>"
+        },
+        "NameSpace":{
+          "type":"string",
+          "default":"",
+          "description":"The namespace where pages for this application are run (CSP Only).<br>"
+        },
+        "Package":{
+          "type":"string",
+          "default":"",
+          "description":"Specifies the package to prefix to the class name for all CSP files in this application.<br>\r\nIf not specified it defaults to \"csp\" (CSP Only).<br>"
+        },
+        "Path":{
+          "type":"string",
+          "default":"",
+          "description":"This specifies the physical path (directory) for the CSP files on the InterSystems IRIS server (CSP Only).<br>"
+        },
+        "PermittedClasses":{
+          "type":"string",
+          "default":"",
+          "description":"A name pattern which is used by the CSP Server to limit the classes which may be run in this application. <br>\r\nThis is a COS pattern, (1\"B\",1\"A\".1N) match {B.cls, A0.cls ... A9.cls} <br>"
+        },
+        "Recurse":{
+          "type":"boolean",
+          "default":1,
+          "description":"This specifies whether to use subdirectories (CSP Only).<br>\r\nIf WPath is the Web Path and PPath is the Physical Path, then with recurse turned on,<br>\r\nWPath/xxx/yyy will look in PPath/xxx/yyy. If recurse is turned off, only files directly<br>\r\ncontained in WPath are used."
+        },
+        "Resource":{
+          "type":"string",
+          "default":"",
+          "description":"The Resource name that controls access to this application.<br>\r\nIf no resource is defined, then it is a public application which\r\nanyone can run.<br>"
+        },
+        "Routines":{
+          "type":"string",
+          "default":"",
+          "description":"List of Routines that can invoke this application (Privileged routine applications only).<br>\r\nThese are in the format Routine/Class:dbname:Flag, where dbname is \r\nthe name of the database where the routine resides; Flag=0 is a routine, Flag=1 is a class name."
+        },
+        "ServeFiles":{
+          "type":"integer",
+          "default":1,
+          "description":"Allows the web server built into InterSystems IRIS to serve up static files, e.g., html or jpg files,<br>\r\nfrom this application path (CSP Only).<br>\r\nThis also allows the stream server to serve files from this path.<br>\r\n0 - No - Never serve files from this application path<br>\r\n1 - Always - Always serve files from this application path, ignore CSP security setting for this path for static files. This is the default for new applications as it is backward compatible with serving files from the web server.<br>\r\n2 - Always and cached - Always serve files from this application path and allow the CSP gateway to cache these files to avoid having to request them from InterSystems IRIS. This is the mode we expect deployed application to use<br>\r\n3 - Use CSP security - If the user has permissions to view a csp/cls page in this application then allow them to view a static file, if they do not have permissions to view a csp/cls page then return a 404 page not found page.<br>"
+        },
+        "ServeFilesTimeout":{
+          "type":"integer",
+          "default":3600,
+          "description":"Time, in seconds, of how long to cache static files.<br>"
+        },
+        "SessionScope":{
+          "type":"integer",
+          "default":2,
+          "description":"SameSite value that is used for CSP Session cookies.<br>\r\nThis setting affects whether session cookies are sent for cross-site requests. <br>\r\nThe default setting for a new application is Strict.<br>\r\n0 - None - Send cookie with cross-site requests .<br>\r\n1 - Lax - Send cookie with top-level cross-site navigation. <br>\r\n2 - Strict - Do not send cookie with cross-site requests. <br>"
+        },
+        "SuperClass":{
+          "type":"string",
+          "default":"",
+          "description":"This specifies the default superclass (CSP Only).<br>\r\nIf blank, it defaults to %CSP.Page.<br>"
+        },
+        "Timeout":{
+          "type":"integer",
+          "default":900,
+          "description":"This specifies the default session timeout, in seconds (CSP Only).<br>"
+        },
+        "Type":{
+          "type":"string",
+          "default":2,
+          "description":"Type - Bitmap describing the type of application<br>\r\nBit 0 = System Application - Reserved<br>\r\nBit 1 = CSP Application (Default)<br>\r\nBit 2 = Privileged routine application<br>\r\nBit 3 - Client Application<br>"
+        },
+        "UseCookies":{
+          "type":"integer",
+          "default":2,
+          "description":"This specifies whether to use cookies for CSP session management or not (CSP Only).<br>\r\nYou can set this on a per-application basis. It does NOT affect the user's use of<br>\r\ncookies in their application, simply how the session is managed. The available<br>\r\noptions are:<br>\r\n'Never' use cookies - This will just use the CSPCHD parameter to persist the session<br>\r\nstate from page to page and will not send a cookie to the browser at all.<br>\r\n'AutoDetect' (the default) - This will start by sending the cookie to the browser and<br>\r\nalso including the CSPCHD parameter in all the links and forms. Then when the user clicks<br>\r\non the next link if the browser accepted the cookie it will switch to the 'Always'<br>\r\nmode and turn off the use of the CSPCHD parameters. If the browser did not accept<br>\r\nthe cookie it will turn into the 'Never' mode.<br>\r\n'Always' use cookies - Do not include the CSPCHD parameter.<br>\r\n0 = Never, 1 = AutoDetect, 2 = Always"
+        },
+        "UserCookieScope":{
+          "type":"integer",
+          "default":2,
+          "description":"Default SameSite value for cookies created by users' calls to %CSP.Response.SetCookie().<br>\r\nThis setting affects whether session cookies are sent for cross-site requests. <br>\r\nUsers can override the default by specifying the SameSite value in their SetCookie call.<br>\r\n0 - None - Send cookie with cross-site requests .<br>\r\n1 - Lax - Send same-site cookies with top-level cross-site navigation. <br>\r\n2 - Strict - Do not send same-site cookies with cross-site requests. "
+        },
+        "iKnowEnabled":{
+          "type":"boolean",
+          "default":0,
+          "description":"Indicates whether iKnow access is enabled for this application"
+        }
+      },
+      "required":[
+        "Name"
+      ],
+      "example":{
+        "AutheEnabled":"32",
+        "AutoCompile":true,
+        "CSPZENEnabled":true,
+        "CSRFToken":false,
+        "ChangePasswordPage":"",
+        "CookiePath":"/api/config/",
+        "DeepSeeEnabled":true,
+        "Description":"",
+        "DispatchClass":"Api.Config.REST.disp",
+        "Enabled":true,
+        "ErrorPage":"",
+        "EventClass":"",
+        "GroupById":"",
+        "InbndWebServicesEnabled":true,
+        "IsNameSpaceDefault":false,
+        "LockCSPName":true,
+        "LoginPage":"",
+        "MatchRoles":"",
+        "Name":"/api/config",
+        "NameSpace":"USER",
+        "Package":"",
+        "Path":"",
+        "PermittedClasses":"",
+        "Recurse":true,
+        "Resource":"",
+        "ServeFiles":1,
+        "ServeFilesTimeout":3600,
+        "SessionScope":2,
+        "SuperClass":"",
+        "Timeout":900,
+        "Type":"2",
+        "UseCookies":2,
+        "UserCookieScope":2,
+        "iKnowEnabled":true
+      }
+    },
+    "ListOfDirectory":{
+      "type":"object",
+      "properties":{
+        "ListOfDirectory":{
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Directory"
+          }
+        }
+      }
+    },
+    "Directory":{
+      "type":"object",
+      "properties":{
+        "BlockFormat":{
+          "type":"integer",
+          "default":2
+        },
+        "BlockSize":{
+          "type":"integer",
+          "default":""
+        },
+        "Blocks":{
+          "type":"integer",
+          "default":0
+        },
+        "BlocksPerMap":{
+          "type":"integer",
+          "default":0
+        },
+        "ClusterMountMode":{
+          "type":"boolean",
+          "default":0
+        },
+        "ClusterMounted":{
+          "type":"boolean",
+          "default":0
+        },
+        "CompressionEngine":{
+          "type":"integer",
+          "default":0
+        },
+        "CurrentMaps":{
+          "type":"integer",
+          "default":""
+        },
+        "Directory":{
+          "type":"string",
+          "default":""
+        },
+        "DirectoryBlock":{
+          "type":"integer",
+          "default":3
+        },
+        "EncryptedDB":{
+          "type":"boolean",
+          "default":0
+        },
+        "EncryptionKeyID":{
+          "type":"string",
+          "default":""
+        },
+        "Expanding":{
+          "type":"boolean",
+          "default":0
+        },
+        "ExpansionSize":{
+          "type":"integer",
+          "default":0
+        },
+        "Full":{
+          "type":"boolean",
+          "default":0
+        },
+        "GlobalJournalState":{
+          "type":"string",
+          "default":""
+        },
+        "InActiveMirror":{
+          "type":"boolean",
+          "default":0
+        },
+        "LastExpansionTime":{
+          "type":"string",
+          "default":0
+        },
+        "MaxSize":{
+          "type":"integer",
+          "default":0
+        },
+        "MirrorActivationRequired":{
+          "type":"boolean",
+          "default":0
+        },
+        "MirrorDBCatchup":{
+          "type":"boolean",
+          "default":0
+        },
+        "MirrorDBCreatedNew":{
+          "type":"boolean",
+          "default":0
+        },
+        "MirrorDBName":{
+          "type":"string",
+          "default":""
+        },
+        "MirrorDBPaused":{
+          "type":"boolean",
+          "default":0
+        },
+        "MirrorFailoverDB":{
+          "type":"boolean",
+          "default":0
+        },
+        "MirrorNoWrite":{
+          "type":"boolean",
+          "default":0
+        },
+        "MirrorObsolete":{
+          "type":"boolean",
+          "default":0
+        },
+        "MirrorSetName":{
+          "type":"string",
+          "default":""
+        },
+        "Mirrored":{
+          "type":"boolean",
+          "default":0
+        },
+        "Mounted":{
+          "type":"boolean",
+          "default":0
+        },
+        "NewGlobalCollation":{
+          "type":"string",
+          "default":5
+        },
+        "NewGlobalGrowthBlock":{
+          "type":"integer",
+          "default":50
+        },
+        "NewGlobalIsKeep":{
+          "type":"boolean",
+          "default":0
+        },
+        "NewGlobalPointerBlock":{
+          "type":"integer",
+          "default":16
+        },
+        "NumberOfConfigDB":{
+          "type":"integer",
+          "default":0
+        },
+        "ROReasonCode":{
+          "type":"integer",
+          "default":0
+        },
+        "ROReasonText":{
+          "type":"string",
+          "default":""
+        },
+        "ReCreate":{
+          "type":"boolean",
+          "default":0
+        },
+        "ReadOnly":{
+          "type":"boolean",
+          "default":0
+        },
+        "ReadOnlyMounted":{
+          "type":"boolean",
+          "default":0
+        },
+        "Reinitialize":{
+          "type":"boolean",
+          "default":0
+        },
+        "RequestSize":{
+          "type":"integer",
+          "default":0
+        },
+        "ResourceName":{
+          "type":"string",
+          "default":""
+        },
+        "RunCatchupDBOnCreate":{
+          "type":"boolean",
+          "default":1
+        },
+        "SFN":{
+          "type":"integer",
+          "default":""
+        },
+        "Size":{
+          "type":"integer",
+          "default":1
+        },
+        "Skeleton":{
+          "type":"boolean",
+          "default":0
+        },
+        "SparseDB":{
+          "type":"boolean",
+          "default":0
+        }
+      },
+      "example":{
+        "Directory":"/usr/irissys/mgr/user/ztestapidata/",
+        "ExpansionSize":0,
+        "NewGlobalCollation":"5",
+        "ReadOnly":false
+      }
+    },
     "Cluster":{
       "type":"object",
       "properties":{
@@ -5436,7 +6123,50 @@ XData OpenAPI [ MimeType = application/json ]
         "Name"
       ],
       "example":{
-        "Name":""
+        "ANSIPrecedence":true,
+        "AllowRowIDUpdate":false,
+        "AutoParallel":true,
+        "AutoParallelThreshold":3200,
+        "BiasQueriesAsOutlier":false,
+        "Comment":true,
+        "DBMSSecurity":true,
+        "DDLDefineBitmapExtent":true,
+        "DDLFinal":true,
+        "DDLNo201":false,
+        "DDLNo30":false,
+        "DDLNo307":false,
+        "DDLNo311":false,
+        "DDLNo315":false,
+        "DDLNo324":false,
+        "DDLNo333":false,
+        "DDLSQLOnlyCompile":false,
+        "DDLUseExtentSet":true,
+        "DDLUseSequence":true,
+        "DefaultSchema":"SQLUser",
+        "DelimitedIds":true,
+        "DropDelete":true,
+        "ECPSync":false,
+        "ExtrinsicFunctions":false,
+        "FastDistinct":true,
+        "IdKey":true,
+        "IdTrxFrom":"~ `!@#$%^&*()_+-=[]\\{}|;':\",./<>?",
+        "IdTrxTo":"",
+        "JDBCGatewayJVMArgs":"",
+        "JDBCGatewayLog":"",
+        "JDBCGatewayPort":53773,
+        "JDBCGatewayUsePassphrase":false,
+        "JavaClassPath":"",
+        "JavaHome":"",
+        "LockThreshold":1000,
+        "LockTimeout":10,
+        "ODBCVarcharMaxlen":4096,
+        "QueryProcedures":false,
+        "RTPC":false,
+        "ReferentialChecks":true,
+        "SaveMAC":false,
+        "TCPKeepAlive":300,
+        "TODATEDefaultFormat":"DD MON YYYY",
+        "TimePrecision":0
       }
     },
     "Shadows":{

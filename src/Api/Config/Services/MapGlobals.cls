@@ -3,6 +3,10 @@ Include Api.Config.inc
 Class Api.Config.Services.MapGlobals [ ProcedureBlock ]
 {
 
+Parameter ISMAP = 1;
+
+Parameter PIDENTIFIER = "Namespace,Name";
+
 ClassMethod CheckModel(model As %Library.DynamicObject) As %Status
 {
 	Set sc = $$$OK

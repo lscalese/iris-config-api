@@ -2,7 +2,7 @@ Include Api.Config.inc
 
 /// Config API.<br/>
 /// Business logic class defined by OpenAPI in Api.Config.REST.spec<br/>
-/// Updated Mar 25, 2021 07:39:55
+/// Updated Mar 28, 2021 13:01:19
 Class Api.Config.REST.impl Extends %REST.Impl [ ProcedureBlock ]
 {
 
@@ -1818,7 +1818,6 @@ ClassMethod GetStartup() As %DynamicObject
 /// Create SqlUserDatatypes.<br/>
 /// The method arguments hold values for:<br/>
 ///     model, SqlUserDatatypes to create.<br/>
-/// WARNING: This method's signature has changed.
 ClassMethod PostSqlUserDatatypes(model As %Stream.Object) As %DynamicObject
 {
 	Set dModel = {}.%FromJSON(.model)
@@ -1939,10 +1938,10 @@ ClassMethod Putconfig(model As %Stream.Object) As %DynamicObject
 	Quit ""
 }
 
-/// Get list of databases directory
+/// Get list of databases directory.
 ClassMethod GetListOfDirectory() As %DynamicObject
 {
-    Set lst = ##class(Api.Config.Services.Directory).List()
+    Set lst = ##class(Api.Config.Services.SYS.Databases).List()
 	Do ..%SetStatusCode($$$HTTP200)
 	Do ..%SetContentType("application/json")
 	Quit {"ListOfDirectory":(lst)}
@@ -1950,23 +1949,23 @@ ClassMethod GetListOfDirectory() As %DynamicObject
 
 /// Get database directory details.<br/>
 /// The method arguments hold values for:<br/>
-///     directory, Database directory.<br/>
+///     directory, Database directory ex: /usr/irissys/mgr/user/ don't forget to escape -> %2Fusr%2Firissys%2Fmgr%2Fuser%2F.<br/>
 ClassMethod GetDirectory(directory As %String) As %DynamicObject
 {
 	Set directory = ##class(%CSP.Page).UnescapeURL(directory)
 	
-    If '##class(Api.Config.Services.Directory).Exists(directory) {
+    If '##class(Api.Config.Services.SYS.Databases).Exists(directory) {
 		Do ..%SetStatusCode($$$HTTP404)
 		Quit ""
 	}
 
-	Set model = ##class(Api.Config.Services.Directory).Get(directory)
+	Set model = ##class(Api.Config.Services.SYS.Databases).Get(directory)
 	Do ..%SetStatusCode($$$HTTP200)
 	Do ..%SetContentType("application/json")
 	Quit model
 }
 
-/// Create a new database.<br/>
+/// Create a new database directory.<br/>
 /// The method arguments hold values for:<br/>
 ///     directory, Database directory to create.<br/>
 ClassMethod PostDirectory(directory As %Stream.Object) As %DynamicObject
@@ -1986,34 +1985,34 @@ ClassMethod PostDirectory(directory As %Stream.Object) As %DynamicObject
 
 /// Update an existing database directory.<br/>
 /// The method arguments hold values for:<br/>
-///     directory, Database directory.<br/>
+///     directory, Database directory ex: /usr/irissys/mgr/user/ don't forget to escape -> %2Fusr%2Firissys%2Fmgr%2Fuser%2F.<br/>
 ///     DirectoryModel, Database to update.<br/>
 ClassMethod PutDirectory(directory As %String, DirectoryModel As %Stream.Object) As %DynamicObject
 {
 	Set dModel = {}.%FromJSON(.model)
 	
-	If '##class(Api.Config.Services.Directory).Exists(dModel.Directory) {
+	If '##class(Api.Config.Services.SYS.Databases).Exists(dModel.Directory) {
 		Do ..%SetStatusCode($$$HTTP404)
 		Quit ""
 	}
 	
-	$$$ThrowOnError(##class(Api.Config.Services.Directory).Update(dModel))
+	$$$ThrowOnError(##class(Api.Config.Services.SYS.Databases).Update(dModel))
 	Do ..%SetStatusCode($$$HTTP204)
 	Quit ""
 }
 
 /// Delete database directory.<br/>
 /// The method arguments hold values for:<br/>
-///     directory, Database directory to delete.<br/>
+///     directory, Database directory ex: /usr/irissys/mgr/user/ don't forget to escape -> %2Fusr%2Firissys%2Fmgr%2Fuser%2F.<br/>
 ClassMethod DeleteDirectory(directory As %String) As %DynamicObject
 {
 	Set directory = ##class(%CSP.Page).UnescapeURL(directory)
-    If '##class(Api.Config.Services.Directory).Exists(directory) {
+    If '##class(Api.Config.Services.SYS.Databases).Exists(directory) {
 		Do ..%SetStatusCode($$$HTTP404)
 		Quit ""
 	}
 	
-	$$$ThrowOnError(##class(Api.Config.Services.Directory).Delete(directory))
+	$$$ThrowOnError(##class(Api.Config.Services.SYS.Databases).Delete(directory))
 	Do ..%SetStatusCode($$$HTTP204)
 	Quit ""
 }
@@ -2025,12 +2024,12 @@ ClassMethod PutDirectoryMounted(directory As %String) As %DynamicObject
 {
     Set directory = ##class(%CSP.Page).UnescapeURL(directory)
 
-	If '##class(Api.Config.Services.Directory).Exists(directory) {
+	If '##class(Api.Config.Services.SYS.Databases).Exists(directory) {
 		Do ..%SetStatusCode($$$HTTP404)
 		Quit ""
 	}
 
-	$$$ThrowOnError(##class(Api.Config.Services.Directory).Mount(directory))
+	$$$ThrowOnError(##class(Api.Config.Services.SYS.Databases).Mount(directory))
 	Do ..%SetStatusCode($$$HTTP204)
 	Quit ""
 }
@@ -2042,36 +2041,140 @@ ClassMethod DeleteDirectoryMounted(directory As %String) As %DynamicObject
 {
     Set directory = ##class(%CSP.Page).UnescapeURL(directory)
 
-	If '##class(Api.Config.Services.Directory).Exists(directory) {
+	If '##class(Api.Config.Services.SYS.Databases).Exists(directory) {
 		Do ..%SetStatusCode($$$HTTP404)
 		Quit ""
 	}
 
-	$$$ThrowOnError(##class(Api.Config.Services.Directory).Dismount(directory))
+	$$$ThrowOnError(##class(Api.Config.Services.SYS.Databases).Dismount(directory))
 	Do ..%SetStatusCode($$$HTTP204)
 	Quit ""
 }
 
-/// Mount database.<br/>
+/// Get Web application.<br/>
 /// The method arguments hold values for:<br/>
-///     directory<br/>
-ClassMethod PutDirectoryMount(directory As %String) As %DynamicObject
+///     name, Web application url ex : /api/config don't forget to escape -> %2Fapi%2Fconfig<br/>
+ClassMethod GetWebApp(name As %String) As %DynamicObject
 {
-    //(Place business logic here)
-    //Do ..%SetStatusCode(<HTTP_status_code>)
-    //Do ..%SetHeader(<name>,<value>)
-    //Quit (Place response here) ; response may be a string, stream or dynamic object
+    Set name = ##class(%CSP.Page).UnescapeURL(name)
+	If '##class(Api.Config.Services.Security.Applications).Exists(name) {
+		Do ..%SetStatusCode($$$HTTP404)
+		Quit ""
+	}
+
+	Quit ##class(Api.Config.Services.Security.Applications).Get(name)
 }
 
-/// Dismount database.<br/>
+/// Update Web application.<br/>
 /// The method arguments hold values for:<br/>
-///     directory<br/>
-ClassMethod DeleteDirectoryMount(directory As %String) As %DynamicObject
+///     name, Web application url ex : /api/config don't forget to escape -> %2Fapi%2Fconfig<br/>
+///     model<br/>
+ClassMethod PutWebApp(name As %String, model As %Stream.Object) As %DynamicObject
 {
-    //(Place business logic here)
-    //Do ..%SetStatusCode(<HTTP_status_code>)
-    //Do ..%SetHeader(<name>,<value>)
-    //Quit (Place response here) ; response may be a string, stream or dynamic object
+    Set dModel = {}.%FromJSON(model)
+	Set name = ##class(%CSP.Page).UnescapeURL(name)
+	If '##class(Api.Config.Services.Security.Applications).Exists(name) {
+		Do ..%SetStatusCode($$$HTTP404)
+		Quit ""
+	}
+
+	$$$ThrowOnError(##class(Api.Config.Services.Security.Applications).Update(dModel))
+	Do ..%SetStatusCode($$$HTTP204)
+	Quit ""
+}
+
+/// Create a new web applications.<br/>
+/// The method arguments hold values for:<br/>
+///     model<br/>
+ClassMethod PostWebApp(model As %Stream.Object) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(model)
+	If '##class(Api.Config.Services.Security.Applications).Exists(dModel.Name) {
+		Do ..%SetStatusCode($$$HTTP409)
+		Quit ""
+	}
+
+	$$$ThrowOnError(##class(Api.Config.Services.Security.Applications).Update(dModel))
+	Do ..%SetStatusCode($$$HTTP204)
+	Quit ""
+}
+
+/// Get list of existings web applications.
+ClassMethod GetListOfWebApps() As %DynamicObject
+{
+    Set lst = ##class(Api.Config.Services.Security.Applications).List()
+	Do ..%SetStatusCode($$$HTTP200)
+	Do ..%SetContentType("application/json")
+	Quit {"ListOfWebApps":(lst)}
+}
+
+/// Delete Web application.<br/>
+/// The method arguments hold values for:<br/>
+///     name, Web application url ex : /api/config don't forget to escape -> %2Fapi%2Fconfig<br/>
+ClassMethod DeleteWebApp(name As %String) As %DynamicObject
+{
+	Set name = ##class(%CSP.Page).UnescapeURl(name)
+    If '##class(Api.Config.Services.Security.Applications).Exists(name) {
+		Do ..%SetStatusCode($$$HTTP404)
+		Quit ""
+	}
+
+	$$$ThrowOnError(##class(Api.Config.Services.Security.Applications).Delete(name))
+	Do ..%SetStatusCode($$$HTTP204)
+	Quit ""
+}
+
+/// Load configuration.<br/>
+/// The method arguments hold values for:<br/>
+///     model, configuration in json format.<br/>
+/// WARNING: This method's signature has changed.
+ClassMethod LoadConfiguration(model As %Stream.Object) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(model)
+	Do ##class(IORedirect.Redirect).ToStream()
+	Try {
+		Set tSC = ##class(Api.Config.Services.Loader).Load(dModel)
+	}
+	Catch ex {
+		Set tSC=ex.AsStatus()
+	}
+	
+	Do ##class(IORedirect.Redirect).RestoreIO()
+	Set stream = ##class(IORedirect.Redirect).Get()
+	
+	If $$$ISERR(tSC) {
+		Do ..%SetStatusCode(500)
+		Do stream.WriteLine($SYSTEM.Status.GetOneErrorText(tSC))
+	}
+	Do stream.Rewind()
+	Quit stream
+}
+
+/// WARNING Delete all namespaces, databases, webapps,... in configuration.<br/>
+/// The method arguments hold values for:<br/>
+///     model, configuration in json format.<br/>
+/// WARNING: This method's signature has changed.
+ClassMethod DeleteConfiguration(model As %Stream.Object) As %DynamicObject
+{
+	Set dModel = {}.%FromJSON(model)
+	Do ##class(IORedirect.Redirect).ToStream()
+	
+	Try {
+		Set tSC = ##class(Api.Config.Services.Loader).Delete(dModel)
+	}
+	Catch ex {
+		Set tSC=ex.AsStatus()
+	}
+	
+	Do ##class(IORedirect.Redirect).RestoreIO()
+	Set stream = ##class(IORedirect.Redirect).Get()
+	
+	If $$$ISERR(tSC) {
+		Do ..%SetStatusCode(500)
+		Do stream.WriteLine($SYSTEM.Status.GetOneErrorText(tSC))
+	}
+	Do stream.Rewind()
+	Quit stream
 }
 
 }

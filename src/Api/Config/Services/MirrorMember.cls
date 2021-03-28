@@ -3,6 +3,8 @@ Include Api.Config.inc
 Class Api.Config.Services.MirrorMember [ ProcedureBlock ]
 {
 
+Parameter ISSINGLE = 1;
+
 ClassMethod CheckModel(model As %Library.DynamicObject) As %Status
 {
 	Quit $$$OK

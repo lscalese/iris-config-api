@@ -3,6 +3,8 @@ Include Api.Config.inc
 Class Api.Config.Services.ConfigFile [ ProcedureBlock ]
 {
 
+Parameter ISSINGLE = 1;
+
 ClassMethod CheckModel(model As %Library.DynamicObject) As %Status
 {
 	Set sc = $$$OK
