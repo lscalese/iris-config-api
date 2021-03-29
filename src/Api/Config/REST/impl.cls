@@ -2,7 +2,7 @@ Include Api.Config.inc
 
 /// Config API.<br/>
 /// Business logic class defined by OpenAPI in Api.Config.REST.spec<br/>
-/// Updated Mar 29, 2021 15:19:06
+/// Updated Mar 29, 2021 20:24:16
 Class Api.Config.REST.impl Extends %REST.Impl [ ProcedureBlock ]
 {
 
@@ -2220,7 +2220,6 @@ ClassMethod PutService(name As %String, model As %Stream.Object) As %DynamicObje
 /// The method arguments hold values for:<br/>
 ///     filter, params filter to export.<br/>
 ///     OnlyNotDefaultValue, export only not default value parameters.<br/>
-/// WARNING: This method's signature has changed.
 ClassMethod PostExport(filter As %Stream.Object, OnlyNotDefaultValue As %Integer) As %DynamicObject
 {
     Set dModel = {}.%FromJSON(filter)
@@ -2231,7 +2230,7 @@ ClassMethod PostExport(filter As %Stream.Object, OnlyNotDefaultValue As %Integer
 	Do export.%ToJSON(record.charStream)
 	Do record.%Save()
 	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/databases/"_record.%Id())
+	Do ..%SetHeader("Location", %request.Application_"export/"_record.%Id())
 	Quit ""
 }
 
@@ -2240,11 +2239,7 @@ ClassMethod PostExport(filter As %Stream.Object, OnlyNotDefaultValue As %Integer
 ///     id, export id to retrieve.<br/>
 ClassMethod GetExport(id As %String) As %DynamicObject
 {
-    //(Place business logic here)
-    //Do ..%SetStatusCode(<HTTP_status_code>)
-    //Do ..%SetHeader(<name>,<value>)
-    //Quit (Place response here) ; response may be a string, stream or dynamic object
-	If '##class(Api.Config.TempStream).%ExistsId(id) {
+    If '##class(Api.Config.TempStream).%ExistsId(id) {
 		Do ..%SetStatusCode($$$HTTP404)
 		Quit ""
 	}

@@ -2,7 +2,7 @@
 
 A library to ease IRIS configuration.  
 Typically this library could be used in your application installer module.  
-It allow to prepare your environment before install your application.  
+It allow to prepare your environment before deploy your application code.  
 
 Features : 
 
@@ -62,8 +62,7 @@ Import and compile.
 
 ### Dependencies
 
-A part of this development has been splitted to a separate library [IO-Redirect](https://github.com/lscalese/IO-Redirect).  
-You can download a xml with all sources [here](https://github.com/lscalese/IO-Redirect/releases/download/v0.4.0/io-redirect-v0.4.0.xml).  
+A part of this development has been splitted to a separate library, more information on project page [IO-Redirect](https://github.com/lscalese/IO-Redirect).  
 
 
 ## Run Unit Tests
@@ -82,7 +81,9 @@ Do ##class(%UnitTest.Manager).RunTest(,"/nodelete")
 
 ## How It works
 
-Basically, there is a related for class for each existing class in %SYS Config package (and few classes from SYS and Security) to allow a configuration using a JSON document.  See the following example : 
+Basically, developers write a configuration JSON document and load it with `##class(Api.Config.Services.Loader).Load()` method.  
+
+Let's see an example :  
 
 ```json
 {
@@ -92,12 +93,12 @@ Basically, there is a related for class for each existing class in %SYS Config p
     },
     "SYS.Databases":{               /* Service class name here SYS.Databases (related to Api.Config.Services.SYS.Databases.) */
         "${DBDIR}myappdata/" : {    /* Database directory to create, will be evaluated to /usr/irissys/mgr/myappdata/. */
-            "ExpansionSize":128     /* Database parameters... */
+            "ExpansionSize":128     /* Database properties (all properties defined in SYS.Databases are available) */
         },
         "${DBDIR}myappcode/": {}    /* Create /usr/irissys/mgr/myappcode/ database with default parameters. */
     },
     "Databases":{                               /* Service class name related to Api.Config.Services.Databases. */
-        "MYAPPDATA" : {                         /* Crate a database configuration named MYAPPDATA. */
+        "MYAPPDATA" : {                         /* Create a database configuration named MYAPPDATA. */
             "Directory" : "${DBDIR}myappdata/"  /* Link /usr/irissys/mgr/myappdata/ to Database name MYAPPDATA. */
         },
         "MYAPPCODE" : {
@@ -150,7 +151,7 @@ You can easily redirect to a stream, file, string or a global using `IORedirect.
 More information about [IORedirect.Redirect here](https://github.com/lscalese/IO-Redirect).  
 
 ```ObjectScript
-Do ##class(IORedirect.Redirect).ToFile("</path/to/logfile.log>")
+Do ##class(IORedirect.Redirect).ToFile(</path/to/logfile.log>)
 Set config = {"SYS.Databases":{"/usr/irissys/mgr/dbtestapi":{} } }
 Set sc = ##class(Api.Config.Services.Loader).Load(config)
 Do ##class(IORedirect.Redirect).RestoreIO()
@@ -263,10 +264,10 @@ Set config = {
 Set sc = ##class(Api.Config.Services.Loader).Load(config)
 ```
 
-If you analyze the output, you can notice a dump of the configuration document with all variables evaluated.  
+Take a look to the output, you can notice a dump of the configuration document with all variables evaluated and the status for each operation.  
 
 <details>
-  <summary>Output : </summary>
+  <summary>Output (click to expand): </summary>
 
 ```
 2021-03-28 08:28:44 Start load configuration
@@ -404,8 +405,8 @@ If you analyze the output, you can notice a dump of the configuration document w
 ## Export configuration
 
 There is a feature to export existing configuration.  
-It's useful to generate a JSON document from an existing installation in order to use it for automatisation of further installation.  
-Howewer, there is a lot of parameters... It's necessary to select wanted items.  
+It's useful to generate a JSON document from an existing installation in order to create automatisation script for further installation.  
+
 
 Firstable, create a filter as follow and then call `export` method.:  
 
@@ -427,7 +428,7 @@ Set filter = {
         "/csp/zrestapp":"",   /* Export Web applications parameters /csp/zrestapp */
         "/csp/zwebapp":""     /* Export Web applications parameters /csp/zwebapp */
     },
-    "Journal":""  /* Export all journal setting.  *There is a trick to export only non default parameters(see below) */
+    "Journal":"",  /* Export all journal setting.  *There is a trick to export only non default parameters(see below) */
     "config":""   /* Export config parameters */
 }
 Set OnlyNotDefaultValue = 1
@@ -436,11 +437,10 @@ Set config = ##class(Api.Config.Services.Loader).export(filter,OnlyNotDefaultVal
 
 `Filter` has a structure pretty similar to configuration document.  
 `OnlyNotDefaultValue` allow to export parameters has value different of the "default value".  
-It's an interesting feature to identify modified parameters and also to keep a configuration document clear.  
-In most case, it's not necessary to export parameters wich contain the default value.  
+It's very interesting to identify modified parameters and also to keep a configuration document clear with only relevant properties.  
 
 <details>
-  <summary>Exported configuration : </summary>
+  <summary>Exported configuration (click to expand) : </summary>
 
 
 ```json

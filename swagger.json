@@ -23,64 +23,6 @@
       "application/json"
     ],
     "paths":{
-      "/security/services": {
-        "get": {
-          "summary": "Get list of services.",
-          "description": "Get list of services.",
-          "parameters": [],
-          "operationId": "GetListOfServices",
-          "responses": {
-            "200": {
-              "description": "OK",
-              "schema":{
-                "$ref": "#/definitions/ListOfServices"
-              }
-            }
-          }
-        }
-      },
-      "/security/services/{name}" : {
-        "get": {
-          "summary": "Get service detail by name",
-          "description":"Get service detail by name",
-          "parameters": [{
-            "name":"name",
-            "in":"path",
-            "type": "string",
-            "required":true
-          }],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "schema":{
-                "$ref": "#/definitions/Services"
-              }
-            }
-          }
-        },
-        "put": {
-          "summary": "Update service.",
-          "description":"Update service.  Set Enable property to 1/0 to activate/disable.",
-          "parameters": [{
-            "name":"name",
-            "in":"path",
-            "type": "string",
-            "required":true
-          },{
-            "name":"model",
-            "in":"body",
-            "required":true
-          }],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "schema":{
-                "$ref": "#/definitions/Services"
-              }
-            }
-          }
-        }
-      },
       "/":{
         "get":{
           "summary": "Swagger 2.0 specification",
@@ -101,6 +43,7 @@
           "description": "Load configuration.",
           "summary": "Load configuration.",
           "operationId": "LoadConfiguration",
+          "tags": ["Import/Export configuration"],
           "parameters": [
             {
               "name":"model",
@@ -123,6 +66,7 @@
           "summary": "WARNING Delete all namespaces, databases, webapps,... defined in configuration object.",
           "description": "WARNING Delete all namespaces, databases, webapps,... defined in configuration object.",
           "operationId": "DeleteConfiguration",
+          "tags": ["Import/Export configuration"],
           "parameters": [
             {
               "name":"model",
@@ -142,92 +86,28 @@
           }
         }
       },
-      "/security/applications/${name}": {
-        "get": {
-          "summary": "Get Web application.",
-          "description": "Get Web application.",
-          "tags":["WebApplication"],
-          "operationId": "GetWebApp",
-          "parameters": [
-            {
-              "name":"name",
-              "description": "Web application url ex : /api/config don't forget to escape -> %2Fapi%2Fconfig",
-              "required": true,
-              "type": "string",
-              "in": "path"
+      "/export":{
+        "post":{
+          "tags": ["Import/Export configuration"],
+          "summary": "Export a part of IRIS configuration.",
+          "description": "Create an export instance on the server following your filter criteria.  You can download the created export with GET /export/{id}.  See the location response header.  ",
+          "operationId": "PostExport",
+          "parameters": [{
+            "name":"filter",
+            "description": "params filter to export.",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ExportFilter"
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            }
-          }
-        },
-        "put": {
-          "summary": "Update Web application.",
-          "description": "Update Web application.",
-          "tags":["WebApplication"],
-          "operationId": "PutWebApp",
-          "parameters": [
-            {
-              "name":"name",
-              "description": "Web application url ex : /api/config don't forget to escape -> %2Fapi%2Fconfig",
-              "required": true,
-              "type": "string",
-              "in": "path"
-            },
-            {
-              "name":"model",
-              "in":"body",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/WebApplication"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            }
-          }
-        },
-        "delete": {
-          "summary": "Delete Web application.",
-          "description": "Delete Web application.",
-          "tags":["WebApplication"],
-          "operationId": "DeleteWebApp",
-          "parameters": [
-            {
-              "name":"name",
-              "description": "Web application url ex : /api/config don't forget to escape -> %2Fapi%2Fconfig",
-              "required": true,
-              "type": "string",
-              "in": "path"
-            }
-          ],
-          "responses": {
-            "204": {
-              "description": "Web Application Deleted."
-            }
-          }
-        }
-      },
-      "/security/applications": {
-        "post": {
-          "summary":"Create a new web applications.",
-          "description":"Create a new web applications.",
-          "tags":["WebApplication"],
-          "operationId": "PostWebApp",
-          "parameters": [
-            {
-              "name":"model",
-              "in":"body",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/WebApplication"
-              }
-            }
-          ],
+          },{
+            "name":"OnlyNotDefaultValue",
+            "description": "export only not default value parameters.",
+            "required": true,
+            "in": "query",
+            "type": "integer",
+            "default": "1"
+          }],
           "responses": {
             "201": {
               "description": "OK",
@@ -238,118 +118,27 @@
               }
             }
           }
-        },
-        "get": {
-          "summary": "Get list of existings web applications.",
-          "description": "Get list of existings web applications.",
-          "tags":["WebApplication"],
-          "operationId": "GetListOfWebApps",
-          "parameters": [],
+        }
+      },
+      "/export/{id}":{
+        "get":{
+          "tags": ["Import/Export configuration"],
+          "summary": "Get an existing configuration export.",
+          "description": "Get an existing configuration export.",
+          "operationId": "GetExport",
+          "parameters": [{
+            "name":"id",
+            "description": "export id to retrieve.",
+            "required": true,
+            "type":"string",
+            "in": "path"
+          }],
           "responses": {
             "200": {
               "description": "OK",
-              "schema": {
-                "$ref": "#/definitions/ListOfWebApplication"
-              }
-            }
-          }
-        }
-      },
-      "/cluster":{
-        "get":{
-          "tags": ["Others"],
-          "operationId":"GetCluster",
-          "description":"Get Cluster.",
-          "parameters":[],
-          "responses":{
-            "200":{
-              "description":"OK",
               "schema":{
-                "$ref":"#/definitions/Cluster"
+
               }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            },
-            "404":{
-              "description":"Cluster not found."
-            }
-          }
-        },
-        "put":{
-          "tags": ["Others"],
-          "operationId":"PutCluster",
-          "description":"Update Cluster.",
-          "parameters":[
-            {
-              "name":"model",
-              "description":"Cluster to update.",
-              "in":"body",
-              "required":true,
-              "schema":{
-                "$ref":"#/definitions/Cluster"
-              }
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"Ressource updated."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"Cluster to update not found."
-            }
-          }
-        }
-      },
-      "/configfile":{
-        "get":{
-          "tags": ["Systems"],
-          "operationId":"GetConfigFile",
-          "description":"Get ConfigFile.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/ConfigFile"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            },
-            "404":{
-              "description":"ConfigFile not found."
-            }
-          }
-        },
-        "put":{
-          "tags": ["Systems"],
-          "operationId":"PutConfigFile",
-          "description":"Update ConfigFile.",
-          "parameters":[
-            {
-              "name":"model",
-              "description":"ConfigFile to update.",
-              "in":"body",
-              "required":true,
-              "schema":{
-                "$ref":"#/definitions/ConfigFile"
-              }
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"Ressource updated."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"ConfigFile to update not found."
             }
           }
         }
@@ -673,6 +462,523 @@
             },
             "409":{
               "description":"Databases already exists."
+            }
+          }
+        }
+      },
+      "/namespaces/{name}":{
+        "get":{
+          "tags": ["Namespaces"],
+          "operationId":"GetNamespaces",
+          "description":"Get Namespaces.",
+          "parameters":[
+            {
+              "name":"name",
+              "description":"Name of the object instance.<br>",
+              "in":"path",
+              "type":"string",
+              "required":true
+            }
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/Namespaces"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            },
+            "404":{
+              "description":"Namespaces not found."
+            }
+          }
+        },
+        "put":{
+          "tags": ["Namespaces"],
+          "operationId":"PutNamespaces",
+          "description":"Update Namespaces.",
+          "parameters":[
+            {
+              "name":"name",
+              "description":"Name of the object instance.<br>",
+              "in":"path",
+              "type":"string",
+              "required":true
+            },
+            {
+              "name":"model",
+              "description":"Namespaces to update.",
+              "in":"body",
+              "required":true,
+              "schema":{
+                "$ref":"#/definitions/Namespaces"
+              }
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"Ressource updated."
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"Namespaces to update not found."
+            }
+          }
+        },
+        "delete":{
+          "tags": ["Namespaces"],
+          "operationId":"DeleteNamespaces",
+          "description":"Delete Namespaces.",
+          "parameters":[
+            {
+              "name":"name",
+              "description":"Name of the object instance.<br>",
+              "in":"path",
+              "type":"string",
+              "required":true
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"Namespaces deleted."
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"Namespaces not found."
+            }
+          }
+        }
+      },
+      "/namespaces":{
+        "get":{
+          "tags": ["Namespaces"],
+          "operationId":"GetListNamespaces",
+          "description":"Get List Of Namespaces.",
+          "parameters":[
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/ListOfNamespaces"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            }
+          }
+        },
+        "post":{
+          "tags": ["Namespaces"],
+          "operationId":"PostNamespaces",
+          "description":"Create Namespaces.",
+          "parameters":[
+            {
+              "name":"model",
+              "description":"Namespaces to create.",
+              "in":"body",
+              "required":true,
+              "schema":{
+                "$ref":"#/definitions/Namespaces"
+              }
+            }
+          ],
+          "responses":{
+            "201":{
+              "description":"Namespaces created.",
+              "headers":{
+                "Location":{
+                  "type":"string",
+                  "description":"Created ressource location."
+                }
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "409":{
+              "description":"Namespaces already exists."
+            }
+          }
+        }
+      },
+      "/security/applications": {
+        "post": {
+          "summary":"Create a new web applications.",
+          "description":"Create a new web applications.",
+          "tags":["WebApplication"],
+          "operationId": "PostWebApp",
+          "parameters": [
+            {
+              "name":"model",
+              "in":"body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/WebApplication"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "OK",
+              "headers":{
+                "Location":{
+                  "type":"string"
+                }
+              }
+            }
+          }
+        },
+        "get": {
+          "summary": "Get list of existings web applications.",
+          "description": "Get list of existings web applications.",
+          "tags":["WebApplication"],
+          "operationId": "GetListOfWebApps",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/ListOfWebApplication"
+              }
+            }
+          }
+        }
+      },
+      "/security/applications/${name}": {
+        "get": {
+          "summary": "Get Web application.",
+          "description": "Get Web application.",
+          "tags":["WebApplication"],
+          "operationId": "GetWebApp",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "Web application url ex : /api/config don't forget to escape -> %2Fapi%2Fconfig",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        },
+        "put": {
+          "summary": "Update Web application.",
+          "description": "Update Web application.",
+          "tags":["WebApplication"],
+          "operationId": "PutWebApp",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "Web application url ex : /api/config don't forget to escape -> %2Fapi%2Fconfig",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            },
+            {
+              "name":"model",
+              "in":"body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/WebApplication"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete Web application.",
+          "description": "Delete Web application.",
+          "tags":["WebApplication"],
+          "operationId": "DeleteWebApp",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "Web application url ex : /api/config don't forget to escape -> %2Fapi%2Fconfig",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Web Application Deleted."
+            }
+          }
+        }
+      },
+      "/configfile":{
+        "get":{
+          "tags": ["System settings"],
+          "operationId":"GetConfigFile",
+          "description":"Get ConfigFile.",
+          "parameters":[
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/ConfigFile"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            },
+            "404":{
+              "description":"ConfigFile not found."
+            }
+          }
+        },
+        "put":{
+          "tags": ["System settings"],
+          "operationId":"PutConfigFile",
+          "description":"Update ConfigFile.",
+          "parameters":[
+            {
+              "name":"model",
+              "description":"ConfigFile to update.",
+              "in":"body",
+              "required":true,
+              "schema":{
+                "$ref":"#/definitions/ConfigFile"
+              }
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"Ressource updated."
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"ConfigFile to update not found."
+            }
+          }
+        }
+      },
+      "/journal":{
+        "get":{
+          "tags": ["System settings"],
+          "operationId":"GetJournal",
+          "description":"Get Journal.",
+          "parameters":[
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/Journal"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            },
+            "404":{
+              "description":"Journal not found."
+            }
+          }
+        },
+        "put":{
+          "tags": ["System settings"],
+          "operationId":"PutJournal",
+          "description":"Update Journal.",
+          "parameters":[
+            {
+              "name":"model",
+              "description":"Journal to update.",
+              "in":"body",
+              "required":true,
+              "schema":{
+                "$ref":"#/definitions/Journal"
+              }
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"Ressource updated."
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"Journal to update not found."
+            }
+          }
+        }
+      },
+      "/config":{
+        "get":{
+          "tags": ["System settings"],
+          "operationId":"Getconfig",
+          "description":"Get config.",
+          "parameters":[
+          ],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/config"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            },
+            "404":{
+              "description":"config not found."
+            }
+          }
+        },
+        "put":{
+          "tags": ["System settings"],
+          "operationId":"Putconfig",
+          "description":"Update config.",
+          "parameters":[
+            {
+              "name":"model",
+              "description":"config to update.",
+              "in":"body",
+              "required":true,
+              "schema":{
+                "$ref":"#/definitions/config"
+              }
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"Ressource updated."
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"config to update not found."
+            }
+          }
+        }
+      },
+      "/security/services": {
+        "get": {
+          "tags": ["Services"],
+          "summary": "Get list of services.",
+          "description": "Get list of services.",
+          "parameters": [],
+          "operationId": "GetListOfServices",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema":{
+                "$ref": "#/definitions/ListOfServices"
+              }
+            }
+          }
+        }
+      },
+      "/security/services/{name}" : {
+        "get": {
+          "tags": ["Services"],
+          "summary": "Get service detail by name",
+          "description":"Get service detail by name",
+          "operationId": "GetService",
+          "parameters": [{
+            "name":"name",
+            "in":"path",
+            "type": "string",
+            "required":true
+          }],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema":{
+                "$ref": "#/definitions/Services"
+              }
+            }
+          }
+        },
+        "put": {
+          "tags": ["Services"],
+          "summary": "Update service.",
+          "description":"Update service.  Set Enable property to 1/0 to activate/disable.",
+          "operationId": "PutService",
+          "parameters": [{
+            "name":"name",
+            "in":"path",
+            "type": "string",
+            "required":true
+          },{
+            "name":"model",
+            "in":"body",
+            "required":true,
+            "schema": {
+              "$ref": "#/definitions/Services"
+            }
+          }],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        }
+      },
+      "/cluster":{
+        "get":{
+          "tags": ["Others"],
+          "operationId":"GetCluster",
+          "description":"Get Cluster.",
+          "parameters":[],
+          "responses":{
+            "200":{
+              "description":"OK",
+              "schema":{
+                "$ref":"#/definitions/Cluster"
+              }
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
+            },
+            "404":{
+              "description":"Cluster not found."
+            }
+          }
+        },
+        "put":{
+          "tags": ["Others"],
+          "operationId":"PutCluster",
+          "description":"Update Cluster.",
+          "parameters":[
+            {
+              "name":"model",
+              "description":"Cluster to update.",
+              "in":"body",
+              "required":true,
+              "schema":{
+                "$ref":"#/definitions/Cluster"
+              }
+            }
+          ],
+          "responses":{
+            "204":{
+              "description":"Ressource updated."
+            },
+            "400":{
+              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
+            },
+            "404":{
+              "description":"Cluster to update not found."
             }
           }
         }
@@ -1341,56 +1647,6 @@
             },
             "404":{
               "description":"IO to update not found."
-            }
-          }
-        }
-      },
-      "/journal":{
-        "get":{
-          "tags": ["Systems"],
-          "operationId":"GetJournal",
-          "description":"Get Journal.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/Journal"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            },
-            "404":{
-              "description":"Journal not found."
-            }
-          }
-        },
-        "put":{
-          "tags": ["Systems"],
-          "operationId":"PutJournal",
-          "description":"Update Journal.",
-          "parameters":[
-            {
-              "name":"model",
-              "description":"Journal to update.",
-              "in":"body",
-              "required":true,
-              "schema":{
-                "$ref":"#/definitions/Journal"
-              }
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"Ressource updated."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"Journal to update not found."
             }
           }
         }
@@ -2758,7 +3014,7 @@
       },
       "/miscellaneous":{
         "get":{
-          "tags": ["Systems"],
+          "tags": ["System settings"],
           "operationId":"GetMiscellaneous",
           "description":"Get Miscellaneous.",
           "parameters":[
@@ -2779,7 +3035,7 @@
           }
         },
         "put":{
-          "tags": ["Systems"],
+          "tags": ["System settings"],
           "operationId":"PutMiscellaneous",
           "description":"Update Miscellaneous.",
           "parameters":[
@@ -2852,148 +3108,6 @@
             },
             "404":{
               "description":"Monitor to update not found."
-            }
-          }
-        }
-      },
-      "/namespaces/{name}":{
-        "get":{
-          "tags": ["Namespaces"],
-          "operationId":"GetNamespaces",
-          "description":"Get Namespaces.",
-          "parameters":[
-            {
-              "name":"name",
-              "description":"Name of the object instance.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            }
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/Namespaces"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            },
-            "404":{
-              "description":"Namespaces not found."
-            }
-          }
-        },
-        "put":{
-          "tags": ["Namespaces"],
-          "operationId":"PutNamespaces",
-          "description":"Update Namespaces.",
-          "parameters":[
-            {
-              "name":"name",
-              "description":"Name of the object instance.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            },
-            {
-              "name":"model",
-              "description":"Namespaces to update.",
-              "in":"body",
-              "required":true,
-              "schema":{
-                "$ref":"#/definitions/Namespaces"
-              }
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"Ressource updated."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"Namespaces to update not found."
-            }
-          }
-        },
-        "delete":{
-          "tags": ["Namespaces"],
-          "operationId":"DeleteNamespaces",
-          "description":"Delete Namespaces.",
-          "parameters":[
-            {
-              "name":"name",
-              "description":"Name of the object instance.<br>",
-              "in":"path",
-              "type":"string",
-              "required":true
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"Namespaces deleted."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"Namespaces not found."
-            }
-          }
-        }
-      },
-      "/namespaces":{
-        "get":{
-          "tags": ["Namespaces"],
-          "operationId":"GetListNamespaces",
-          "description":"Get List Of Namespaces.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/ListOfNamespaces"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            }
-          }
-        },
-        "post":{
-          "tags": ["Namespaces"],
-          "operationId":"PostNamespaces",
-          "description":"Create Namespaces.",
-          "parameters":[
-            {
-              "name":"model",
-              "description":"Namespaces to create.",
-              "in":"body",
-              "required":true,
-              "schema":{
-                "$ref":"#/definitions/Namespaces"
-              }
-            }
-          ],
-          "responses":{
-            "201":{
-              "description":"Namespaces created.",
-              "headers":{
-                "Location":{
-                  "type":"string",
-                  "description":"Created ressource location."
-                }
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "409":{
-              "description":"Namespaces already exists."
             }
           }
         }
@@ -3476,7 +3590,7 @@
       },
       "/startup":{
         "get":{
-          "tags": ["Systems"],
+          "tags": ["System settings"],
           "operationId":"GetStartup",
           "description":"Get Startup.",
           "parameters":[
@@ -3497,7 +3611,7 @@
           }
         },
         "put":{
-          "tags": ["Systems"],
+          "tags": ["System settings"],
           "operationId":"PutStartup",
           "description":"Update Startup.",
           "parameters":[
@@ -3526,7 +3640,7 @@
       },
       "/telnet":{
         "get":{
-          "tags": ["Systems"],
+          "tags": ["System settings"],
           "operationId":"GetTelnet",
           "description":"Get Telnet.",
           "parameters":[
@@ -3547,7 +3661,7 @@
           }
         },
         "put":{
-          "tags": ["Systems"],
+          "tags": ["System settings"],
           "operationId":"PutTelnet",
           "description":"Update Telnet.",
           "parameters":[
@@ -3573,59 +3687,35 @@
             }
           }
         }
-      },
-      "/config":{
-        "get":{
-          "tags": ["Systems"],
-          "operationId":"Getconfig",
-          "description":"Get config.",
-          "parameters":[
-          ],
-          "responses":{
-            "200":{
-              "description":"OK",
-              "schema":{
-                "$ref":"#/definitions/config"
-              }
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty."
-            },
-            "404":{
-              "description":"config not found."
-            }
-          }
-        },
-        "put":{
-          "tags": ["Systems"],
-          "operationId":"Putconfig",
-          "description":"Update config.",
-          "parameters":[
-            {
-              "name":"model",
-              "description":"config to update.",
-              "in":"body",
-              "required":true,
-              "schema":{
-                "$ref":"#/definitions/config"
-              }
-            }
-          ],
-          "responses":{
-            "204":{
-              "description":"Ressource updated."
-            },
-            "400":{
-              "description":"Bad request, can occurs if mandatory parameters are missing or empty"
-            },
-            "404":{
-              "description":"config to update not found."
-            }
-          }
-        }
       }
     },
     "definitions":{
+      "ExportFilter": {
+        "type":"object",
+        "properties": {
+          
+        },
+        "example": {
+            "Namespaces": {   
+                "MYAPP":""    
+            },
+            "MapGlobals":{
+                "MYAPP":""    
+            },
+            "MapPackages":{ 
+                "MYAPP":""    
+            },
+            "MapRoutines":{
+                "MYAPP":""    
+            },
+            "Security.Applications":{
+                "/csp/zrestapp":"",   
+                "/csp/zwebapp":""     
+            },
+            "Journal":"",  
+            "config":""   
+        }
+      },
       "ListOfServices":{
         "type":"object",
         "properties": {
