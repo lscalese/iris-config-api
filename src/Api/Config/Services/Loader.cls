@@ -336,24 +336,30 @@ ClassMethod log(msg As %String, newLine As %Boolean = {$$$YES}, dtOnNewLine As %
 
 /// OnlyNotDefaultValue : properties with the default value won't exported.
 /// 
-ClassMethod export(filter As %DynamicObject = {{}}, OnlyNotDefaultValue As %Boolean = 0) As %DynamicObject
+ClassMethod export(filter As %DynamicObject = {{}}, OnlyNotDefaultValue As %Boolean = 1) As %DynamicObject
 {
     ; Do ##class(Api.Config.Services.Loader).export()
     #define     CFGCLASS(%cls)  "Api.Config.Services."_%cls
 
     Set filter = {
-        "config":{"locksiz":""},
-        "Startup":{"SystemMode":""},
-        "Databases":{
-            "MYAPPCODE":"",
-            "MYAPPDATA":""
-        },
-        "Namespaces":{
-            "MYAPP":""
+        "Namespaces": {   
+            "MYAPP":""    /* Namespace to export */
         },
         "MapGlobals":{
-            "MYAPP":""
-        }
+            "MYAPP":""    /* Export all globals mapping for namespace MYAPP */
+        },
+        "MapPackages":{ 
+            "MYAPP":""    /* Export all packages mapping for namespace MYAPP */
+        },
+        "MapRoutines":{
+            "MYAPP":""    /* Export all routines mapping for namespace MYAPP */
+        },
+        "Security.Applications":{
+            "/csp/zrestapp":"",   /* Export Web applications parameters /csp/zrestapp */
+            "/csp/zwebapp":""     /* Export Web applications parameters /csp/zwebapp */
+        },
+        "Journal":"",  /* Export all journal setting.  *There is a trick to export only non default parameters(see below) */
+        "config":""   /* Export config parameters */
     }
     
     #dim export As %DynamicObject = {}
@@ -416,9 +422,14 @@ ClassMethod export(filter As %DynamicObject = {{}}, OnlyNotDefaultValue As %Bool
         Set iterList = lst.%GetIterator()
         While iterList.%GetNext(.keylist,.vl) {
             Do tmpObj.%Set($Property(vl,lvl2keyProp), vl)
+            Do:OnlyNotDefaultValue ..removeDefaultValue(key,.vl)
         }
     }
 
+    Set formatter=##class(%JSON.Formatter).%New()
+    Set exportStr = ""
+    Do formatter.FormatToString(export, .exportStr)
+    w !,exportStr
     Quit export
 }
 
@@ -454,7 +465,7 @@ ClassMethod removeDefaultValue(key As %String, model As %DynamicObject) As %Stat
         Set iter = model.%GetIterator()
         While iter.%GetNext(.property,.value) {
             If ##class(%Dictionary.CompiledProperty).%ExistsId(className_"||"_property) {
-                w !,$PROPERTY(obj,property)
+                
                 If $PROPERTY(obj,property)=$PROPERTY(model,property) {
                     Do model.%Remove(property)
                 }

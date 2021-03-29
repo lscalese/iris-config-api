@@ -8,6 +8,12 @@
       <SourcesRoot>src</SourcesRoot>
       <Resource Name="Api.Config.PKG"/>
       <!--<UnitTest Name="/tests" Package="UnitTest.dc" Phase="test"/>-->
+      <Dependencies>
+        <ModuleReference>
+          <Name>io-redirect</Name>
+          <Version>0.4.0</Version>
+        </ModuleReference>
+      </Dependencies>
     </Module>
   </Document>
 </Export>
