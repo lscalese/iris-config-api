@@ -20,6 +20,7 @@ Features :
 5. [Run Unit Tests](#Run-Unit-Tests)
 6. [Basic example](#Basic-example)
 7. [Advanced](#Basic-example)
+8. [Export configuration](#Export-configuration)
 
 
 
@@ -89,7 +90,7 @@ Basically, there is a related for class for each existing class in %SYS Config p
         "DBDIR" : "${MGRDIR}",      /* predefined variable with mgr directory path. */
         "WEBAPPDIR" : "${CSPDIR}"   /* predefined variable with csp directory path. */
     },
-    "SYS.Databases":{               /* Service class name here SYS.Databases (related to Api.Config.Services.SYS.Databases. */
+    "SYS.Databases":{               /* Service class name here SYS.Databases (related to Api.Config.Services.SYS.Databases.) */
         "${DBDIR}myappdata/" : {    /* Database directory to create, will be evaluated to /usr/irissys/mgr/myappdata/. */
             "ExpansionSize":128     /* Database parameters... */
         },
@@ -103,13 +104,13 @@ Basically, there is a related for class for each existing class in %SYS Config p
             "Directory" : "${DBDIR}myappcode/"
         }
     },
-    "Namespaces":{                  /* Service class name related to Api.Config.Services.Namespaces." */
-        "MYAPP": {                  /* Create a Namespace "MYAPP". */
+    "Namespaces":{                  /* Service class name related to Api.Config.Services.Namespaces. */
+        "MYAPP": {                  /* Create a Namespace MYAPP. */
             "Globals":"MYAPPDATA",  /* Set default database for globals. */
             "Routines":"MYAPPCODE"  /* Set default database for routines. */
         }
     },
-    "Security.Applications": {                      /* Service class name related to Api.Config.Services.Security.Applications." */
+    "Security.Applications": {                      /* Service class name related to Api.Config.Services.Security.Applications. */
         "/csp/zrestapp": {                          /* Create REST application /csp/zrestapp.  */
             "DispatchClas" : "my.dispatch.class",   /* Dispatch class. */
             "Namespace" : "MYAPP",                  /* Namespace... */
@@ -211,7 +212,7 @@ Set config = {
             "CookiePath" : "/csp/zrestapp/"
         },
         "/csp/zwebapp": {
-            "Path": "${WEBAPPDIR}",
+            "Path": "${WEBAPPDIR}zwebapp/",
             "Namespace" : "MYAPP",
             "Enabled" : "1",
             "AuthEnabled": "64",
@@ -264,7 +265,9 @@ Set sc = ##class(Api.Config.Services.Loader).Load(config)
 
 If you analyze the output, you can notice a dump of the configuration document with all variables evaluated.  
 
-Output
+<details>
+  <summary>Output : </summary>
+
 ```
 2021-03-28 08:28:44 Start load configuration
 2021-03-28 08:28:44 {
@@ -396,6 +399,7 @@ Output
 2021-03-28 08:28:45  * Startup
 2021-03-28 08:28:45    + Update Startup ... OK
 ```
+</details>
 
 ## Export configuration
 
@@ -435,3 +439,77 @@ Set config = ##class(Api.Config.Services.Loader).export(filter,OnlyNotDefaultVal
 It's an interesting feature to identify modified parameters and also to keep a configuration document clear.  
 In most case, it's not necessary to export parameters wich contain the default value.  
 
+<details>
+  <summary>Exported configuration : </summary>
+
+
+```json
+{
+  "Namespaces":{
+    "MYAPP":{
+      "Globals":"MYAPPDATA",
+      "Name":"MYAPP",
+      "Routines":"MYAPPCODE"
+    }
+  },
+  "MapGlobals":{
+    "MYAPP":[
+      {
+        "Collation":5,
+        "Database":"MYAPPLOG",
+        "LockDatabase":"MYAPPLOG",
+        "Name":"App.Log",
+        "Namespace":"MYAPP"
+      },
+      {
+        "Collation":5,
+        "Database":"MYAPPARCHIVE",
+        "LockDatabase":"MYAPPARCHIVE",
+        "Name":"Archive.Data",
+        "Namespace":"MYAPP"
+      }
+    ]
+  },
+  "MapPackages":{
+    "MYAPP":[
+      {
+        "Database":"USER",
+        "Name":"PackageName",
+        "Namespace":"MYAPP"
+      }
+    ]
+  },
+  "MapRoutines":{
+    "MYAPP":[
+      {
+        "Database":"USER",
+        "Name":"RoutineName",
+        "Namespace":"MYAPP"
+      }
+    ]
+  },
+  "Security.Applications":{
+    "/csp/zrestapp":{
+      "CookiePath":"/csp/zrestapp/",
+      "IsNameSpaceDefault":true,
+      "MatchRoles":"",
+      "Name":"/csp/zrestapp"
+    },
+    "/csp/zwebapp":{
+      "CookiePath":"/csp/zwebapp/",
+      "MatchRoles":"",
+      "Name":"/csp/zwebapp",
+      "Path":"/usr/irissys/csp/"
+    }
+  },
+  "Journal":{
+    "AlternateDirectory":"/usr/irissys/mgr/journal/",
+    "CurrentDirectory":"/usr/irissys/mgr/journal/",
+    "FreezeOnError":true
+  },
+  "config":{
+    "locksiz":33554432
+  }
+}
+```
+</details>
