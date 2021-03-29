@@ -14,11 +14,12 @@ Features :
 ## Table of contents
 
 1. [Prerequisites](#Prerequisites)
-2. [Installation](#Installation)
+2. [Installation Docker](#Installation-Docker)
 3. [Installation ZPM](#Installation-ZPM)
-4. [Run Unit Tests](#Run-Unit-Tests)
-5. [Basic example](#Basic-example)
-6. [Advanced](#Basic-example)
+4. [Installation by XML](#Installation-By-XML)
+5. [Run Unit Tests](#Run-Unit-Tests)
+6. [Basic example](#Basic-example)
+7. [Advanced](#Basic-example)
 
 
 
@@ -26,7 +27,7 @@ Features :
 
 Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker desktop](https://www.docker.com/products/docker-desktop) installed.
 
-## Installation 
+## Installation Docker
 
 Clone/git pull the repo into any local directory
 
@@ -52,10 +53,11 @@ $ docker-compose up -d
 zpm "install config-api"
 ```
 
-## For non docker ZPM user
+## Installation by XML
 
-Download the last version here.  
+Download the latest version which include dependencies on [release page](https://github.com/lscalese/iris-config-api/releases/).  
 Import and compile.  
+
 
 ### Dependencies
 
@@ -158,11 +160,11 @@ Do ##class(IORedirect.Redirect).RestoreIO()
 Now, let's try a configuration document a little bit more complex.  
 In this example : 
 
- * use variable
+ * variables usage.
  * create databases
- * namespace, 
- * globals\routines«packages mapping
- * Set system settings (journal, locksiz,...)
+ * create namespace, 
+ * set globals\routines\packages mapping
+ * set system configuration (journal, locksiz,...)
 
 ```ObjectScript
 Set config = {
@@ -264,8 +266,8 @@ If you analyze the output, you can notice a dump of the configuration document w
 
 Output
 ```
-2021-03-28 17:19:51 Start load configuration
-2021-03-28 17:19:51 {
+2021-03-28 08:28:44 Start load configuration
+2021-03-28 08:28:44 {
   "SYS.Databases":{
     "/usr/irissys/mgr/myappdata/":{
       "ExpansionSize":128
@@ -313,32 +315,36 @@ Output
       "CookiePath":"/csp/zwebapp/"
     }
   },
-  "MapGlobals":[
-    {
-      "Namespace":"MYAPP",
-      "Name":"Archive.Data",
-      "Database":"MYAPPARCHIVE"
-    },
-    {
-      "Namespace":"MYAPP",
-      "Name":"App.Log",
-      "Database":"MYAPPLOG"
-    }
-  ],
-  "MapPackages":[
-    {
-      "Namespace":"MYAPP",
-      "Name":"PackageName",
-      "Database":"USER"
-    }
-  ],
-  "MapRoutines":[
-    {
-      "Namespace":"MYAPP",
-      "Name":"RoutineName",
-      "Database":"USER"
-    }
-  ],
+  "MapGlobals":{
+    "MYAPP":[
+      {
+        "Name":"Archive.Data",
+        "Database":"MYAPPARCHIVE"
+      },
+      {
+        "Name":"App.Log",
+        "Database":"MYAPPLOG"
+      }
+    ]
+  },
+  "MapPackages":{
+    "MYAPP":[
+      {
+        "Namespace":"MYAPP",
+        "Name":"PackageName",
+        "Database":"USER"
+      }
+    ]
+  },
+  "MapRoutines":{
+    "MYAPP":[
+      {
+        "Namespace":"MYAPP",
+        "Name":"RoutineName",
+        "Database":"USER"
+      }
+    ]
+  },
   "Journal":{
     "FreezeOnError":1
   },
@@ -357,39 +363,75 @@ Output
     "SystemMode":"DEVELOPMENT"
   }
 }
-2021-03-28 17:19:51  * SYS.Databases
-2021-03-28 17:19:51    + Create /usr/irissys/mgr/myappdata/ ... OK
-2021-03-28 17:19:51    + Create /usr/irissys/mgr/myapparchive/ ... OK
-2021-03-28 17:19:51    + Create /usr/irissys/mgr/myappcode/ ... OK
-2021-03-28 17:19:51    + Create /usr/irissys/mgr/myapplog/ ... OK
-2021-03-28 17:19:51  * Databases
-2021-03-28 17:19:51    + Create MYAPPDATA ... OK
-2021-03-28 17:19:51    + Create MYAPPCODE ... OK
-2021-03-28 17:19:51    + Create MYAPPARCHIVE ... OK
-2021-03-28 17:19:51    + Create MYAPPLOG ... OK
-2021-03-28 17:19:51  * Namespaces
-2021-03-28 17:19:51    + Create MYAPP ... OK
-2021-03-28 17:19:51  * Security.Applications
-2021-03-28 17:19:51    + Create /csp/zrestapp ... OK
-2021-03-28 17:19:51    + Create /csp/zwebapp ... OK
-2021-03-28 17:19:51  * MapGlobals
-2021-03-28 17:19:51    + Create MYAPP Archive.Data ... OK
-2021-03-28 17:19:51    + Create MYAPP App.Log ... OK
-2021-03-28 17:19:51  * MapPackages
-2021-03-28 17:19:51    + Create MYAPP PackageName ... OK
-2021-03-28 17:19:51  * MapRoutines
-2021-03-28 17:19:51    + Create MYAPP RoutineName ... OK
-2021-03-28 17:19:52  * Journal
-2021-03-28 17:19:52    + Update Journal ... OK
-2021-03-28 17:19:52  * Security.Services
-2021-03-28 17:19:52    + Update %Service_Mirror ... OK
-2021-03-28 17:19:52  * SQL
-2021-03-28 17:19:52    + Update SQL ... OK
-2021-03-28 17:19:52  * config
-2021-03-28 17:19:52    + Update config ... OK
-2021-03-28 17:19:52  * Startup
-2021-03-28 17:19:52    + Update Startup ... OK
+2021-03-28 08:28:44  * SYS.Databases
+2021-03-28 08:28:44    + Create /usr/irissys/mgr/myappdata/ ... OK
+2021-03-28 08:28:44    + Create /usr/irissys/mgr/myapparchive/ ... OK
+2021-03-28 08:28:44    + Create /usr/irissys/mgr/myappcode/ ... OK
+2021-03-28 08:28:44    + Create /usr/irissys/mgr/myapplog/ ... OK
+2021-03-28 08:28:44  * Databases
+2021-03-28 08:28:44    + Create MYAPPDATA ... OK
+2021-03-28 08:28:44    + Create MYAPPCODE ... OK
+2021-03-28 08:28:44    + Create MYAPPARCHIVE ... OK
+2021-03-28 08:28:44    + Create MYAPPLOG ... OK
+2021-03-28 08:28:44  * Namespaces
+2021-03-28 08:28:44    + Create MYAPP ... OK
+2021-03-28 08:28:44  * Security.Applications
+2021-03-28 08:28:44    + Create /csp/zrestapp ... OK
+2021-03-28 08:28:44    + Create /csp/zwebapp ... OK
+2021-03-28 08:28:44  * MapGlobals
+2021-03-28 08:28:44    + Create MYAPP Archive.Data ... OK
+2021-03-28 08:28:44    + Create MYAPP App.Log ... OK
+2021-03-28 08:28:45  * MapPackages
+2021-03-28 08:28:45    + Create MYAPP PackageName ... OK
+2021-03-28 08:28:45  * MapRoutines
+2021-03-28 08:28:45    + Create MYAPP RoutineName ... OK
+2021-03-28 08:28:45  * Journal
+2021-03-28 08:28:45    + Update Journal ... OK
+2021-03-28 08:28:45  * Security.Services
+2021-03-28 08:28:45    + Update %Service_Mirror ... OK
+2021-03-28 08:28:45  * SQL
+2021-03-28 08:28:45    + Update SQL ... OK
+2021-03-28 08:28:45  * config
+2021-03-28 08:28:45    + Update config ... OK
+2021-03-28 08:28:45  * Startup
+2021-03-28 08:28:45    + Update Startup ... OK
 ```
 
 ## Export configuration
+
+There is a feature to export existing configuration.  
+It's useful to generate a JSON document from an existing installation in order to use it for automatisation of further installation.  
+Howewer, there is a lot of parameters... It's necessary to select wanted items.  
+
+Firstable, create a filter as follow and then call `export` method.:  
+
+```ObjectScript
+Set filter = {
+    "Namespaces": {   
+        "MYAPP":""    /* Namespace to export */
+    },
+    "MapGlobals":{
+        "MYAPP":""    /* Export all globals mapping for namespace MYAPP */
+    },
+    "MapPackages":{ 
+        "MYAPP":""    /* Export all packages mapping for namespace MYAPP */
+    },
+    "MapRoutines":{
+        "MYAPP":""    /* Export all routines mapping for namespace MYAPP */
+    },
+    "Security.Applications":{
+        "/csp/zrestapp":"",   /* Export Web applications parameters /csp/zrestapp */
+        "/csp/zwebapp":""     /* Export Web applications parameters /csp/zwebapp */
+    },
+    "Journal":""  /* Export all journal setting.  *There is a trick to export only non default parameters(see below) */
+    "config":""   /* Export config parameters */
+}
+Set OnlyNotDefaultValue = 1
+Set config = ##class(Api.Config.Services.Loader).export(filter,OnlyNotDefaultValue)
+```
+
+`Filter` has a structure pretty similar to configuration document.  
+`OnlyNotDefaultValue` allow to export parameters has value different of the "default value".  
+It's an interesting feature to identify modified parameters and also to keep a configuration document clear.  
+In most case, it's not necessary to export parameters wich contain the default value.  
 
