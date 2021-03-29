@@ -2,7 +2,7 @@ Include Api.Config.inc
 
 /// Config API.<br/>
 /// Business logic class defined by OpenAPI in Api.Config.REST.spec<br/>
-/// Updated Mar 28, 2021 13:01:19
+/// Updated Mar 29, 2021 15:19:06
 Class Api.Config.REST.impl Extends %REST.Impl [ ProcedureBlock ]
 {
 
@@ -2127,8 +2127,7 @@ ClassMethod DeleteWebApp(name As %String) As %DynamicObject
 /// Load configuration.<br/>
 /// The method arguments hold values for:<br/>
 ///     model, configuration in json format.<br/>
-/// WARNING: This method's signature has changed.
-ClassMethod LoadConfiguration(model As %Stream.Object) As %DynamicObject
+ClassMethod LoadConfiguration(model As %Stream.Object) As %Stream.Object
 {
     Set dModel = {}.%FromJSON(model)
 	Do ##class(IORedirect.Redirect).ToStream()
@@ -2150,11 +2149,10 @@ ClassMethod LoadConfiguration(model As %Stream.Object) As %DynamicObject
 	Quit stream
 }
 
-/// WARNING Delete all namespaces, databases, webapps,... in configuration.<br/>
+/// WARNING Delete all namespaces, databases, webapps,... defined in configuration object.<br/>
 /// The method arguments hold values for:<br/>
 ///     model, configuration in json format.<br/>
-/// WARNING: This method's signature has changed.
-ClassMethod DeleteConfiguration(model As %Stream.Object) As %DynamicObject
+ClassMethod DeleteConfiguration(model As %Stream.Object) As %Stream.Object
 {
 	Set dModel = {}.%FromJSON(model)
 	Do ##class(IORedirect.Redirect).ToStream()
@@ -2175,6 +2173,85 @@ ClassMethod DeleteConfiguration(model As %Stream.Object) As %DynamicObject
 	}
 	Do stream.Rewind()
 	Quit stream
+}
+
+/// Get list of services.
+ClassMethod GetListOfServices() As %DynamicObject
+{
+    Set lst = ##class(Api.Config.Services.Security.Services).List()
+	Do ..%SetStatusCode($$$HTTP200)
+	Do ..%SetContentType("application/json")
+	Quit {"ListOfServices":(lst)}
+}
+
+/// Get service detail by name<br/>
+/// The method arguments hold values for:<br/>
+///     name<br/>
+ClassMethod GetService(name As %String) As %DynamicObject
+{
+    Set name = ##class(%CSP.Page).UnescapeURL(name)
+	If '##class(Api.Config.Services.Security.Services).Exists(name) {
+		Do ..%SetStatusCode($$$HTTP404)
+		Quit ""
+	}
+
+	Quit ##class(Api.Config.Services.Security.Services).Get(name)
+}
+
+/// Update service.  Set Enable property to 1/0 to activate/disable.<br/>
+/// The method arguments hold values for:<br/>
+///     name<br/>
+///     model<br/>
+ClassMethod PutService(name As %String, model As %Stream.Object) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(model)
+	Set name = ##class(%CSP.Page).UnescapeURL(name)
+	If '##class(Api.Config.Services.Security.Services).Exists(name) {
+		Do ..%SetStatusCode($$$HTTP404)
+		Quit ""
+	}
+
+	$$$ThrowOnError(##class(Api.Config.Services.Security.Services).Update(dModel))
+	Do ..%SetStatusCode($$$HTTP204)
+	Quit ""
+}
+
+/// Create an export instance on the server following your filter criteria.  You can download the created export with GET /export/{id}.  See the location response header.<br/>
+/// The method arguments hold values for:<br/>
+///     filter, params filter to export.<br/>
+///     OnlyNotDefaultValue, export only not default value parameters.<br/>
+/// WARNING: This method's signature has changed.
+ClassMethod PostExport(filter As %Stream.Object, OnlyNotDefaultValue As %Integer) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(filter)
+	Do ..%SetStatusCode($$$HTTP201)
+	Set export = ##class(Api.Config.Services.Loader).export(dModel,''OnlyNotDefaultValue)
+	Set record = ##class(Api.Config.TempStream).%New()
+	Set record.name = "export-config"
+	Do export.%ToJSON(record.charStream)
+	Do record.%Save()
+	Do ..%SetStatusCode($$$HTTP201)
+	Do ..%SetHeader("Location", %request.Application_"/databases/"_record.%Id())
+	Quit ""
+}
+
+/// Get an existing configuration export.<br/>
+/// The method arguments hold values for:<br/>
+///     id, export id to retrieve.<br/>
+ClassMethod GetExport(id As %String) As %DynamicObject
+{
+    //(Place business logic here)
+    //Do ..%SetStatusCode(<HTTP_status_code>)
+    //Do ..%SetHeader(<name>,<value>)
+    //Quit (Place response here) ; response may be a string, stream or dynamic object
+	If '##class(Api.Config.TempStream).%ExistsId(id) {
+		Do ..%SetStatusCode($$$HTTP404)
+		Quit ""
+	}
+	Do ..%SetStatusCode($$$HTTP200)
+	Set record = ##class(Api.Config.TempStream).%OpenId(id)
+	Set response = {}.%FromJSON(record.charStream)
+	Quit response
 }
 
 }

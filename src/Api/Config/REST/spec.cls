@@ -48,6 +48,9 @@ XData OpenAPI [ MimeType = application/json ]
         "description":"Load configuration.",
         "summary":"Load configuration.",
         "operationId":"LoadConfiguration",
+        "tags":[
+          "Import/Export configuration"
+        ],
         "parameters":[
           {
             "name":"model",
@@ -58,6 +61,9 @@ XData OpenAPI [ MimeType = application/json ]
             }
           }
         ],
+        "produces":[
+          "text/plain"
+        ],
         "responses":{
           "200":{
             "description":"OK"
@@ -65,12 +71,12 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "delete":{
-        "tags":[
-          "TEST"
-        ],
-        "summary":"Delete configuration.",
-        "description":"WARNING Delete all namespaces, databases, webapps,... in configuration.",
+        "summary":"WARNING Delete all namespaces, databases, webapps,... defined in configuration object.",
+        "description":"WARNING Delete all namespaces, databases, webapps,... defined in configuration object.",
         "operationId":"DeleteConfiguration",
+        "tags":[
+          "Import/Export configuration"
+        ],
         "parameters":[
           {
             "name":"model",
@@ -78,6 +84,149 @@ XData OpenAPI [ MimeType = application/json ]
             "required":true,
             "in":"body",
             "schema":{
+            }
+          }
+        ],
+        "produces":[
+          "text/plain"
+        ],
+        "responses":{
+          "200":{
+            "description":"OK"
+          }
+        }
+      }
+    },
+    "/export":{
+      "post":{
+        "tags":[
+          "Import/Export configuration"
+        ],
+        "summary":"Export a part of IRIS configuration.",
+        "description":"Create an export instance on the server following your filter criteria.  You can download the created export with GET /export/{id}.  See the location response header.  ",
+        "operationId":"PostExport",
+        "parameters":[
+          {
+            "name":"filter",
+            "description":"params filter to export.",
+            "required":true,
+            "in":"body",
+            "schema":{
+              "$ref":"#/definitions/ExportFilter"
+            }
+          },
+          {
+            "name":"OnlyNotDefaultValue",
+            "description":"export only not default value parameters.",
+            "required":true,
+            "in":"query",
+            "type":"integer",
+            "default":"1"
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"OK",
+            "headers":{
+              "Location":{
+                "type":"string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/export/{id}":{
+      "get":{
+        "tags":[
+          "Import/Export configuration"
+        ],
+        "summary":"Get an existing configuration export.",
+        "description":"Get an existing configuration export.",
+        "operationId":"GetExport",
+        "parameters":[
+          {
+            "name":"id",
+            "description":"export id to retrieve.",
+            "required":true,
+            "type":"string",
+            "in":"path"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"OK",
+            "schema":{
+            }
+          }
+        }
+      }
+    },
+    "/security/services":{
+      "get":{
+        "tags":[
+          "Services"
+        ],
+        "summary":"Get list of services.",
+        "description":"Get list of services.",
+        "parameters":[
+        ],
+        "operationId":"GetListOfServices",
+        "responses":{
+          "200":{
+            "description":"OK",
+            "schema":{
+              "$ref":"#/definitions/ListOfServices"
+            }
+          }
+        }
+      }
+    },
+    "/security/services/{name}":{
+      "get":{
+        "tags":[
+          "Services"
+        ],
+        "summary":"Get service detail by name",
+        "description":"Get service detail by name",
+        "operationId":"GetService",
+        "parameters":[
+          {
+            "name":"name",
+            "in":"path",
+            "type":"string",
+            "required":true
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"OK",
+            "schema":{
+              "$ref":"#/definitions/Services"
+            }
+          }
+        }
+      },
+      "put":{
+        "tags":[
+          "Services"
+        ],
+        "summary":"Update service.",
+        "description":"Update service.  Set Enable property to 1/0 to activate/disable.",
+        "operationId":"PutService",
+        "parameters":[
+          {
+            "name":"name",
+            "in":"path",
+            "type":"string",
+            "required":true
+          },
+          {
+            "name":"model",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/Services"
             }
           }
         ],
@@ -3808,6 +3957,80 @@ XData OpenAPI [ MimeType = application/json ]
     }
   },
   "definitions":{
+    "ExportFilter":{
+      "type":"object",
+      "properties":{
+      },
+      "example":{
+        "Namespaces":{
+          "MYAPP":""
+        },
+        "MapGlobals":{
+          "MYAPP":""
+        },
+        "MapPackages":{
+          "MYAPP":""
+        },
+        "MapRoutines":{
+          "MYAPP":""
+        },
+        "Security.Applications":{
+          "/csp/zrestapp":"",
+          "/csp/zwebapp":""
+        },
+        "Journal":"",
+        "config":""
+      }
+    },
+    "ListOfServices":{
+      "type":"object",
+      "properties":{
+        "ListOfWebApps":{
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Services"
+          }
+        }
+      }
+    },
+    "Services":{
+      "type":"object",
+      "properties":{
+        "AutheEnabled":{
+          "type":"string",
+          "default":0,
+          "description":"Authentication methods enabled for the service<br>\r\nBit 0 = AutheK5CCache<br>\r\nBit 1 = AutheK5Prompt<br>\r\nBit 2 = AutheK5API<br>\r\nBit 3 = AutheK5KeyTab<br>\r\nBit 4 = AutheOS<br>\r\nBit 5 - AutheCache<br>\r\nBit 6 = AutheUnauthenticated<br>\r\nBit 7 = AutheKB<br>\r\nBit 8 = AutheKBEncryption<br>\r\nBit 9 = AutheKBIntegrity<br>\r\nBit 10 = AutheSystem<br>\r\nBit 11 = AutheLDAP<br>\r\nBit 13 = AutheDelegated<br>\r\nBit 14 = AutheLoginToken<br>\r\nBits 15-19 reserved<br>\r\nBit 20 = TwoFactorSMS<br>\r\nBit 21 = TwoFactorPW<br>"
+        },
+        "ClientSystems":{
+          "type":"string",
+          "default":"",
+          "description":"List of valid IP addresses allowed to connect for this service."
+        },
+        "Description":{
+          "type":"string",
+          "default":"",
+          "description":"Full name of the service"
+        },
+        "Enabled":{
+          "type":"boolean",
+          "default":0,
+          "description":"Service enabled"
+        },
+        "Name":{
+          "type":"string",
+          "default":"",
+          "description":"Name of the service"
+        }
+      },
+      "required":[
+        "Description",
+        "Name"
+      ],
+      "example":{
+        "Description":"",
+        "Name":""
+      }
+    },
     "ListOfWebApplication":{
       "type":"object",
       "properties":{

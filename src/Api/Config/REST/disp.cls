@@ -25,8 +25,18 @@ XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
   <Route Url="/" Method="get" Call="GetSpecification" />
   <!-- Load configuration. -->
   <Route Url="/loader" Method="put" Call="LoadConfiguration" />
-  <!-- Delete configuration. -->
+  <!-- WARNING Delete all namespaces, databases, webapps,... defined in configuration object. -->
   <Route Url="/loader" Method="delete" Call="DeleteConfiguration" />
+  <!-- Export a part of IRIS configuration. -->
+  <Route Url="/export" Method="post" Call="PostExport" />
+  <!-- Get an existing configuration export. -->
+  <Route Url="/export/:id" Method="get" Call="GetExport" />
+  <!-- Get list of services. -->
+  <Route Url="/security/services" Method="get" Call="GetListOfServices" />
+  <!-- Get service detail by name -->
+  <Route Url="/security/services/:name" Method="get" Call="GetService" />
+  <!-- Update service. -->
+  <Route Url="/security/services/:name" Method="put" Call="PutService" />
   <!-- Get Web application. -->
   <Route Url="/security/applications/\$(.+)" Method="get" Call="GetWebApp" />
   <!-- Update Web application. -->
@@ -180,8 +190,8 @@ ClassMethod GetSpecification() As %Status
 ClassMethod LoadConfiguration() As %Status
 {
     Try {
-        Do ##class(%REST.Impl).%SetContentType("application/json")
-        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Do ##class(%REST.Impl).%SetContentType("text/plain")
+        If '##class(%REST.Impl).%CheckAccepts("text/plain") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
         If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"model")) Quit
         Set pmodel=%request.Content
         Set response=##class(Api.Config.REST.impl).LoadConfiguration(pmodel)
@@ -192,15 +202,95 @@ ClassMethod LoadConfiguration() As %Status
     Quit $$$OK
 }
 
-/// Delete configuration.
+/// WARNING Delete all namespaces, databases, webapps,... defined in configuration object.
 ClassMethod DeleteConfiguration() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("text/plain")
+        If '##class(%REST.Impl).%CheckAccepts("text/plain") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"model")) Quit
+        Set pmodel=%request.Content
+        Set response=##class(Api.Config.REST.impl).DeleteConfiguration(pmodel)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Export a part of IRIS configuration.
+ClassMethod PostExport() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"filter")) Quit
+        Set pfilter=%request.Content
+        If '$data(%request.Data("OnlyNotDefaultValue",1)) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"OnlyNotDefaultValue")) Quit
+        If $data(%request.Data("OnlyNotDefaultValue",2)) {
+            Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTDuplicate,"OnlyNotDefaultValue")) Quit
+        }
+        Set pOnlyNotDefaultValue=%request.Data("OnlyNotDefaultValue",1)
+        If ($number(pOnlyNotDefaultValue,"I")="") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTInvalid,"OnlyNotDefaultValue",pOnlyNotDefaultValue)) Quit
+        Set response=##class(Api.Config.REST.impl).PostExport(pfilter,pOnlyNotDefaultValue)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get an existing configuration export.
+ClassMethod GetExport(pid As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetExport(pid)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get list of services.
+ClassMethod GetListOfServices() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetListOfServices()
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get service detail by name
+ClassMethod GetService(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetService(pname)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Update service.
+ClassMethod PutService(pname As %String) As %Status
 {
     Try {
         Do ##class(%REST.Impl).%SetContentType("application/json")
         If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
         If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"model")) Quit
         Set pmodel=%request.Content
-        Set response=##class(Api.Config.REST.impl).DeleteConfiguration(pmodel)
+        Set response=##class(Api.Config.REST.impl).PutService(pname,pmodel)
         Do ##class(Api.Config.REST.impl).%WriteResponse(response)
     } Catch (ex) {
         Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))

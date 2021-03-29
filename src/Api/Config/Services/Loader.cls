@@ -341,27 +341,6 @@ ClassMethod export(filter As %DynamicObject = {{}}, OnlyNotDefaultValue As %Bool
     ; Do ##class(Api.Config.Services.Loader).export()
     #define     CFGCLASS(%cls)  "Api.Config.Services."_%cls
 
-    Set filter = {
-        "Namespaces": {   
-            "MYAPP":""    /* Namespace to export */
-        },
-        "MapGlobals":{
-            "MYAPP":""    /* Export all globals mapping for namespace MYAPP */
-        },
-        "MapPackages":{ 
-            "MYAPP":""    /* Export all packages mapping for namespace MYAPP */
-        },
-        "MapRoutines":{
-            "MYAPP":""    /* Export all routines mapping for namespace MYAPP */
-        },
-        "Security.Applications":{
-            "/csp/zrestapp":"",   /* Export Web applications parameters /csp/zrestapp */
-            "/csp/zwebapp":""     /* Export Web applications parameters /csp/zwebapp */
-        },
-        "Journal":"",  /* Export all journal setting.  *There is a trick to export only non default parameters(see below) */
-        "config":""   /* Export config parameters */
-    }
-    
     #dim export As %DynamicObject = {}
 
     #dim processedFilter As %DynamicObject = ..processConfig(filter)
@@ -482,7 +461,6 @@ ClassMethod removeDefaultValue(key As %String, model As %DynamicObject) As %Stat
 ClassMethod processConfig(config As %DynamicObject) As %DynamicObject
 {
     Set:'$ISOBJECT(config.Defaults) config.Defaults = {}
-	Set config.Defaults.LOWERPREFIX = $$$LOWER(config.Defaults.PREFIX)
 	
 	Set processedConfig = config.%ToJSON()
 	

@@ -28,13 +28,13 @@ ClassMethod Update(model As %Library.DynamicObject) As %Status
 	Quit ##class(Security.Services).Modify(model.Name,.properties)
 }
 
-ClassMethod List(Names As %String = "*", CPFFile As %String = "", Flags As %Integer = 0, Format As %Integer = 0) As %DynamicArray
+ClassMethod List(Names As %String = "*") As %DynamicArray
 {
 	$$$switchNSSys
 	Set list = []
 	Try{
 		Set rs=##class(%Library.ResultSet).%New("Security.Services:List")
-		Do rs.Execute(Names,CPFFile,Flags,Format)
+		Do rs.Execute(Names)
 		While rs.Next() {
 			Do list.%Push(..Get(rs.Data("Name")))
 		}
