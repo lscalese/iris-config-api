@@ -96,7 +96,7 @@ Basically, there is a related for class for each existing class in %SYS Config p
         },
         "${DBDIR}myappcode/": {}    /* Create /usr/irissys/mgr/myappcode/ database with default parameters. */
     },
-    "Databases":{                               /* Service class name related to Api.Config.Services.Databases". */
+    "Databases":{                               /* Service class name related to Api.Config.Services.Databases. */
         "MYAPPDATA" : {                         /* Crate a database configuration named MYAPPDATA. */
             "Directory" : "${DBDIR}myappdata/"  /* Link /usr/irissys/mgr/myappdata/ to Database name MYAPPDATA. */
         },
