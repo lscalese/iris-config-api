@@ -51,7 +51,7 @@
               "required": true,
               "in": "body",
               "schema": {
-                
+                "$ref": "#/definitions/ConfigDocument"
               }
             }
           ],
@@ -4212,6 +4212,101 @@
           "ExpansionSize":0,
           "NewGlobalCollation":"5",
           "ReadOnly":false
+        }
+      },
+      "ConfigDocument": {
+        "type":"object",
+        "example": {
+          "Defaults":{
+              "DBDIR" : "${MGRDIR}",
+              "WEBAPPDIR" : "${CSPDIR}",
+              "DBDATA" : "${DBDIR}myappdata/",
+              "DBARCHIVE" : "${DBDIR}myapparchive/",
+              "DBCODE" : "${DBDIR}myappcode/",
+              "DBLOG" : "${DBDIR}myapplog/"
+          },
+          "SYS.Databases":{
+              "${DBDATA}" : {"ExpansionSize":128},
+              "${DBARCHIVE}" : {},
+              "${DBCODE}" : {},
+              "${DBLOG}" : {}
+          },
+          "Databases":{
+              "MYAPPDATA" : {
+                  "Directory" : "${DBDATA}"
+              },
+              "MYAPPCODE" : {
+                  "Directory" : "${DBCODE}"
+              },
+              "MYAPPARCHIVE" : {
+                  "Directory" : "${DBARCHIVE}"
+              },
+              "MYAPPLOG" : {
+                  "Directory" : "${DBLOG}"
+              }
+          },
+          "Namespaces":{
+              "MYAPP": {
+                  "Globals":"MYAPPDATA",
+                  "Routines":"MYAPPCODE"
+              }
+          },
+          "Security.Applications": {
+              "/csp/zrestapp": {
+                  "DispatchClas" : "my.dispatch.class",
+                  "Namespace" : "MYAPP",
+                  "Enabled" : "1",
+                  "AuthEnabled": "64",
+                  "CookiePath" : "/csp/zrestapp/"
+              },
+              "/csp/zwebapp": {
+                  "Path": "${WEBAPPDIR}zwebapp/",
+                  "Namespace" : "MYAPP",
+                  "Enabled" : "1",
+                  "AuthEnabled": "64",
+                  "CookiePath" : "/csp/zwebapp/"
+              }
+          },
+          "MapGlobals":{
+              "MYAPP": [{
+                  "Name" : "Archive.Data",
+                  "Database" : "MYAPPARCHIVE"
+              },{
+                  "Name" : "App.Log",
+                  "Database" : "MYAPPLOG"
+              }]
+          },
+          "MapPackages": {
+              "MYAPP": [{
+                  "Namespace" : "MYAPP",
+                  "Name" : "PackageName",
+                  "Database" : "USER"
+              }]
+          },
+          "MapRoutines": {
+              "MYAPP": [{
+                  "Namespace" : "MYAPP",
+                  "Name" : "RoutineName",
+                  "Database" : "USER"
+              }]
+          },
+          "Journal": {
+              "FreezeOnError":1
+          },
+          "Security.Services":{   
+              "%Service_Mirror": {
+                  "Enabled" : 0
+              }
+          },
+          "SQL": {
+              "LockThreshold" : 2500
+          },
+          "config": {
+              "locksiz" : 33554432
+          },
+          "Startup":{
+              "SystemMode" : "DEVELOPMENT"
+          }
         }
       },
       "Cluster":{

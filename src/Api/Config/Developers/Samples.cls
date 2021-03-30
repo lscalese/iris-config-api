@@ -7,99 +7,95 @@ Class Api.Config.Developers.Samples
 ClassMethod advanced() As %Status
 {
     Set config = {
+        "Defaults":{
+            "DBDIR" : "${MGRDIR}",
+            "WEBAPPDIR" : "${CSPDIR}",
+            "DBDATA" : "${DBDIR}myappdata/",
+            "DBARCHIVE" : "${DBDIR}myapparchive/",
+            "DBCODE" : "${DBDIR}myappcode/",
+            "DBLOG" : "${DBDIR}myapplog/"
+        },
         "SYS.Databases":{
-            "/usr/irissys/mgr/myappdata/":{
-            "ExpansionSize":128
-            },
-            "/usr/irissys/mgr/myapparchive/":{
-            },
-            "/usr/irissys/mgr/myappcode/":{
-            },
-            "/usr/irissys/mgr/myapplog/":{
-            }
+            "${DBDATA}" : {"ExpansionSize":128},
+            "${DBARCHIVE}" : {},
+            "${DBCODE}" : {},
+            "${DBLOG}" : {}
         },
         "Databases":{
-            "MYAPPDATA":{
-            "Directory":"/usr/irissys/mgr/myappdata/"
+            "MYAPPDATA" : {
+                "Directory" : "${DBDATA}"
             },
-            "MYAPPCODE":{
-            "Directory":"/usr/irissys/mgr/myappcode/"
+            "MYAPPCODE" : {
+                "Directory" : "${DBCODE}"
             },
-            "MYAPPARCHIVE":{
-            "Directory":"/usr/irissys/mgr/myapparchive/"
+            "MYAPPARCHIVE" : {
+                "Directory" : "${DBARCHIVE}"
             },
-            "MYAPPLOG":{
-            "Directory":"/usr/irissys/mgr/myapplog/"
+            "MYAPPLOG" : {
+                "Directory" : "${DBLOG}"
             }
         },
         "Namespaces":{
-            "MYAPP":{
-            "Globals":"MYAPPDATA",
-            "Routines":"MYAPPCODE"
+            "MYAPP": {
+                "Globals":"MYAPPDATA",
+                "Routines":"MYAPPCODE"
             }
         },
-        "Security.Applications":{
-            "/csp/zrestapp":{
-            "DispatchClas":"my.dispatch.class",
-            "Namespace":"MYAPP",
-            "Enabled":"1",
-            "AuthEnabled":"64",
-            "CookiePath":"/csp/zrestapp/"
+        "Security.Applications": {
+            "/csp/zrestapp": {
+                "DispatchClas" : "my.dispatch.class",
+                "Namespace" : "MYAPP",
+                "Enabled" : "1",
+                "AuthEnabled": "64",
+                "CookiePath" : "/csp/zrestapp/"
             },
-            "/csp/zwebapp":{
-            "Path":"/usr/irissys/csp/",
-            "Namespace":"MYAPP",
-            "Enabled":"1",
-            "AuthEnabled":"64",
-            "CookiePath":"/csp/zwebapp/"
+            "/csp/zwebapp": {
+                "Path": "${WEBAPPDIR}zwebapp/",
+                "Namespace" : "MYAPP",
+                "Enabled" : "1",
+                "AuthEnabled": "64",
+                "CookiePath" : "/csp/zwebapp/"
             }
         },
         "MapGlobals":{
-            "MYAPP":[
-            {
-                "Name":"Archive.Data",
-                "Database":"MYAPPARCHIVE"
-            },
-            {
-                "Name":"App.Log",
-                "Database":"MYAPPLOG"
-            }
-            ]
+            "MYAPP": [{
+                "Name" : "Archive.Data",
+                "Database" : "MYAPPARCHIVE"
+            },{
+                "Name" : "App.Log",
+                "Database" : "MYAPPLOG"
+            }]
         },
-        "MapPackages":{
-            "MYAPP":[
-            {
-                "Namespace":"MYAPP",
-                "Name":"PackageName",
-                "Database":"USER"
-            }
-            ]
+        "MapPackages": {
+            "MYAPP": [{
+                "Namespace" : "MYAPP",
+                "Name" : "PackageName",
+                "Database" : "USER"
+            }]
         },
-        "MapRoutines":{
-            "MYAPP":[
-            {
-                "Namespace":"MYAPP",
-                "Name":"RoutineName",
-                "Database":"USER"
-            }
-            ]
+        "MapRoutines": {
+            "MYAPP": [{
+                "Namespace" : "MYAPP",
+                "Name" : "RoutineName",
+                "Database" : "USER"
+            }]
         },
-        "Journal":{
+        "Journal": {
             "FreezeOnError":1
         },
-        "Security.Services":{
-            "%Service_Mirror":{
-            "Enabled":0
+        "Security.Services":{   
+            "%Service_Mirror": {
+                "Enabled" : 0
             }
         },
-        "SQL":{
-            "LockThreshold":2500
+        "SQL": {
+            "LockThreshold" : 2500
         },
-        "config":{
-            "locksiz":33554432
+        "config": {
+            "locksiz" : 33554432
         },
         "Startup":{
-            "SystemMode":"DEVELOPMENT"
+            "SystemMode" : "DEVELOPMENT"
         }
     }
     Set sc = ##class(Api.Config.Services.Loader).Load(config)

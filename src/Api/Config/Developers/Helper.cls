@@ -209,4 +209,28 @@ ClassMethod skipProperty(property As %Dictionary.CompiledProperty) As %Boolean
     Quit $$$NO
 }
 
+ClassMethod MDListServices()
+{
+    ; d ##class(Api.Config.Developers.Helper).MDListServices()
+    #define METHODEXISTS(%name)    $s(##class(%Dictionary.MethodDefinition).%ExistsId(key_"||"_%name):"yes",1:"no")
+    Write !,"| Service classes 	| List 	| Get 	| Update    | Create    | Delete    | Exists    |"
+    Write !,"|-	|-	|-	|-	|-	|-	|-	|"
+
+    Set list = 1, get = 1, update = 1, create = 1, delete=1, exists=1 
+    Set key = "Api.Config.Services"
+    For  {
+        Set key = $Order(^oddDEF(key))
+        Quit:key=""||(key'["Api.Config.Services.")
+        CONTINUE:key="Api.Config.Services.Loader"
+
+        Set list = $$$METHODEXISTS("List"), 
+                    get = $$$METHODEXISTS("Get"), 
+                    update = $$$METHODEXISTS("Update"), 
+                    create = $$$METHODEXISTS("Create"), 
+                    delete = $$$METHODEXISTS("Delete"), 
+                    exists = $$$METHODEXISTS("Exists")
+        Write !, $$$FormatText("| %1 | %2 | %3 | %4 | %5 | %6 | %7 |",key,list,get,update,create,delete,exists)
+    }
+}
+
 }

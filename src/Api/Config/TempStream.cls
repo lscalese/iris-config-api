@@ -1,7 +1,8 @@
 /// Description
 Class Api.Config.TempStream Extends %Persistent
 {
-Property created As %TimeStamp [ InitialExpression = { $zdatetime($HOROLOG,3,1)};
+
+Property created As %TimeStamp [ InitialExpression = {$zdatetime($HOROLOG,3,1)} ];
 
 Property name As %String;
 

@@ -59,3 +59,8 @@ zn "%SYS" \
 
 zw ##class(community.csvgen).GenerateFromURL("https://github.com/h2oai/h2o-tutorials/raw/master/h2o-world-2017/automl/data/product_backorders.csv")
 
+## update REST App
+
+Set features("addPing")=0, new = "", error = ""
+Set sc = ##class(%REST.API).CreateApplication("Api.Config.REST","/irisrun/repo/swagger.json",.features,.new,.error)
+Write !,"Status : ",$SYSTEM.Status.GetOneErrorText(sc),!,"New :"new,!,"error ",error

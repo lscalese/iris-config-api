@@ -20,7 +20,9 @@ Features :
 5. [Run Unit Tests](#Run-Unit-Tests)
 6. [Basic example](#Basic-example)
 7. [Advanced](#Basic-example)
-8. [Export configuration](#Export-configuration)
+8. [Service classes mechanic](#Service-classes-mechanic)
+9. [Export configuration](#Export-configuration)
+10. [REST application](#REST-application)
 
 
 
@@ -123,14 +125,12 @@ Let's see an example :
 }
 ```
 
-Observ `Api.Config.Services` package to see the list of available [services](https://github.com/lscalese/iris-config-api/tree/master/src/Api/Config/Services).  
-
 
 ## Basic example
 
 ```ObjectScript
 Set config = {"SYS.Databases":{"/usr/irissys/mgr/dbtestapi":{} } }
-Set sc = ##class(Api.Config.Services.Loader).Load(config) /* config can be a %DynamicObject, a file name or a stream with the config. */
+Set sc = ##class(Api.Config.Services.Loader).Load(config) /* config can be a %DynamicObject, a file name or a stream with the config JSON document. */
 ```
 
 Output : 
@@ -178,13 +178,13 @@ Set config = {
         "DBCODE" : "${DBDIR}myappcode/",
         "DBLOG" : "${DBDIR}myapplog/"
     },
-    "SYS.Databases":{
+    "SYS.Databases":{                           /* Service class Api.Config.Services.SYS.Databases */
         "${DBDATA}" : {"ExpansionSize":128},
         "${DBARCHIVE}" : {},
         "${DBCODE}" : {},
         "${DBLOG}" : {}
     },
-    "Databases":{
+    "Databases":{                               /* Service class Api.Config.Services.Database */
         "MYAPPDATA" : {
             "Directory" : "${DBDATA}"
         },
@@ -198,13 +198,13 @@ Set config = {
             "Directory" : "${DBLOG}"
         }
     },
-    "Namespaces":{
+    "Namespaces":{                              /* Service class Api.Config.Services.Namespaces */
         "MYAPP": {
             "Globals":"MYAPPDATA",
             "Routines":"MYAPPCODE"
         }
     },
-    "Security.Applications": {
+    "Security.Applications": {                  /* Service class Api.Config.Security.Applications */
         "/csp/zrestapp": {
             "DispatchClas" : "my.dispatch.class",
             "Namespace" : "MYAPP",
@@ -220,7 +220,7 @@ Set config = {
             "CookiePath" : "/csp/zwebapp/"
         }
     },
-    "MapGlobals":{
+    "MapGlobals":{                              /* Service class Api.Config.MapGlobals */
         "MYAPP": [{
             "Name" : "Archive.Data",
             "Database" : "MYAPPARCHIVE"
@@ -229,35 +229,35 @@ Set config = {
             "Database" : "MYAPPLOG"
         }]
     },
-    "MapPackages": {
+    "MapPackages": {                            /* Service class Api.Config.MapPackages */
         "MYAPP": [{
             "Namespace" : "MYAPP",
             "Name" : "PackageName",
             "Database" : "USER"
         }]
     },
-    "MapRoutines": {
+    "MapRoutines": {                            /* Service class Api.Config.MapRoutines */
         "MYAPP": [{
             "Namespace" : "MYAPP",
             "Name" : "RoutineName",
             "Database" : "USER"
         }]
     },
-    "Journal": {
+    "Journal": {                                /* Service class Api.Config.Journal */
         "FreezeOnError":1
     },
-    "Security.Services":{   
+    "Security.Services":{                       /* Service class Api.Config.Services */
         "%Service_Mirror": {
             "Enabled" : 0
         }
     },
-    "SQL": {
+    "SQL": {                                    /* Service class Api.Config.SQL */
         "LockThreshold" : 2500
     },
-    "config": {
+    "config": {                                 /* Service class Api.Config.config */
         "locksiz" : 33554432
     },
-    "Startup":{
+    "Startup":{                                 /* Service class Api.Config.Startup */
         "SystemMode" : "DEVELOPMENT"
     }
 }
@@ -402,9 +402,150 @@ Take a look to the output, you can notice a dump of the configuration document w
 ```
 </details>
 
+## Service classes mechanic
+
+For each service class there is a list of operation available depending the type : 
+
+ * List
+ * Get
+ * Update
+ * Create
+ * Delete
+ * Exists
+
+For example `Api.Config.Services.Namespaces` allow all of operation listed above, but `Api.Config.Services.Journal` allow only `Get` and `Update`.  
+
+<details>
+  <summary>See this table (click to expand): </summary>
+
+| Service classes       | List  | Get   | Update    | Create    | Delete    | Exists    |
+|-      |-      |-      |-      |-      |-      |-      |
+| Api.Config.Services.Cluster | no | yes | yes | no | no | no |
+| Api.Config.Services.ConfigFile | no | yes | yes | no | no | no |
+| Api.Config.Services.Databases | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.Debug | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.DeviceSubTypes | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.Devices | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.ECP | no | yes | yes | no | no | no |
+| Api.Config.Services.ECPServers | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.IO | no | yes | yes | no | no | no |
+| Api.Config.Services.Journal | no | yes | yes | no | no | no |
+| Api.Config.Services.LicenseServers | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.MagTapes | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.MapGlobals | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.MapMirrors | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.MapPackages | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.MapRoutines | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.MapShadows | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.MirrorMember | no | yes | yes | no | no | no |
+| Api.Config.Services.Mirrors | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.Miscellaneous | no | yes | yes | no | no | no |
+| Api.Config.Services.Monitor | no | yes | yes | no | no | no |
+| Api.Config.Services.Namespaces | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.SQL | no | yes | yes | no | no | no |
+| Api.Config.Services.SYS.Databases | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.Security.Applications | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.Security.Services | yes | yes | yes | no | no | yes |
+| Api.Config.Services.Shadows | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.SqlSysDatatypes | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.SqlUserDatatypes | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.Startup | no | yes | yes | no | no | no |
+| Api.Config.Services.Telnet | no | yes | yes | no | no | no |
+| Api.Config.Services.config | no | yes | yes | no | no | no |
+
+</details>
+
+## Service classes usage
+
+
+### Get
+
+Get Journal setting:  
+```
+Set jrnSetting = ##class(Api.Config.Services.Journal).Get()
+Do ##class(Api.Config.Developers.Utils).Show(jrnSetting)
+```
+
+Output:
+```json
+{
+  "AlternateDirectory":"/usr/irissys/mgr/journal/",
+  "BackupsBeforePurge":2,
+  "CurrentDirectory":"/usr/irissys/mgr/journal/",
+  "DaysBeforePurge":2,
+  "FileSizeLimit":1024,
+  "FreezeOnError":true,
+  "JournalFilePrefix":"",
+  "JournalcspSession":false
+}
+```
+
+### Update
+Update Journal setting, just the FileSizeLimit : 
+
+```
+Set sc = ##class(Api.Config.Services.Journal).Update({"FileSizeLimit":256})
+Write $SYSTEM.Status.GetOneErrorText(sc)
+```
+
+### List
+Get list of namespaces : 
+```
+Set list = ##class(Api.Config.Services.Namespaces).List()
+Do ##class(Api.Config.Developers.Utils).Show(list)
+```
+
+Output:
+```json
+[
+  {
+    "Globals":"IRISSYS",
+    "Name":"%SYS",
+    "Routines":"IRISSYS",
+    "TempGlobals":"IRISTEMP"
+  },
+  {
+    "Globals":"MYAPPDATA",
+    "Name":"MYAPP",
+    "Routines":"MYAPPCODE",
+    "TempGlobals":"IRISTEMP"
+  },
+  {
+    "Globals":"USER",
+    "Name":"USER",
+    "Routines":"USER",
+    "TempGlobals":"IRISTEMP"
+  }
+]
+```
+
+### Exists
+
+Check if a namespace exists : 
+```
+Write ##class(Api.Config.Services.Namespaces).Exists("TESTAPI")
+```
+
+### Create
+  
+Create a namespace:  
+
+```
+Set sc = ##class(Api.Config.Services.Namespaces).Create({"Globals":"USER","Routines":"USER","Name":"ZTESTAPI"})
+Write $SYSTEM.Status.GetOneErrorText(sc)
+```
+
+### Delete
+
+Delete a namespace:  
+```
+Set sc = ##class(Api.Config.Services.Namespaces).Delete("ZTESTAPI")
+Write $SYSTEM.Status.GetOneErrorText(sc)
+```
+
 ## Export configuration
 
-There is a feature to export existing configuration.  
+This is important feature to export existing configuration.  
 It's useful to generate a JSON document from an existing installation in order to create automatisation script for further installation.  
 
 
@@ -513,3 +654,34 @@ It's very interesting to identify modified parameters and also to keep a configu
 }
 ```
 </details>
+
+# REST application
+
+A REST API is also avaible allowing CRUD operation over all implemented config services, load configuration JSON document, export ...  
+Configuration using simple `curl` command line became possible.  
+
+## Install WEB Application
+
+Execute the following script to install web application /csp/config :  
+
+```
+Do ##class(Api.Config.Developers.Install).installRESTApp()
+```
+
+Note : If you use the docker template in this repository the web application /api/config is automatically installed.  
+
+## Available REST operations
+
+We don't list all available operations in this document, but you can load the [swagger file)[https://github.com/lscalese/iris-config-api/blob/master/swagger.json] into your favorite software like : 
+
+* [swagger-ui modue](https://openexchange.intersystems.com/package/iris-web-swagger-ui)
+* [swagger editor](https://editor.swagger.io)
+* [Postman](https://www.postman.com/)
+
+By default the swagger specification's available a this location : `http://localhost:32773/api/config/` (adapt with your port number).  
+
+
+Note : with this docker template, the [swagger-ui module](https://openexchange.intersystems.com/package/iris-web-swagger-ui) is automatically installed and available at `http://localhost:32773/swagger-ui/index.html`
+
+![swagger-ui](https://github.com/lscalese/iris-config-api/blob/master/img/swagger-ui.png?raw=true)
+
