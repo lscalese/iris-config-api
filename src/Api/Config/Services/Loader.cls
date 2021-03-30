@@ -334,9 +334,9 @@ ClassMethod log(msg As %String, newLine As %Boolean = {$$$YES}, dtOnNewLine As %
     Return sc
 }
 
-/// OnlyNotDefaultValue : properties with the default value won't exported.
-/// 
-ClassMethod export(filter As %DynamicObject = {{}}, OnlyNotDefaultValue As %Boolean = 1) As %DynamicObject
+/// OnlyNotDefaultValue : properties with the default value won't exported.  
+/// toFile : if you want to export to a file, fill toFile argument with the filepath.  
+ClassMethod export(filter As %DynamicObject = {{}}, OnlyNotDefaultValue As %Boolean = 1, toFile As %String = "") As %DynamicObject
 {
     ; Do ##class(Api.Config.Services.Loader).export()
     #define     CFGCLASS(%cls)  "Api.Config.Services."_%cls
@@ -408,7 +408,11 @@ ClassMethod export(filter As %DynamicObject = {{}}, OnlyNotDefaultValue As %Bool
     Set formatter=##class(%JSON.Formatter).%New()
     Set exportStr = ""
     Do formatter.FormatToString(export, .exportStr)
-    w !,exportStr
+    
+    If toFile '= "" {
+        Do ..toFile(export, toFile)
+    }
+
     Quit export
 }
 
@@ -489,6 +493,25 @@ ClassMethod processConfig(config As %DynamicObject) As %DynamicObject
     Set model = {}.%FromJSON(processedConfig)
     Do model.%Remove("Defaults")
     Quit model
+}
+
+ClassMethod toFile(object As %DynamicObject, filename As %String) As %Status
+{
+    Set dir = ##class(%File).GetDirectory(filename)
+    
+    If '##class(%File).DirectoryExists(dir) {
+        Set created = ##class(%File).CreateDirectoryChain(dir)
+        Quit:'created $$$ERROR(5001, "Fail to create directory chain")
+    }
+
+    Set configString = object.%ToJSON()
+    Set formatter=##class(%JSON.Formatter).%New()
+    Do formatter.FormatToString(object, .configString)
+
+    #dim file As %Stream.FileCharacter = ##class(%Stream.FileCharacter).%New()
+    $$$QuitOnError(file.LinkToFile(filename))
+    Do file.Write(configString)
+    Quit file.%Save()
 }
 
 }
