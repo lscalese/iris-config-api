@@ -5,50 +5,7 @@ Class Api.Config.Services.Loader
 ClassMethod test()
 {
     ;d ##class(Api.Config.Services.Loader).test()
-    Set cfg = {
-        "Defaults":{
-            "DBDIR" : "${MGRDIR}",
-            "WEBAPPDIR" : "${CSPDIR}"
-        },
-        "SYS.Databases":{
-            "${DBDIR}myappdata/" : {
-                "ExpansionSize":128
-            },
-            "${DBDIR}myappcode/": {}
-        },
-        "Databases":{
-            "MYAPPDATA" : {
-                "Directory" : "${DBDIR}myappdata/"
-            },
-            "MYAPPCODE" : {
-                "Directory" : "${DBDIR}myappcode/"
-            }
-        },
-        "Namespaces":{
-            "MYAPP": {
-                "Globals":"MYAPPDATA",
-                "Routines":"MYAPPCODE"
-            }
-        },
-        "Security.Applications": {
-            "/csp/zrestapp": {
-                "DispatchClas" : "my.dispatch.class",
-                "Namespace" : "MYAPP",
-                "Enabled" : "1",
-                "AuthEnabled": "64",
-                "CookiePath" : "/csp/zrestapp/"
-            }
-        },
-         "MapGlobals":{
-            "MYAPP": [{
-                "Name" : "Archive.Data",
-                "Database" : "MYAPPARCHIVE"
-            },{
-                "Name" : "App.Log",
-                "Database" : "MYAPPLOG"
-            }]
-        }
-    }
+    
 
     Set cfg2 = {
         "Defaults":{
@@ -367,7 +324,6 @@ ClassMethod export(filter As %DynamicObject = {{}}, OnlyNotDefaultValue As %Bool
 
         If isMap {
             Set lvl2keyProp = $PIECE($PARAMETER($$$CFGCLASS(key),"PIDENTIFIER"),",",1)
-            Set name = $PIECE($PARAMETER($$$CFGCLASS(key),"PIDENTIFIER"),",",2)
             CONTINUE:'$ISOBJECT(value)
             
             Set iterList = value.%GetIterator(), lst = []

@@ -25,7 +25,7 @@ ClassMethod installRESTApp() As %Status
 ClassMethod SetSwaggerUIDefaultPath(specUrl As %String = "/api/config/", toReplace As %String = """http://localhost:52773/crud/_spec""") As %Status
 {
     Quit:'##class(Api.Config.Services.Security.Applications).Exists("/swagger-ui") $$$ERROR(5001, "/swagger-ui web app does not exists")
-    Set sc = $$$OK
+    
     Set app = ##class(Api.Config.Services.Security.Applications).Get("/swagger-ui")
     Set dir = ##class(%File).NormalizeDirectory(app.Path)
     

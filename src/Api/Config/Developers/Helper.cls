@@ -46,8 +46,8 @@ ClassMethod GenToArray(className As %String, outClassName As %String) As %Status
         Set property = class.Properties.GetNext(.key)
         Quit:key="" 
         Continue:..skipProperty(property)
-        Set jsonType = $$$GETTYPE($Replace(property.Type, "Library.",""))
-        Set swaggerType = $$$GETSWAGGERTYPE($Replace(property.Type, "Library.",""))
+        ; Set jsonType = $$$GETTYPE($Replace(property.Type, "Library.",""))
+        ; Set swaggerType = $$$GETSWAGGERTYPE($Replace(property.Type, "Library.",""))
         Set line = $CHAR(9) _ $$$FormatText("Set:$$$CanSetProperty(model,""%1"") properties(""%1"") = model.%1", property.Name)
         Do method.Implementation.WriteLine(line)
     }
@@ -90,7 +90,7 @@ ClassMethod GenToDynamic(className As %String, outClassName As %String) As %Stat
         Quit:key="" 
         Continue:..skipProperty(property)
         Set jsonType = $$$GETTYPE($Replace(property.Type, "Library.",""))
-        Set swaggerType = $$$GETSWAGGERTYPE($Replace(property.Type, "Library.",""))
+        ; Set swaggerType = $$$GETSWAGGERTYPE($Replace(property.Type, "Library.",""))
         Do method.Implementation.WriteLine($CHAR(9) _ $$$FormatText("Do:$Data(properties(""%1"")) model.%Set(""%1"", properties(""%1""), ""%2"")", property.Name, jsonType))
     }
     Do method.Implementation.WriteLine($CHAR(9) _ "Quit model")
@@ -138,7 +138,7 @@ ClassMethod GenObjectToArray(className As %String, outClassName As %String) As %
     Return sc
 }
 
-ClassMethod ShowSwaggerDef(className As %String, outClassName As %String) As %DynamicObject
+ClassMethod ShowSwaggerDef(className As %String) As %DynamicObject
 {
     #define GETTYPE(%type) $case(%type,"%Boolean":"boolean","Security.Datatype.BooleanYN":"boolean","%Float":"number","%Integer":"number",:"string")
     #define GETSWAGGERTYPE(%type) $case(%type,"%Boolean":"boolean","Security.Datatype.BooleanYN":"boolean","%Float":"number","%Integer":"integer",:"string")
@@ -193,8 +193,6 @@ ClassMethod getPropertyDescription(property As %String, class As %String) As %St
 {
     New $NAMESPACE
     Set $NAMESPACE = "%SYS"
-
-    Set desc = ""
 
     #dim cProp As %Dictionary.CompiledProperty = ##class(%Dictionary.CompiledProperty).%OpenId(class _ "||" _property,,.sc)
     Quit:$$$ISERR(sc) ""

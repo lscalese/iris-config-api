@@ -48,7 +48,7 @@ ClassMethod Get(Directory As %String) As %Library.DynamicObject
 ClassMethod List(mask As %String = "*") As %DynamicArray
 {
     $$$switchNSSys
-    Set dbList = [], tmpLst = ""
+    Set dbList = []
 	Try{
 		Set rs=##class(%Library.ResultSet).%New("SYS.Database:CompactLocalList")
 		Do rs.Execute(mask)

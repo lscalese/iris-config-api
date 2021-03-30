@@ -997,7 +997,7 @@ ClassMethod DeleteMapMirrors(id As %String, name As %String) As %DynamicObject
 ///     id, ID where the mapping is.<br><br/>
 ClassMethod GetListMapMirrors(id As %String) As %DynamicObject
 {
-	Set lst = ##class(Api.Config.Services.MapMirrors).List()
+	Set lst = ##class(Api.Config.Services.MapMirrors).List(id)
 	Do ..%SetStatusCode($$$HTTP200)
 	Do ..%SetContentType("application/json")
 	Quit {"ListOfMapMirrors":(lst)}
@@ -1970,7 +1970,7 @@ ClassMethod GetDirectory(directory As %String) As %DynamicObject
 ///     directory, Database directory to create.<br/>
 ClassMethod PostDirectory(directory As %Stream.Object) As %DynamicObject
 {
-    Set dModel = {}.%FromJSON(.model)
+    Set dModel = {}.%FromJSON(.directory)
 	
 	If ##class(Api.Config.Services.Databases).Exists(dModel.Directory) {
 		Do ..%SetStatusCode($$$HTTP409)
@@ -1989,8 +1989,8 @@ ClassMethod PostDirectory(directory As %Stream.Object) As %DynamicObject
 ///     DirectoryModel, Database to update.<br/>
 ClassMethod PutDirectory(directory As %String, DirectoryModel As %Stream.Object) As %DynamicObject
 {
-	Set dModel = {}.%FromJSON(.model)
-	
+	Set dModel = {}.%FromJSON(.DirectoryModel)
+	Set dModel.Directory = directory
 	If '##class(Api.Config.Services.SYS.Databases).Exists(dModel.Directory) {
 		Do ..%SetStatusCode($$$HTTP404)
 		Quit ""
@@ -2113,7 +2113,7 @@ ClassMethod GetListOfWebApps() As %DynamicObject
 ///     name, Web application url ex : /api/config don't forget to escape -> %2Fapi%2Fconfig<br/>
 ClassMethod DeleteWebApp(name As %String) As %DynamicObject
 {
-	Set name = ##class(%CSP.Page).UnescapeURl(name)
+	Set name = ##class(%CSP.Page).UnescapeURL(name)
     If '##class(Api.Config.Services.Security.Applications).Exists(name) {
 		Do ..%SetStatusCode($$$HTTP404)
 		Quit ""

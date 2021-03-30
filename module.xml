@@ -7,7 +7,6 @@
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
       <Resource Name="Api.Config.PKG"/>
-      <!--<UnitTest Name="/tests" Package="UnitTest.dc" Phase="test"/>-->
       <Dependencies>
         <ModuleReference>
           <Name>io-redirect</Name>
