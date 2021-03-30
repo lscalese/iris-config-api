@@ -20,7 +20,7 @@ Features :
 5. [Run Unit Tests](#Run-Unit-Tests)
 6. [Basic example](#Basic-example)
 7. [Advanced](#Basic-example)
-8. [Service classes mechanic](#Service-classes-mechanic)
+8. [Service classes usage](#Service-classes-usage)
 9. [Export configuration](#Export-configuration)
 10. [REST application](#REST-application)
 
@@ -404,7 +404,7 @@ Take a look to the output, you can notice a dump of the configuration document w
 ```
 </details>
 
-## Service classes mechanic
+## Service classes usage
 
 For each service class there is a list of operation available depending the type : 
 
@@ -415,7 +415,7 @@ For each service class there is a list of operation available depending the type
  * Delete
  * Exists
 
-For example `Api.Config.Services.Namespaces` allow all of operation listed above, but `Api.Config.Services.Journal` allow only `Get` and `Update`.  
+For example `Api.Config.Services.Namespaces` allow all of operations listed above, but `Api.Config.Services.Journal` allow only `Get` and `Update`.  
 
 <details>
   <summary>See this table (click to expand): </summary>
@@ -456,9 +456,6 @@ For example `Api.Config.Services.Namespaces` allow all of operation listed above
 | Api.Config.Services.config | no | yes | yes | no | no | no |
 
 </details>
-
-## Service classes usage
-
 
 ### Get
 
