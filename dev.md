@@ -64,3 +64,6 @@ zw ##class(community.csvgen).GenerateFromURL("https://github.com/h2oai/h2o-tutor
 Set features("addPing")=0, new = "", error = ""
 Set sc = ##class(%REST.API).CreateApplication("Api.Config.REST","/irisrun/repo/swagger.json",.features,.new,.error)
 Write !,"Status : ",$SYSTEM.Status.GetOneErrorText(sc),!,"New :"new,!,"error ",error
+
+<UnitTest Name="/tests" Package="UnitTest.dc" Phase="test"/>
+      

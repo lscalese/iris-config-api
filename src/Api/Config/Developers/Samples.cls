@@ -3,6 +3,95 @@
 Class Api.Config.Developers.Samples
 {
 
+ClassMethod firstStep() As %Status
+{
+    /// zw ##class(Api.Config.Developers.Samples).firstStep()
+    Set config = {
+        "Journal": {                                /* Service class Api.Config.Journal */
+            "FreezeOnError":1
+        },
+        "SQL": {                                    /* Service class Api.Config.SQL */
+            "LockThreshold" : 2500
+        },
+        "config": {                                 /* Service class Api.Config.config */
+            "locksiz" : 33554432
+        },
+        "Startup":{                                 /* Service class Api.Config.Startup */
+            "SystemMode" : "DEVELOPMENT"
+        }
+    }
+    Set sc = ##class(Api.Config.Services.Loader).Load(config)
+    Quit sc
+}
+
+ClassMethod firstAppEnvironment() As %Status
+{
+    /// zw ##class(Api.Config.Developers.Samples).firstAppEnvironment()
+    Set config = {
+        "Defaults":{
+            "DBDIR" : "${MGRDIR}",
+            "WEBAPPDIR" : "${CSPDIR}",
+            "DBDATA" : "${DBDIR}myappdata/",
+            "DBARCHIVE" : "${DBDIR}myapparchive/",
+            "DBCODE" : "${DBDIR}myappcode/",
+            "DBLOG" : "${DBDIR}myapplog/"
+        },
+        "SYS.Databases":{
+            "${DBDATA}" : {"ExpansionSize":128},
+            "${DBARCHIVE}" : {},
+            "${DBCODE}" : {},
+            "${DBLOG}" : {}
+        },
+        "Databases":{
+            "MYAPPDATA" : {
+                "Directory" : "${DBDATA}"
+            },
+            "MYAPPCODE" : {
+                "Directory" : "${DBCODE}"
+            },
+            "MYAPPARCHIVE" : {
+                "Directory" : "${DBARCHIVE}"
+            },
+            "MYAPPLOG" : {
+                "Directory" : "${DBLOG}"
+            }
+        },
+        "Namespaces":{
+            "MYAPP": {
+                "Globals":"MYAPPDATA",
+                "Routines":"MYAPPCODE"
+            }
+        },
+        "Security.Applications": {
+            "/csp/zrestapp": {
+                "DispatchClas" : "my.dispatch.class",
+                "Namespace" : "MYAPP",
+                "Enabled" : "1",
+                "AuthEnabled": "64",
+                "CookiePath" : "/csp/zrestapp/"
+            },
+            "/csp/zwebapp": {
+                "Path": "${WEBAPPDIR}zwebapp/",
+                "Namespace" : "MYAPP",
+                "Enabled" : "1",
+                "AuthEnabled": "64",
+                "CookiePath" : "/csp/zwebapp/"
+            }
+        },
+        "MapGlobals":{
+            "MYAPP": [{
+                "Name" : "Archive.Data",
+                "Database" : "MYAPPARCHIVE"
+            },{
+                "Name" : "App.Log",
+                "Database" : "MYAPPLOG"
+            }]
+        }
+    }
+    Set sc = ##class(Api.Config.Services.Loader).Load(config)
+    Quit sc
+}
+
 /// zw ##class(Api.Config.Developers.Samples).advanced()
 ClassMethod advanced() As %Status
 {
