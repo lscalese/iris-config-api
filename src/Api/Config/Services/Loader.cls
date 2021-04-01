@@ -102,6 +102,18 @@ ClassMethod test()
     zw ..Load(cfg2)
 }
 
+/// special method to load just before zpm "load ..." in iris.script file
+ClassMethod ONZPMLoad(model As %DynamicObject, ByRef params) As %Status
+{
+    Set params=""
+    ;Set:'$d(params("IFEXISTS")) params("IFEXISTS")="Update"
+    Set sc = ..commonLoad(model, "Create",.params)
+    If $ISOBJECT(model.Defaults), model.Defaults.WORKNS {
+        ZN model.Defaults.WORKNS
+    }
+    Return sc
+}
+
 /// Model can be : 
 /// * a %String with the path to the JSON Document.
 /// * a stream contain JSON Document
@@ -110,7 +122,7 @@ ClassMethod Load(model As %DynamicObject, ByRef params) As %Status
 {
     Set params=""
     ;Set:'$d(params("IFEXISTS")) params("IFEXISTS")="Update"
-    Set sc = ..commonLoad(model, "Create",.params)
+    Set sc = ..commonLoad(.model, "Create",.params)
     Return sc
 }
 

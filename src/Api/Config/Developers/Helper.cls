@@ -2,7 +2,7 @@
 /// zw ##class(Api.Config.Developers.Helper).GenCommonMethod("","")
 /// zw ##class(Api.Config.Developers.Helper).GenObjectToArray("","")
 /// zw ##class(Api.Config.Developers.Helper).GenToDynamic("","")
-Class Api.Config.Developers.Helper
+Class Api.Config.Developers.Helper [ System = 2 ]
 {
 
 /// Description
@@ -12,7 +12,7 @@ ClassMethod GenCommonMethod(className As %String, outClassName As %String) As %S
     Do ..GenToDynamic(className, outClassName)
     Do ..GenToArray(className, outClassName)
     Do ..GenObjectToArray(className, outClassName)
-    Do ..ShowSwaggerDef(className, outClassName)
+    Do ..ShowSwaggerDef(className)
     Return sc
 }
 
