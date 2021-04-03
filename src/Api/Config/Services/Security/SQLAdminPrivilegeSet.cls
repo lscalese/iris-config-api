@@ -65,7 +65,7 @@ ClassMethod Update(model As %Library.DynamicObject) As %Status
 ClassMethod Delete(Namespace As %String, Grantee As %String) As %Status
 {
 	$$$switchNSSys
-	Set obj = ##class(Security.SQLAdminPrivilegeSet).IDKeyDelete(Namespace, Grantee)
+	Quit ##class(Security.SQLAdminPrivilegeSet).IDKeyDelete(Namespace, Grantee)
 }
 
 ClassMethod List(Namespace As %String = "*") As %DynamicArray
