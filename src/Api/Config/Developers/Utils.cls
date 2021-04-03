@@ -11,4 +11,14 @@ ClassMethod Show(model As %DynamicObject)
     Write !,str
 }
 
+ClassMethod buildXmlRelease(filename As %String = "/irisrun/repo/dist/config-api_with_dependencies.xml") As %Status
+{
+    Do:##class(%File).Exists(filename) ##class(%File).Delete(filename)
+    Set items = ""
+    Set items("Api.Config.inc.INC")=""
+    Set items("IORedirect.INC")=""
+    Set items("Api.Config.*.CLS")=""
+    Quit $SYSTEM.OBJ.Export(.items,filename)
+}
+
 }

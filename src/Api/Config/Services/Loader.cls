@@ -102,18 +102,6 @@ ClassMethod test()
     zw ..Load(cfg2)
 }
 
-/// special method to load just before zpm "load ..." in iris.script file
-ClassMethod ONZPMLoad(model As %DynamicObject, ByRef params) As %Status
-{
-    Set params=""
-    ;Set:'$d(params("IFEXISTS")) params("IFEXISTS")="Update"
-    Set sc = ..commonLoad(model, "Create",.params)
-    If $ISOBJECT(model.Defaults), model.Defaults.WORKNS {
-        ZN model.Defaults.WORKNS
-    }
-    Return sc
-}
-
 /// Model can be : 
 /// * a %String with the path to the JSON Document.
 /// * a stream contain JSON Document
@@ -121,8 +109,21 @@ ClassMethod ONZPMLoad(model As %DynamicObject, ByRef params) As %Status
 ClassMethod Load(model As %DynamicObject, ByRef params) As %Status
 {
     Set params=""
+    Set:'$d(params("IFEXISTS")) params("IFEXISTS")="Update"
+    Set sc = ..commonLoad(model, "Create",.params)
+    Return sc
+}
+
+ClassMethod LoadFromInvoke(model As %DynamicObject, args...) As %Status
+{
+    Set params=""
+    If +$g(args)>0 {
+        For i=1:2:args {
+            Set params(args(i))=$GET(args(i+1))
+        }
+    }
     ;Set:'$d(params("IFEXISTS")) params("IFEXISTS")="Update"
-    Set sc = ..commonLoad(.model, "Create",.params)
+    Set sc = ..commonLoad(model, "Create",.params)
     Return sc
 }
 
@@ -163,7 +164,7 @@ ClassMethod commonLoad(model As %DynamicObject, action As %String, ByRef params 
     
     $$$log("Start load configuration")
     
-    Set processedConfig = ..processConfig(model)
+    Set processedConfig = ..processConfig(model,.params)
     Set formatter=##class(%JSON.Formatter).%New()
     Set swaggerString = ""
     Do formatter.FormatToString(processedConfig, .swaggerString)
@@ -192,6 +193,21 @@ ClassMethod commonLoad(model As %DynamicObject, action As %String, ByRef params 
             Set sc2 = $CLASSMETHOD($$$CFGCLASS(key), rAction, value)
             Set sc = $$$ADDSC(sc,sc2)
             $$$log($SYSTEM.Status.GetOneErrorText(sc2),0)
+            CONTINUE
+        }
+
+        If value.%IsA("%DynamicArray") {
+            Set iterLvl2 = value.%GetIterator()
+            While iterLvl2.%GetNext(.keyLvl3,.valueLvl2) {
+                $$$log("   + "_rAction _" " _ valueLvl2.%ToJSON() _ " ... ")
+                If rAction = "Delete" {
+                    ; Set sc2 = $CLASSMETHOD($$$CFGCLASS(key), rAction, id1, id2)
+                } Else {
+                    Set sc2 = $CLASSMETHOD($$$CFGCLASS(key), rAction, valueLvl2)
+                }
+                
+                $$$log($SYSTEM.Status.GetOneErrorText(sc2),0)
+            }
             CONTINUE
         }
 
@@ -405,6 +421,7 @@ ClassMethod removeDefaultValue(key As %String, model As %DynamicObject) As %Stat
     Set sc = $$$OK
     If key [ "." {
         Set className = key
+        Set:$PIECE(className,".")="Library" $PIECE(className,".")="%Library"
     } Else {
         Set className = "Config."_key
     }
@@ -430,21 +447,41 @@ ClassMethod removeDefaultValue(key As %String, model As %DynamicObject) As %Stat
     Quit sc
 }
 
-ClassMethod processConfig(config As %DynamicObject) As %DynamicObject
+ClassMethod processConfig(config As %DynamicObject, ByRef params) As %DynamicObject
 {
     Set:'$ISOBJECT(config.Defaults) config.Defaults = {}
 	
 	Set processedConfig = config.%ToJSON()
 	
-	Set installDir = ##class(%File).GetDirectory($zu(86))
+	Set installDir = $SYSTEM.Util.InstallDirectory()
 	
 	Set replaceString("${MGRDIR}") = $SYSTEM.Util.ManagerDirectory()
 	Set replaceString("${CSPDIR}") = ##class(%File).NormalizeDirectory("csp", installDir)
-	
+    Set replaceString("${BINDIR}") = $SYSTEM.Util.BinaryDirectory()
+    Set replaceString("${LIBDIR}") = ##class(%File).NormalizeDirectory("lib", installDir)
+    Set replaceString("${NAMESPACE}") = $NAMESPACE
+    Set replaceString("${USERNAME}") = $USERNAME
+    Set replaceString("${ROLES}") = $ROLES
+
+    Set replaceString("${mgrdir}") = $SYSTEM.Util.ManagerDirectory()
+	Set replaceString("${cspdir}") = ##class(%File).NormalizeDirectory("csp", installDir)
+    Set replaceString("${bindir}") = $SYSTEM.Util.BinaryDirectory()
+    Set replaceString("${libdir}") = ##class(%File).NormalizeDirectory("lib", installDir)
+    Set replaceString("${namespace}") = $NAMESPACE
+    Set replaceString("${username}") = $USERNAME
+    Set replaceString("${roles}") = $ROLES
+
+    Set k = ""
+    For  {
+        Set k = $ORDER(params(k),1,value)
+        Quit:k=""
+        Set replaceString( "${"_k_"}" ) = value
+    }
+
 	#dim iter As %Iterator.Object = config.Defaults.%GetIterator()
 	
 	While iter.%GetNext(.property, .value) {
-		Set replaceString( "${"_property_"}" ) = value
+		Set:'$Data(params(property)) replaceString( "${"_property_"}" ) = value
 	}
 	
 	Do {

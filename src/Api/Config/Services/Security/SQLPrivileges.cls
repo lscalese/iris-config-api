@@ -23,12 +23,44 @@ ClassMethod Get(Namespace, SQLObject, Privilege, Grantee, Grantor) As %DynamicOb
 
 ClassMethod Update(model As %DynamicObject) As %Status
 {
-    New $NAMESPACE
     Set lst = [], sc = $$$OK, ns = $NAMESPACE
-    If model.%IsDefined("PrivList"), model.PrivList'="" {
-        For i=1:1:$LENGTH(model.PrivList) {
+    Set:model.Grantor="" model.Grantor = "_SYSTEM"
+    Set:model.Namespace="" model.Namespace = $NAMESPACE
+    Set:model.Grantable="" model.Grantable = 0
+
+    New $NAMESPACE
+    If $EXTRACT(model.SQLObject , *)= "*" {
+        Set arg = $EXTRACT(model.SQLObject, 3, *-1)
+        Set sql = "SELECT SqlQualifiedNameQ from %Dictionary.CompiledClass WHERE SqlQualifiedNameQ %STARTSWITH(?) and ClassType = 'persistent'"
+        Set tStatement = ##class(%SQL.Statement).%New()
+        Set sc = tStatement.%Prepare(sql)
+        If $$$ISERR(sc) $$$ThrowStatus(sc)
+        Set tResult = tStatement.%Execute(arg)
+        If (tResult.%SQLCODE'=0)&&(tResult.%SQLCODE'=100) $$$ThrowStatus($$$ERROR($$$SQLError, tResult.%SQLCODE, tResult.%Message)) 
+        While tResult.%Next() {
+            Set tObj = tResult.%Get("SqlQualifiedNameQ")
             Set copyModel = {}.%FromJSON(model.%ToJSON())
-            Set copyModel.Privilege = $Extract(model.PrivList,i)
+            If model.%IsDefined("PrivList"), model.PrivList'="" {
+                For i=1:1:$LENGTH(model.PrivList) {
+
+                    CONTINUE:"adirsu"'[$$$LOWER($Extract(model.PrivList,i))
+
+                    Set copyModel = {}.%FromJSON(model.%ToJSON())
+                    Set copyModel.Privilege = $$$LOWER($Extract(model.PrivList,i))
+                    Set copyModel.SQLObject = $e(model.SQLObject,1,2)_tResult.%Get("SqlQualifiedNameQ")
+                    Do lst.%Push(copyModel)
+                }
+            } Else {
+                Set copyModel = {}.%FromJSON(model.%ToJSON())
+                Set copyModel.SQLObject = $e(model.SQLObject,1,2)_tResult.%Get("SqlQualifiedNameQ")
+                Do lst.%Push(model)
+            }
+        }
+    } ElseIf model.%IsDefined("PrivList") && (model.PrivList'="") {
+        For i=1:1:$LENGTH(model.PrivList) {
+            CONTINUE:"adirsu"'[$$$LOWER($Extract(model.PrivList,i))
+            Set copyModel = {}.%FromJSON(model.%ToJSON())
+            Set copyModel.Privilege = $$$LOWER($Extract(model.PrivList,i))
             Do lst.%Push(copyModel)
         }
     } Else {
@@ -39,9 +71,8 @@ ClassMethod Update(model As %DynamicObject) As %Status
     Set $NAMESPACE="%SYS"
     While iter.%GetNext(.key,.value) {
         
-        Set namespace = value.Namespace, sqlobject=value.SQLObject, privilege=value.Privilege
-        
-        &SQL(DELETE Security.SQLPrivileges WHERE Namespace=:namespace AND SQLObject=:sqlobject AND Privilege=:privilege)
+        Set namespace = value.Namespace, sqlobject=value.SQLObject, privilege=value.Privilege, grantee = value.Grantee
+        &SQL(DELETE Security.SQLPrivileges WHERE Namespace=:namespace AND SQLObject=:sqlobject AND Privilege=:privilege and Grantee=:grantee)
             
         Set sp = ##class(Security.SQLPrivileges).%New()
         Set:value.%IsDefined("Grantable") sp.Grantable = value.Grantable

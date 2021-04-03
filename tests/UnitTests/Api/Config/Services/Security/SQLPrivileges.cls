@@ -8,7 +8,7 @@ Method TestCreate() As %Status
 		"Grantee" : "unittests1",
 		"Grantor" : "_SYSTEM",
 		"Namespace" : "USER",
-		"SQLObject" : "1,Api_Config.TempStream",
+		"SQLObject" : "1,Api_Config.*",
 		"Grantable" : "0",
 		"PrivList" : "dsu"
 	}

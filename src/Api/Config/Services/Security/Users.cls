@@ -5,4 +5,12 @@ Class Api.Config.Services.Security.Users Extends Api.Config.Services.Common.Meth
 
 Parameter SYSCLASS = "Security.Users";
 
+ClassMethod Create(model As %Library.DynamicObject) As %Status
+{
+	Do ..ToArray(model,.properties)
+	$$$switchNSSys
+    kill properties("Name")
+	Quit $CLASSMETHOD(..#SYSCLASS, "Create",model.Name,.properties)
+}
+
 }

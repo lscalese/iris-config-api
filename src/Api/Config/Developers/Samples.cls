@@ -7,17 +7,63 @@ ClassMethod firstStep() As %Status
 {
     /// zw ##class(Api.Config.Developers.Samples).firstStep()
     Set config = {
-        "Journal": {                                /* Service class Api.Config.Journal */
-            "FreezeOnError":1
+        "Security.Roles":{
+            "MyAppRoleRO" : {
+                "Descripion" : "MyApp SQL Read Only Role",
+                "Resources" : "%Service_SQL:U",
+                "GrantedRoles" : "%SQL"
+            },
+            "MyAppRoleRW" : {
+                "Descripion" : "MyApp SQL Read\\Write Role",
+                "Resources" : "%Service_SQL:U",
+                "GrantedRoles" : "%SQL"
+            }
         },
-        "SQL": {                                    /* Service class Api.Config.SQL */
-            "LockThreshold" : 2500
+        "Security.SQLPrivileges": [{
+            "Grantable" : 0,
+            "Grantee": "MyAppRoleRO",
+            "Grantor" : "_SYSTEM",
+            "Namespace" : "${namespace}",
+            "PrivList" : "s",
+            "SQLObject" : "1,Api_*"
+        },{
+            "Grantable" : 0,
+            "Grantee": "MyAppRoleRW",
+            "Grantor" : "_SYSTEM",
+            "Namespace" : "${namespace}",
+            "PrivList" : "siud",
+            "SQLObject" : "1,Api_*"
+        }],
+        "Security.Users": {
+            "SQLUserRW": {
+                "Description":"SQLUser1",
+                "Password" : "$$test$$",
+                "ChangePassword" : 1,
+                "AccountNeverExpires": 1,
+                "Roles":"MyAppRoleRW",
+                "Namespace" : "${namespace}"
+            },
+            "SQLUserRO": {
+                "Description":"SQLUserRO",
+                "Password" : "$$test$$",
+                "ChangePassword" : 0,
+                "AccountNeverExpires": 1,
+                "Roles":"MyAppRoleRO",
+                "Namespace" : "${namespace}"
+            }
         },
-        "config": {                                 /* Service class Api.Config.config */
-            "locksiz" : 33554432
+        "Security.SSLConfigs": {
+            "SSLDefault":{}
         },
-        "Startup":{                                 /* Service class Api.Config.Startup */
-            "SystemMode" : "DEVELOPMENT"
+        "Library.SQLConnection": {
+            "SQLConnection1" : {},
+            "SQLConnection2" : {}
+        },
+        "Security.SQLAdminPrivilegeSet" : {
+            "${namespace}": [{
+                "CreateTable" : 1,
+                "Grantee" : "SQLUserRW"
+            }]
         }
     }
     Set sc = ##class(Api.Config.Services.Loader).Load(config)
@@ -191,28 +237,35 @@ ClassMethod advanced() As %Status
     Quit sc
 }
 
-/// zw ##class(Api.Config.Developers.Samples).export()
-ClassMethod export() As %Status
+/// zw ##class(Api.Config.Developers.Samples).TestExport()
+/// d ##class(Api.Config.Developers.Utils).Show(##class(Api.Config.Developers.Samples).TestExport())
+ClassMethod TestExport() As %Status
 {
     Set filter = {
         "Namespaces": {   
-            "MYAPP":""    /* Namespace to export */
+            "${namespace}":""    /* Namespace to export */
         },
         "MapGlobals":{
-            "MYAPP":""    /* Export all globals mapping for namespace MYAPP */
+            "${namespace}":""    /* Export all globals mapping for namespace MYAPP */
         },
         "MapPackages":{ 
-            "MYAPP":""    /* Export all packages mapping for namespace MYAPP */
+            "${namespace}":""    /* Export all packages mapping for namespace MYAPP */
         },
         "MapRoutines":{
-            "MYAPP":""    /* Export all routines mapping for namespace MYAPP */
+            "${namespace}":""    /* Export all routines mapping for namespace MYAPP */
         },
         "Security.Applications":{
             "/csp/zrestapp":"",   /* Export Web applications parameters /csp/zrestapp */
             "/csp/zwebapp":""     /* Export Web applications parameters /csp/zwebapp */
         },
         "Journal":"",  /* Export all journal setting.  *There is a trick to export only non default parameters(see below) */
-        "config":""   /* Export config parameters */
+        "config":"",   /* Export config parameters */
+        "Library.SQLConnection":"",
+        "Security.Users":"",
+        "Security.SQLAdminPrivilegeSet":{
+            "${namespace}":""
+        },
+        "Security.SQLPrivileges":""
     }
     Set OnlyNotDefaultValue = 1
     Set config = ##class(Api.Config.Services.Loader).export(filter,OnlyNotDefaultValue)
