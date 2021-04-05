@@ -275,4 +275,19 @@ ClassMethod TestExport() As %Status
     Quit config
 }
 
+ClassMethod TestExport2()
+{
+    Set filter = {
+        "Namespaces": {   
+            "%SYS":""    /* Namespace to export */
+        },
+        "Journal":"",  /* Export all journal setting.  *There is a trick to export only non default parameters(see below) */
+        "config":""   /* Export config parameters */
+    }
+
+    Set OnlyNotDefaultValue = 0
+    Set config = ##class(Api.Config.Services.Loader).export(filter,OnlyNotDefaultValue)
+    Do ##class(Api.Config.Developers.Utils).Show(config)
+}
+
 }

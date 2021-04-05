@@ -338,9 +338,9 @@ ClassMethod export(filter As %DynamicObject = {{}}, OnlyNotDefaultValue As %Bool
     Set iter = processedFilter.%GetIterator()
 
     While iter.%GetNext(.key,.value) {
-
-        If '##class(%Dictionary.CompiledClass).%ExistsId(key) {
-            $$$log("class not found (skipped)",0)
+        $$$log(" * "_key)
+        If '##class(%Dictionary.CompiledClass).%ExistsId($$$CFGCLASS(key)) {
+            $$$log(" class not found (skipped)",0)
             CONTINUE
         }
         
