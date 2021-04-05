@@ -31,6 +31,70 @@ XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
   <Route Url="/export" Method="post" Call="PostExport" />
   <!-- Get an existing configuration export. -->
   <Route Url="/export/:id" Method="get" Call="GetExport" />
+  <!-- Create a new user. -->
+  <Route Url="/security/users" Method="post" Call="PostUsers" />
+  <!-- Get list of existing users. -->
+  <Route Url="/security/users" Method="get" Call="GetListOfUsers" />
+  <!-- Get user detail. -->
+  <Route Url="/security/users/\$(.+)" Method="get" Call="GetUser" />
+  <!-- Update user. -->
+  <Route Url="/security/users/\$(.+)" Method="put" Call="PutUsers" />
+  <!-- Delete a user. -->
+  <Route Url="/security/users/\$(.+)" Method="delete" Call="DeleteUsers" />
+  <!-- Create a new role. -->
+  <Route Url="/security/roles" Method="post" Call="PostRoles" />
+  <!-- Get list of existing roles. -->
+  <Route Url="/security/roles" Method="get" Call="GetListOfRoles" />
+  <!-- Get role detail. -->
+  <Route Url="/security/roles/\$(.+)" Method="get" Call="GetRoles" />
+  <!-- Update role. -->
+  <Route Url="/security/roles/\$(.+)" Method="put" Call="PutRoles" />
+  <!-- Delete a role. -->
+  <Route Url="/security/roles/\$(.+)" Method="delete" Call="DeleteRoles" />
+  <!-- Create a new resource. -->
+  <Route Url="/security/resources" Method="post" Call="PostResources" />
+  <!-- Get list of existing resources. -->
+  <Route Url="/security/resources" Method="get" Call="GetListOfResources" />
+  <!-- Get resource detail. -->
+  <Route Url="/security/resources/\$(.+)" Method="get" Call="GetResources" />
+  <!-- Update resource. -->
+  <Route Url="/security/resources/\$(.+)" Method="put" Call="PutResources" />
+  <!-- Delete a resource. -->
+  <Route Url="/security/resources/\$(.+)" Method="delete" Call="DeleteResources" />
+  <!-- Create a new sslconfig. -->
+  <Route Url="/security/sslconfigs" Method="post" Call="PostSSLConfigs" />
+  <!-- Get list of existing sslconfigs. -->
+  <Route Url="/security/sslconfigs" Method="get" Call="GetListOfSSLConfigs" />
+  <!-- Get sslconfig detail. -->
+  <Route Url="/security/sslconfigs/\$(.+)" Method="get" Call="GetSSLConfigs" />
+  <!-- Update sslconfig. -->
+  <Route Url="/security/sslconfigs/\$(.+)" Method="put" Call="PutSSLConfigs" />
+  <!-- Delete a sslconfig. -->
+  <Route Url="/security/sslconfigs/\$(.+)" Method="delete" Call="DeleteSSLConfigs" />
+  <!-- Get list of SQLAdminPrivilegeSet. -->
+  <Route Url="/security/sqladminprivilegeset" Method="get" Call="GetListOfSQLAdminPrivilegeSet" />
+  <!-- Set SQLAdminPrivilegeSet. -->
+  <Route Url="/security/sqladminprivilegeset" Method="put" Call="PutSQLAdminPrivilegeSet" />
+  <!-- Get SQLAdminPrivilegeSet detail. -->
+  <Route Url="/security/sqladminprivilegeset/:namespace/:grantee" Method="get" Call="GetSQLAdminPrivilegeSet" />
+  <!-- Delete SQLAdminPrivilegeSet. -->
+  <Route Url="/security/sqladminprivilegeset/:namespace/:grantee" Method="delete" Call="DeleteSQLAdminPrivilegeSet" />
+  <!-- Get list of privilege for namespace and grantee. -->
+  <Route Url="/security/sqlprivileges/:namespace/:grantee" Method="get" Call="GetListOfSQLPrivileges" />
+  <!-- Delete privileges for namespace and grantee. -->
+  <Route Url="/security/sqlprivileges/:namespace/:grantee" Method="delete" Call="DeleteSQLPrivileges" />
+  <!-- Set SQL Privileges. -->
+  <Route Url="/security/sqlprivileges" Method="put" Call="PutSQLPrivileges" />
+  <!-- Create a new sqlconnection. -->
+  <Route Url="/library/sqlconnection" Method="post" Call="PostSQLConnection" />
+  <!-- Get list of existing SQLConnections. -->
+  <Route Url="/library/sqlconnection" Method="get" Call="GetListOfSQLConnection" />
+  <!-- Get SQLConnection detail. -->
+  <Route Url="/library/sqlconnection/\$(.+)" Method="get" Call="GetSQLConnection" />
+  <!-- Update SQLConnection. -->
+  <Route Url="/library/sqlconnection/\$(.+)" Method="put" Call="PutSQLConnection" />
+  <!-- Delete SQLConnection. -->
+  <Route Url="/library/sqlconnection/\$(.+)" Method="delete" Call="DeleteSQLConnection" />
   <!-- Get list of databases directory. -->
   <Route Url="/sys/databases" Method="get" Call="GetListOfDirectory" />
   <!-- Create a new database directory. -->
@@ -56,14 +120,14 @@ XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
   <Route Url="/namespaces" Method="post" Call="PostNamespaces" />
   <!-- Create a new web applications. -->
   <Route Url="/security/applications" Method="post" Call="PostWebApp" />
-  <!-- Get list of existings web applications. -->
+  <!-- Get list of existing web applications. -->
   <Route Url="/security/applications" Method="get" Call="GetListOfWebApps" />
   <!-- Get Web application. -->
-  <Route Url="/security/applications/\$(.+)" Method="get" Call="GetWebApp" />
+  <Route Url="/security/applications/:name" Method="get" Call="GetWebApp" />
   <!-- Update Web application. -->
-  <Route Url="/security/applications/\$(.+)" Method="put" Call="PutWebApp" />
+  <Route Url="/security/applications/:name" Method="put" Call="PutWebApp" />
   <!-- Delete Web application. -->
-  <Route Url="/security/applications/\$(.+)" Method="delete" Call="DeleteWebApp" />
+  <Route Url="/security/applications/:name" Method="delete" Call="DeleteWebApp" />
   <Route Url="/configfile" Method="get" Call="GetConfigFile" />
   <Route Url="/configfile" Method="put" Call="PutConfigFile" />
   <Route Url="/journal" Method="get" Call="GetJournal" />
@@ -247,6 +311,478 @@ ClassMethod GetExport(pid As %String) As %Status
         Do ##class(%REST.Impl).%SetContentType("application/json")
         If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
         Set response=##class(Api.Config.REST.impl).GetExport(pid)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Create a new user.
+ClassMethod PostUsers() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"model")) Quit
+        Set pmodel=%request.Content
+        Set response=##class(Api.Config.REST.impl).PostUsers(pmodel)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get list of existing users.
+ClassMethod GetListOfUsers() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetListOfUsers()
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get user detail.
+ClassMethod GetUser(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetUser(pname)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Update user.
+ClassMethod PutUsers(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"model")) Quit
+        Set pmodel=%request.Content
+        Set response=##class(Api.Config.REST.impl).PutUsers(pname,pmodel)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Delete a user.
+ClassMethod DeleteUsers(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).DeleteUsers(pname)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Create a new role.
+ClassMethod PostRoles() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"model")) Quit
+        Set pmodel=%request.Content
+        Set response=##class(Api.Config.REST.impl).PostRoles(pmodel)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get list of existing roles.
+ClassMethod GetListOfRoles() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetListOfRoles()
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get role detail.
+ClassMethod GetRoles(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetRoles(pname)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Update role.
+ClassMethod PutRoles(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"model")) Quit
+        Set pmodel=%request.Content
+        Set response=##class(Api.Config.REST.impl).PutRoles(pname,pmodel)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Delete a role.
+ClassMethod DeleteRoles(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).DeleteRoles(pname)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Create a new resource.
+ClassMethod PostResources() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"model")) Quit
+        Set pmodel=%request.Content
+        Set response=##class(Api.Config.REST.impl).PostResources(pmodel)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get list of existing resources.
+ClassMethod GetListOfResources() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetListOfResources()
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get resource detail.
+ClassMethod GetResources(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetResources(pname)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Update resource.
+ClassMethod PutResources(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"model")) Quit
+        Set pmodel=%request.Content
+        Set response=##class(Api.Config.REST.impl).PutResources(pname,pmodel)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Delete a resource.
+ClassMethod DeleteResources(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).DeleteResources(pname)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Create a new sslconfig.
+ClassMethod PostSSLConfigs() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"model")) Quit
+        Set pmodel=%request.Content
+        Set response=##class(Api.Config.REST.impl).PostSSLConfigs(pmodel)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get list of existing sslconfigs.
+ClassMethod GetListOfSSLConfigs() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetListOfSSLConfigs()
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get sslconfig detail.
+ClassMethod GetSSLConfigs(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetSSLConfigs(pname)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Update sslconfig.
+ClassMethod PutSSLConfigs(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"model")) Quit
+        Set pmodel=%request.Content
+        Set response=##class(Api.Config.REST.impl).PutSSLConfigs(pname,pmodel)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Delete a sslconfig.
+ClassMethod DeleteSSLConfigs(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).DeleteSSLConfigs(pname)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get list of SQLAdminPrivilegeSet.
+ClassMethod GetListOfSQLAdminPrivilegeSet() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetListOfSQLAdminPrivilegeSet()
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Set SQLAdminPrivilegeSet.
+ClassMethod PutSQLAdminPrivilegeSet() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"model")) Quit
+        Set pmodel=%request.Content
+        Set response=##class(Api.Config.REST.impl).PutSQLAdminPrivilegeSet(pmodel)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get SQLAdminPrivilegeSet detail.
+ClassMethod GetSQLAdminPrivilegeSet(pnamespace As %String, pgrantee As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetSQLAdminPrivilegeSet(pnamespace,pgrantee)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Delete SQLAdminPrivilegeSet.
+ClassMethod DeleteSQLAdminPrivilegeSet(pnamespace As %String, pgrantee As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).DeleteSQLAdminPrivilegeSet(pnamespace,pgrantee)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get list of privilege for namespace and grantee.
+ClassMethod GetListOfSQLPrivileges(pnamespace As %String, pgrantee As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetListOfSQLPrivileges(pnamespace,pgrantee)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Delete privileges for namespace and grantee.
+ClassMethod DeleteSQLPrivileges(pnamespace As %String, pgrantee As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).DeleteSQLPrivileges(pnamespace,pgrantee)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Set SQL Privileges.
+ClassMethod PutSQLPrivileges() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"SQLPrivilege")) Quit
+        Set pSQLPrivilege=%request.Content
+        Set response=##class(Api.Config.REST.impl).PutSQLPrivileges(pSQLPrivilege)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Create a new sqlconnection.
+ClassMethod PostSQLConnection() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"model")) Quit
+        Set pmodel=%request.Content
+        Set response=##class(Api.Config.REST.impl).PostSQLConnection(pmodel)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get list of existing SQLConnections.
+ClassMethod GetListOfSQLConnection() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetListOfSQLConnection()
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Get SQLConnection detail.
+ClassMethod GetSQLConnection(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).GetSQLConnection(pname)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Update SQLConnection.
+ClassMethod PutSQLConnection(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"model")) Quit
+        Set pmodel=%request.Content
+        Set response=##class(Api.Config.REST.impl).PutSQLConnection(pname,pmodel)
+        Do ##class(Api.Config.REST.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
+/// Delete SQLConnection.
+ClassMethod DeleteSQLConnection(pname As %String) As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        Set response=##class(Api.Config.REST.impl).DeleteSQLConnection(pname)
         Do ##class(Api.Config.REST.impl).%WriteResponse(response)
     } Catch (ex) {
         Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.impl","ExposeServerExceptions"))
@@ -507,7 +1043,7 @@ ClassMethod PostWebApp() As %Status
     Quit $$$OK
 }
 
-/// Get list of existings web applications.
+/// Get list of existing web applications.
 ClassMethod GetListOfWebApps() As %Status
 {
     Try {

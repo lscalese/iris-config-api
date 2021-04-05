@@ -165,9 +165,9 @@ ClassMethod commonLoad(model As %DynamicObject, action As %String, ByRef params 
     $$$log("Start load configuration")
     
     Set processedConfig = ..processConfig(model,.params)
-    Set formatter=##class(%JSON.Formatter).%New()
-    Set swaggerString = ""
-    Do formatter.FormatToString(processedConfig, .swaggerString)
+
+    Do ##class(Api.Config.Developers.Utils).FormatJSON(processedConfig, .swaggerString)
+    
     $$$log(swaggerString)
 
     Set iter = processedConfig.%GetIterator()
@@ -175,6 +175,11 @@ ClassMethod commonLoad(model As %DynamicObject, action As %String, ByRef params 
     While iter.%GetNext(.key,.value) {
         $$$log(" * "_key)
         
+        If '##class(%Dictionary.CompiledClass).%ExistsId($$$CFGCLASS(key)) {
+            $$$log(" Class not found (skipped)",0)
+            CONTINUE
+        }
+
         Set rAction = action
         Set isSingle = $PARAMETER($$$CFGCLASS(key),"ISSINGLE")=1
         Set isMap = $PARAMETER($$$CFGCLASS(key),"ISMAP")=1
@@ -333,6 +338,11 @@ ClassMethod export(filter As %DynamicObject = {{}}, OnlyNotDefaultValue As %Bool
     Set iter = processedFilter.%GetIterator()
 
     While iter.%GetNext(.key,.value) {
+
+        If '##class(%Dictionary.CompiledClass).%ExistsId(key) {
+            $$$log("class not found (skipped)",0)
+            CONTINUE
+        }
         
         Set isSingle = $PARAMETER($$$CFGCLASS(key),"ISSINGLE")=1
         Set isMap = $PARAMETER($$$CFGCLASS(key),"ISMAP")=1

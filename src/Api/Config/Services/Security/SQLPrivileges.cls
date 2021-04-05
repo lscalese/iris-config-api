@@ -105,4 +105,56 @@ ClassMethod Delete(Namespace, SQLObject, Privilege, Grantee, Grantor) As %Status
     Quit ..ToDynamic(.properties)
 }
 
+ClassMethod List(Namespace As %String, Grantee As %String) As %DynamicArray
+{
+	Set list = [], tmp=0
+	Try{
+		Do ..ExecQry($$$LOWER(Namespace),$$$LOWER(Grantee),.tmp)
+	}Catch(ex) {
+		
+		Throw ex
+	}
+	
+	Set k = ""
+	For  {
+		Set k = $order(tmp(k),1,v)
+		Quit:k=""
+		Do list.%Push(v)
+	}
+	Return list
+}
+
+ClassMethod ExecQry(Namespace, Grantee, ByRef tmp)
+{
+    $$$switchNSSys
+	Try{
+		Set rs=##class(%Library.ResultSet).%New(..#SYSCLASS_":List")
+		Do rs.Execute()
+		While rs.Next() {
+            Set tNS = $$$LOWER(rs.Data("Namespace")), tGrantee = $$$LOWER(rs.Data("Grantee"))
+            
+            If Namespace '= "*" && (tNS '= Namespace) {
+                CONTINUE
+            }
+            If Grantee '= "*" && (tGrantee '= Grantee) {
+                CONTINUE
+            }
+            
+			Set tmp($i(tmp))= {
+                "Grantable" : (rs.Data("Grantable")),
+                "Grantee" : (rs.Data("Grantee")),
+                "Grantor" : (rs.Data("Grantor")),
+                "Namespace" : (rs.Data("Namespace")),
+                "Privilege" : (rs.Data("Privilege")),
+                "SQLObject" : (rs.Data("SQLObject"))
+            }
+		}
+		Do rs.Close()
+	}Catch(ex) {
+		Throw ex
+	}
+	Kill rs
+	Quit
+}
+
 }

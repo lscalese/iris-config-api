@@ -64,6 +64,9 @@ ClassMethod firstStep() As %Status
                 "CreateTable" : 1,
                 "Grantee" : "SQLUserRW"
             }]
+        },
+        "azeruipo" : {
+            
         }
     }
     Set sc = ##class(Api.Config.Services.Loader).Load(config)

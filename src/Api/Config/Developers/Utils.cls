@@ -1,14 +1,21 @@
 /// Description
-Class Api.Config.Developers.Utils
+Class Api.Config.Developers.Utils [ System = 2 ]
 {
 
 /// Description
 ClassMethod Show(model As %DynamicObject)
 {
-    Set formatter=##class(%JSON.Formatter).%New()
     Set str = ""
-    Do formatter.FormatToString(model, .str)
+    Do ..FormatJSON(model,.str)
     Write !,str
+}
+
+ClassMethod FormatJSON(model As %DynamicObject, Output formatted)
+{
+    Set formatter=##class(%JSON.Formatter).%New()
+    Set formatted = ""
+    Do formatter.FormatToString(model, .formatted)
+    Quit
 }
 
 ClassMethod buildXmlRelease(filename As %String = "/irisrun/repo/dist/config-api_with_dependencies.xml") As %Status

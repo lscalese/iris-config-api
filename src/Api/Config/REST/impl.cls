@@ -2,7 +2,7 @@ Include Api.Config.inc
 
 /// Config API.<br/>
 /// Business logic class defined by OpenAPI in Api.Config.REST.spec<br/>
-/// Updated Mar 30, 2021 17:58:15
+/// Updated Apr 5, 2021 18:38:05
 Class Api.Config.REST.impl Extends %REST.Impl [ ProcedureBlock ]
 {
 
@@ -1475,15 +1475,7 @@ ClassMethod PutMonitor(model As %Stream.Object) As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod GetNamespaces(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.Namespaces).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.Namespaces).Get(name)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("Namespaces", name)
 }
 
 /// Update Namespaces.<br/>
@@ -1492,23 +1484,9 @@ ClassMethod GetNamespaces(name As %String) As %DynamicObject
 ///     model, Namespaces to update.<br/>
 ClassMethod PutNamespaces(name As %String, model As %Stream.Object) As %DynamicObject
 {
-	Set dModel = {}.%FromJSON(.model)
-	Set dModel.Name = name
-	Set sc =##class(Api.Config.Services.Namespaces).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If '##class(Api.Config.Services.Namespaces).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.Namespaces).Update(dModel))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Set dModel = {}.%FromJSON(.model), dModel.Name = name
+	Set resp = ..DefaultPutImpl("Namespaces", dModel)
+	Quit resp
 }
 
 /// Get SQL.
@@ -1525,23 +1503,9 @@ ClassMethod GetSQL() As %DynamicObject
 ///     model, Namespaces to create.<br/>
 ClassMethod PostNamespaces(model As %Stream.Object) As %DynamicObject
 {
-	Set dModel = {}.%FromJSON(.model)
-	Set sc =##class(Api.Config.Services.Namespaces).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.Namespaces).Exists(dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.Namespaces).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/namespaces/"_dModel.Name)
-	Quit ""
+	Set dModel = {}.%FromJSON(.model), resp = ..DefaultPostImpl("Namespaces", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"namespaces/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete Namespaces.<br/>
@@ -1549,14 +1513,15 @@ ClassMethod PostNamespaces(model As %Stream.Object) As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod DeleteNamespaces(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.Namespaces).Exists(name) {
+	Quit ..DefaultDelImpl("Namespaces", name)
+	/*If '##class(Api.Config.Services.Namespaces).Exists(name) {
 		Do ..%SetStatusCode($$$HTTP404)
 		Quit ""
 	}
 	
 	$$$ThrowOnError(##class(Api.Config.Services.Namespaces).Delete(name))
 	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ""*/
 }
 
 /// Update SQL.<br/>
@@ -2099,7 +2064,7 @@ ClassMethod PostWebApp(model As %Stream.Object) As %DynamicObject
 	Quit ""
 }
 
-/// Get list of existings web applications.
+/// Get list of existing web applications.
 ClassMethod GetListOfWebApps() As %DynamicObject
 {
     Set lst = ##class(Api.Config.Services.Security.Applications).List()
@@ -2247,6 +2212,428 @@ ClassMethod GetExport(id As %String) As %DynamicObject
 	Set record = ##class(Api.Config.TempStream).%OpenId(id)
 	Set response = {}.%FromJSON(record.charStream)
 	Quit response
+}
+
+/// Create a new user.<br/>
+/// The method arguments hold values for:<br/>
+///     model<br/>
+ClassMethod PostUsers(model As %Stream.Object) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(.model)
+	Set resp = ..DefaultPostImpl("Security.Users", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"/security/users/"_dModel.Name)
+	Quit resp
+}
+
+/// Get list of users.
+ClassMethod GetListOfUsers() As %DynamicObject
+{
+    Quit ..DefaultListOf("Security.Users")
+}
+
+/// Get user detail.<br/>
+/// The method arguments hold values for:<br/>
+///     name, user name<br/>
+ClassMethod GetUser(name As %String) As %DynamicObject
+{
+    Quit ..DefaultGetImpl("Security.Users", name)
+}
+
+/// Update user.<br/>
+/// The method arguments hold values for:<br/>
+///     name, username.<br/>
+///     model<br/>
+ClassMethod PutUsers(name As %String, model As %Stream.Object) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(.model), dModel.Name = name
+	Set resp = ..DefaultPutImpl("Security.Users", dModel)
+	Quit resp
+}
+
+/// Delete a user.<br/>
+/// The method arguments hold values for:<br/>
+///     name, username.<br/>
+ClassMethod DeleteUsers(name As %String) As %DynamicObject
+{
+    Quit ..DefaultDelImpl("Security.Users", name)
+}
+
+/// Create a new role.<br/>
+/// The method arguments hold values for:<br/>
+///     model<br/>
+ClassMethod PostRoles(model As %Stream.Object) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(.model)
+	Set resp = ..DefaultPostImpl("Security.Roles", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"/security/roles/"_dModel.Name)
+	Quit resp
+}
+
+/// Get list of roles.
+ClassMethod GetListOfRoles() As %DynamicObject
+{
+    Quit ..DefaultListOf("Security.Roles")
+}
+
+/// Get role detail.<br/>
+/// The method arguments hold values for:<br/>
+///     name, role name<br/>
+ClassMethod GetRoles(name As %String) As %DynamicObject
+{
+    Quit ..DefaultGetImpl("Security.Roles", name)
+}
+
+/// Update role.<br/>
+/// The method arguments hold values for:<br/>
+///     name, role name.<br/>
+///     model<br/>
+ClassMethod PutRoles(name As %String, model As %Stream.Object) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(.model), dModel.Name = name
+	Set resp = ..DefaultPutImpl("Security.Roles", dModel)
+	Quit resp
+}
+
+/// Delete a role.<br/>
+/// The method arguments hold values for:<br/>
+///     name, role name.<br/>
+ClassMethod DeleteRoles(name As %String) As %DynamicObject
+{
+    Quit ..DefaultDelImpl("Security.Roles", name)
+}
+
+/// Create a new resource.<br/>
+/// The method arguments hold values for:<br/>
+///     model<br/>
+ClassMethod PostResources(model As %Stream.Object) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(.model)
+	Set resp = ..DefaultPostImpl("Security.Resources", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"/security/resources/"_dModel.Name)
+	Quit resp
+}
+
+/// Get list of resources.
+ClassMethod GetListOfResources() As %DynamicObject
+{
+    Quit ..DefaultListOf("Security.Resources")
+}
+
+/// Get resource detail.<br/>
+/// The method arguments hold values for:<br/>
+///     name, resource name<br/>
+ClassMethod GetResources(name As %String) As %DynamicObject
+{
+    Quit ..DefaultGetImpl("Security.Resources", name)
+}
+
+/// Update resource.<br/>
+/// The method arguments hold values for:<br/>
+///     name, resource name.<br/>
+///     model<br/>
+ClassMethod PutResources(name As %String, model As %Stream.Object) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(.model), dModel.Name = name
+	Set resp = ..DefaultPutImpl("Security.Resources", dModel)
+	Quit resp
+}
+
+/// Delete a resource.<br/>
+/// The method arguments hold values for:<br/>
+///     name, resource name.<br/>
+ClassMethod DeleteResources(name As %String) As %DynamicObject
+{
+    Quit ..DefaultDelImpl("Security.Resources", name)
+}
+
+/// Create a new sslconfig.<br/>
+/// The method arguments hold values for:<br/>
+///     model<br/>
+ClassMethod PostSSLConfigs(model As %Stream.Object) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(.model)
+	Set resp = ..DefaultPostImpl("Security.SSLConfigs", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"/security/sslconfigs/"_dModel.Name)
+	Quit resp
+}
+
+/// Get list of sslconfigs.
+ClassMethod GetListOfSSLConfigs() As %DynamicObject
+{
+    Quit ..DefaultListOf("Security.SSLConfigs")
+}
+
+/// Get sslconfig detail.<br/>
+/// The method arguments hold values for:<br/>
+///     name, sslconfig name<br/>
+ClassMethod GetSSLConfigs(name As %String) As %DynamicObject
+{
+    Quit ..DefaultGetImpl("Security.SSConfigs", name)
+}
+
+/// Update sslconfig.<br/>
+/// The method arguments hold values for:<br/>
+///     name, sslconfig name.<br/>
+///     model<br/>
+ClassMethod PutSSLConfigs(name As %String, model As %Stream.Object) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(.model), dModel.Name = name
+	Set resp = ..DefaultPutImpl("Security.SSLConfigs", dModel)
+	Quit resp
+}
+
+/// Delete a sslconfig.<br/>
+/// The method arguments hold values for:<br/>
+///     name, sslconfig name.<br/>
+ClassMethod DeleteSSLConfigs(name As %String) As %DynamicObject
+{
+    Quit ..DefaultDelImpl("Security.SSLConfigs", name)
+}
+
+/// Get list of SQLAdminPrivilegeSet.
+ClassMethod GetListOfSQLAdminPrivilegeSet() As %DynamicObject
+{
+    Quit ..DefaultListOf("Security.SQLAdminPrivilegeSet")
+}
+
+/// Set SQLAdminPrivilegeSet.<br/>
+/// The method arguments hold values for:<br/>
+///     model<br/>
+ClassMethod PutSQLAdminPrivilegeSet(model As %Stream.Object) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(.model)
+	Set resp = ..DefaultPutImpl("Security.SQLAdminPrivilegeSet", dModel, , $$$NO)
+	Quit resp
+}
+
+/// Get SQLAdminPrivilegeSet detail.<br/>
+/// The method arguments hold values for:<br/>
+///     namespace, namespace<br/>
+///     grantee, grantee<br/>
+ClassMethod GetSQLAdminPrivilegeSet(namespace As %String, grantee As %String) As %DynamicObject
+{
+    Quit ..DefaultGetImpl("Security.SQLAdminPrivilegeSet", namespace, grantee)
+}
+
+/// Delete SQLAdminPrivilegeSet.<br/>
+/// The method arguments hold values for:<br/>
+///     namespace, namespace<br/>
+///     grantee, grantee<br/>
+ClassMethod DeleteSQLAdminPrivilegeSet(namespace As %String, grantee As %String) As %DynamicObject
+{
+    Quit ..DefaultDelImpl("Security.SQLAdminPrivilegeSet", namespace, grantee)
+}
+
+/// Get list of privilege for namespace and grantee.<br/>
+/// The method arguments hold values for:<br/>
+///     namespace<br/>
+///     grantee<br/>
+ClassMethod GetListOfSQLPrivileges(namespace As %String, grantee As %String) As %DynamicObject
+{
+    Set lst = ##class(Api.Config.Services.Security.SQLPrivileges).List(namespace,grantee)
+	Do ..%SetStatusCode($$$HTTP200)
+	Do ..%SetContentType("application/json")
+	Quit {"ListOfNamespaces":(lst)}
+}
+
+/// Delete privileges for namespace and grantee.<br/>
+/// The method arguments hold values for:<br/>
+///     namespace<br/>
+///     grantee<br/>
+ClassMethod DeleteSQLPrivileges(namespace As %String, grantee As %String) As %DynamicObject
+{
+    Quit ..DefaultDelImpl("Security.SQLPrivileges", namespace, grantee)
+}
+
+/// Set SQL Privileges<br/>
+/// The method arguments hold values for:<br/>
+///     SQLPrivilege<br/>
+ClassMethod PutSQLPrivileges(SQLPrivilege As %Stream.Object) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(.model)
+	Set resp = ..DefaultPutImpl("Security.SQLPrivileges", dModel, , $$$NO)
+	Quit resp
+}
+
+/// Create a new sqlconnection.<br/>
+/// The method arguments hold values for:<br/>
+///     model<br/>
+ClassMethod PostSQLConnection(model As %Stream.Object) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(.model)
+	Set resp = ..DefaultPostImpl("Library.SQLConnection", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"library/sqlconnection/"_dModel.Name)
+	Quit resp
+}
+
+/// Get list of existing SQLConnections.
+ClassMethod GetListOfSQLConnection() As %DynamicObject
+{
+    Quit ..DefaultListOf("Library.SQLConnection")
+}
+
+/// Get SQLConnection detail.<br/>
+/// The method arguments hold values for:<br/>
+///     name, SQLConnection name<br/>
+ClassMethod GetSQLConnection(name As %String) As %DynamicObject
+{
+    Quit ..DefaultGetImpl("Library.SQLConnection", name)
+}
+
+/// Update SQLConnection.<br/>
+/// The method arguments hold values for:<br/>
+///     name, SQLConnection name.<br/>
+///     model<br/>
+ClassMethod PutSQLConnection(name As %String, model As %Stream.Object) As %DynamicObject
+{
+    Set dModel = {}.%FromJSON(.model), dModel.Name = name
+	Set resp = ..DefaultPutImpl("Library.SQLConnection", dModel)
+	Quit resp
+}
+
+/// Delete SQLConnection.<br/>
+/// The method arguments hold values for:<br/>
+///     name, SQLConnection name.<br/>
+ClassMethod DeleteSQLConnection(name As %String) As %DynamicObject
+{
+    Quit ..DefaultDelImpl("Security.SQLConnection", name)
+}
+
+ClassMethod DefaultGetImpl(class As %String, ids...) As %DynamicObject [ Private ]
+{
+	Set class = "Api.Config.Services." _ class
+
+	If '$d(ids) {
+		Do ..%SetStatusCode($$$HTTP200)
+		Quit $CLASSMETHOD(class, "Get")
+	}
+
+	Set id1 = ##class(%CSP.Page).UnescapeURL(ids(1))
+
+	If ids = 1 {
+		
+		If '$CLASSMETHOD(class, "Exists", id1) {
+			Do ..%SetStatusCode($$$HTTP404)
+			Quit ""
+		}
+		
+		Quit $CLASSMETHOD(class, "Get", id1)
+	}
+
+	Set id2 = ##class(%CSP.Page).UnescapeURL(ids(2))
+
+	If $CLASSMETHOD(class, "Exists", id1, id2) {
+		Do ..%SetStatusCode($$$HTTP404)
+		Quit ""
+	}
+
+	Do ..%SetStatusCode($$$HTTP200)
+	Quit $CLASSMETHOD(class, "Get", id1, id2)
+}
+
+ClassMethod DefaultDelImpl(class As %String, ids...) As %DynamicObject [ Private ]
+{
+	Set class = "Api.Config.Services." _ class
+	Set id1 = ##class(%CSP.Page).UnescapeURL(ids(1))
+
+	If ids = 1 {
+		
+		If '$CLASSMETHOD(class, "Exists", id1) {
+			Do ..%SetStatusCode($$$HTTP404)
+			Quit ""
+		}
+		
+		$$$ThrowOnError($CLASSMETHOD(class, "Delete", id1))
+		Do ..%SetStatusCode($$$HTTP204)
+		Quit ""
+	}
+
+	Set id2 = ##class(%CSP.Page).UnescapeURL(ids(2))
+
+	If '$CLASSMETHOD(class, "Exists", id1, id2) {
+		Do ..%SetStatusCode($$$HTTP404)
+		Quit ""
+	}
+	
+	$$$ThrowOnError($CLASSMETHOD(class, "Delete", id1, id2))
+	Do ..%SetStatusCode($$$HTTP204)
+	Quit ""
+}
+
+ClassMethod DefaultPostImpl(class As %String, dModel As %DynamicObject, Output created As %Boolean) As %DynamicObject [ Private ]
+{
+	Set class = "Api.Config.Services." _ class
+	Set created = $$$NO, sc = $CLASSMETHOD(class, "CheckModel", dModel)
+	If $$$ISERR(sc) {
+		Do ..%SetStatusCode($$$HTTP400)
+		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
+		Quit jsonSC
+	}
+	
+	Set ids = $PARAMETER(class, "PIDENTIFIER")
+	Set id1 = $Piece(ids,",",1)
+	Set:id1="" id1="Name"
+	Set id2 = $Piece(ids,",",2)
+
+	If id2 = "" {
+		If $CLASSMETHOD(class, "Exists", dModel.%Get(id1)) {
+			Do ..%SetStatusCode($$$HTTP409)
+			Quit ""
+		}
+	} Else {
+		If $CLASSMETHOD(class, "Exists", dModel.%Get(id1), dModel.%Get(id2)) {
+			Do ..%SetStatusCode($$$HTTP409)
+			Quit ""
+		}
+	}
+	
+	$$$ThrowOnError($CLASSMETHOD(class, "Create", dModel))
+	Set created = $$$YES
+	Do ..%SetStatusCode($$$HTTP201)
+	Quit ""
+}
+
+ClassMethod DefaultPutImpl(class As %String, dModel As %DynamicObject, Output updated As %Boolean, existsTest As %Boolean = {$$$YES}) As %DynamicObject [ Private ]
+{
+	Set class = "Api.Config.Services." _ class
+	Set updated = $$$NO, sc = $CLASSMETHOD(class, "CheckModel", dModel)
+	If $$$ISERR(sc) {
+		Do ..%SetStatusCode($$$HTTP400)
+		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
+		Quit jsonSC
+	}
+
+	If existsTest {
+		Set ids = $PARAMETER(class, "PIDENTIFIER")
+		Set id1 = $Piece(ids,",",1)
+		Set:id1="" id1="Name"
+		Set id2 = $Piece(ids,",",2)
+		s ^lsc=id1
+		If id2 = "" {
+			If '$CLASSMETHOD(class, "Exists", dModel.%Get(id1)) {
+				Do ..%SetStatusCode($$$HTTP404)
+				Quit ""
+			}
+		} Else {
+			If '$CLASSMETHOD(class, "Exists", dModel.%Get(id1), dModel.%Get(id2)) {
+				Do ..%SetStatusCode($$$HTTP404)
+				Quit ""
+			}
+		}
+	}
+	
+	$$$ThrowOnError($CLASSMETHOD(class, "Update", dModel))
+	Set updated = $$$YES
+	Do ..%SetStatusCode($$$HTTP204)
+	Quit ""
+}
+
+ClassMethod DefaultListOf(class As %String, propertyList As %String = "list") As %DynamicObject
+{
+	Set class = "Api.Config.Services." _ class, obj = {}
+	Set lst = $CLASSMETHOD(class, "List")
+	Do ..%SetStatusCode($$$HTTP200), ..%SetContentType("application/json"), obj.%Set(propertyList,lst)
+	Quit obj
 }
 
 }

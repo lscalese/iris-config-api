@@ -3,14 +3,15 @@
   <Document name="config-api.ZPM">
     <Module>
       <Name>config-api</Name>
-      <Version>0.0.1</Version>
+      <Version>0.2.0</Version>
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
       <Resource Name="Api.Config.PKG"/>
+      <UnitTest Name="/tests" Package="UnitTests.Api.Config" Phase="test"/>
       <Dependencies>
         <ModuleReference>
           <Name>io-redirect</Name>
-          <Version>0.4.0</Version>
+          <Version>0.4.1</Version>
         </ModuleReference>
       </Dependencies>
     </Module>

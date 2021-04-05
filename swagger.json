@@ -143,6 +143,762 @@
           }
         }
       },
+      "/security/users": {
+        "post": {
+          "summary":"Create a new user.",
+          "description":"Create a new user.",
+          "tags":["Security"],
+          "operationId": "PostUsers",
+          "parameters": [
+            {
+              "name":"model",
+              "in":"body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/SecurityUsers"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "OK",
+              "headers":{
+                "Location":{
+                  "type":"string"
+                }
+              }
+            }
+          }
+        },
+        "get": {
+          "summary": "Get list of existing users.",
+          "description": "Get list of users.",
+          "tags":["Security"],
+          "operationId": "GetListOfUsers",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/ListOfSecurityUsers"
+              }
+            }
+          }
+        }
+      },
+      "/security/users/${name}": {
+        "get": {
+          "summary": "Get user detail.",
+          "description": "Get user detail.",
+          "tags":["Security"],
+          "operationId": "GetUser",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "user name",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/SecurityUsers"
+              }
+            }
+          }
+        },
+        "put": {
+          "summary": "Update user.",
+          "description": "Update user.",
+          "tags":["Security"],
+          "operationId": "PutUsers",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "username.",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            },
+            {
+              "name":"model",
+              "in":"body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/SecurityUsers"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete a user.",
+          "description": "Delete a user.",
+          "tags":["Security"],
+          "operationId": "DeleteUsers",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "username.",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "User Deleted."
+            },
+            "404": {
+              "description" : "User not found."
+            }
+          }
+        }
+      },
+      "/security/roles": {
+        "post": {
+          "summary":"Create a new role.",
+          "description":"Create a new role.",
+          "tags":["Security"],
+          "operationId": "PostRoles",
+          "parameters": [
+            {
+              "name":"model",
+              "in":"body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/SecurityRoles"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "OK",
+              "headers":{
+                "Location":{
+                  "type":"string"
+                }
+              }
+            }
+          }
+        },
+        "get": {
+          "summary": "Get list of existing roles.",
+          "description": "Get list of roles.",
+          "tags":["Security"],
+          "operationId": "GetListOfRoles",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/ListOfSecurityRoles"
+              }
+            }
+          }
+        }
+      },
+      "/security/roles/${name}": {
+        "get": {
+          "summary": "Get role detail.",
+          "description": "Get role detail.",
+          "tags":["Security"],
+          "operationId": "GetRoles",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "role name",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        },
+        "put": {
+          "summary": "Update role.",
+          "description": "Update role.",
+          "tags":["Security"],
+          "operationId": "PutRoles",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "role name.",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            },
+            {
+              "name":"model",
+              "in":"body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/SecurityRoles"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete a role.",
+          "description": "Delete a role.",
+          "tags":["Security"],
+          "operationId": "DeleteRoles",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "role name.",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Role Deleted."
+            },
+            "404": {
+              "description" : "Role not found."
+            }
+          }
+        }
+      },
+      "/security/resources": {
+        "post": {
+          "summary":"Create a new resource.",
+          "description":"Create a new resource.",
+          "tags":["Security"],
+          "operationId": "PostResources",
+          "parameters": [
+            {
+              "name":"model",
+              "in":"body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/SecurityResources"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "OK",
+              "headers":{
+                "Location":{
+                  "type":"string"
+                }
+              }
+            }
+          }
+        },
+        "get": {
+          "summary": "Get list of existing resources.",
+          "description": "Get list of resources.",
+          "tags":["Security"],
+          "operationId": "GetListOfResources",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/ListOfSecurityResources"
+              }
+            }
+          }
+        }
+      },
+      "/security/resources/${name}": {
+        "get": {
+          "summary": "Get resource detail.",
+          "description": "Get resource detail.",
+          "tags":["Security"],
+          "operationId": "GetResources",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "resource name",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        },
+        "put": {
+          "summary": "Update resource.",
+          "description": "Update resource.",
+          "tags":["Security"],
+          "operationId": "PutResources",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "resource name.",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            },
+            {
+              "name":"model",
+              "in":"body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/SecurityResources"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete a resource.",
+          "description": "Delete a resource.",
+          "tags":["Security"],
+          "operationId": "DeleteResources",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "resource name.",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Resource Deleted."
+            },
+            "404": {
+              "description" : "Resource not found."
+            }
+          }
+        }
+      },
+      "/security/sslconfigs": {
+        "post": {
+          "summary":"Create a new sslconfig.",
+          "description":"Create a new sslconfig.",
+          "tags":["Security"],
+          "operationId": "PostSSLConfigs",
+          "parameters": [
+            {
+              "name":"model",
+              "in":"body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/SecuritySSLConfigs"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "OK",
+              "headers":{
+                "Location":{
+                  "type":"string"
+                }
+              }
+            }
+          }
+        },
+        "get": {
+          "summary": "Get list of existing sslconfigs.",
+          "description": "Get list of sslconfigs.",
+          "tags":["Security"],
+          "operationId": "GetListOfSSLConfigs",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/ListOfSecuritySSLConfigs"
+              }
+            }
+          }
+        }
+      },
+      "/security/sslconfigs/${name}": {
+        "get": {
+          "summary": "Get sslconfig detail.",
+          "description": "Get sslconfig detail.",
+          "tags":["Security"],
+          "operationId": "GetSSLConfigs",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "sslconfig name",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        },
+        "put": {
+          "summary": "Update sslconfig.",
+          "description": "Update sslconfig.",
+          "tags":["Security"],
+          "operationId": "PutSSLConfigs",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "sslconfig name.",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            },
+            {
+              "name":"model",
+              "in":"body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/SecuritySSLConfigs"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete a sslconfig.",
+          "description": "Delete a sslconfig.",
+          "tags":["Security"],
+          "operationId": "DeleteSSLConfigs",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "sslconfig name.",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "SSLConfig Deleted."
+            },
+            "404": {
+              "description" : "SSLConfig not found."
+            }
+          }
+        }
+      },
+      "/security/sqladminprivilegeset": {
+        "get": {
+          "summary": "Get list of SQLAdminPrivilegeSet.",
+          "description": "Get list of SQLAdminPrivilegeSet.",
+          "tags":["Security"],
+          "operationId": "GetListOfSQLAdminPrivilegeSet",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/ListOfSecuritySQLAdminPrivilegeSet"
+              }
+            }
+          }
+        },
+        "put": {
+          "summary": "Set SQLAdminPrivilegeSet.",
+          "description": "Set SQLAdminPrivilegeSet.",
+          "tags":["Security"],
+          "operationId": "PutSQLAdminPrivilegeSet",
+          "parameters": [
+            {
+              "name":"model",
+              "in":"body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/SecuritySQLAdminPrivilegeSet"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        }
+      },
+      "/security/sqladminprivilegeset/{namespace}/{grantee}": {
+        "get": {
+          "summary": "Get SQLAdminPrivilegeSet detail.",
+          "description": "Get SQLAdminPrivilegeSet detail.",
+          "tags":["Security"],
+          "operationId": "GetSQLAdminPrivilegeSet",
+          "parameters": [
+            {
+              "name":"namespace",
+              "description": "namespace",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            },
+            {
+              "name":"grantee",
+              "description": "grantee",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/SecuritySQLAdminPrivilegeSet"
+              }
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete SQLAdminPrivilegeSet.",
+          "description": "Delete SQLAdminPrivilegeSet.",
+          "tags":["Security"],
+          "operationId": "DeleteSQLAdminPrivilegeSet",
+          "parameters": [
+            {
+              "name":"namespace",
+              "description": "namespace",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            },
+            {
+              "name":"grantee",
+              "description": "grantee",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "SQLAdminPrivilegeSet Deleted."
+            },
+            "404": {
+              "description" : "SQLAdminPrivilegeSet not found."
+            }
+          }
+        }
+      },
+      "/security/sqlprivileges/{namespace}/{grantee}" : {
+        "get": {
+          "tags": ["Security"],
+          "summary": "Get list of privilege for namespace and grantee.",
+          "description": "Get list of privilege for namespace and grantee.",
+          "operationId": "GetListOfSQLPrivileges",
+          "parameters": [{
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },{
+            "name": "grantee",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/ListOfSecuritySQLPrivileges"
+              }
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Security"],
+          "summary": "Delete privileges for namespace and grantee.",
+          "description": "Delete privileges for namespace and grantee.",
+          "operationId": "DeleteSQLPrivileges",
+          "parameters": [{
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },{
+            "name": "grantee",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }],
+          "responses": {
+            "204": {
+              "description": "Privileges deleted."
+            }
+          }
+        }
+      },
+      "/security/sqlprivileges" : {
+        "put": {
+          "tags": ["Security"],
+          "summary": "Set SQL Privileges.",
+          "description" : "Set SQL Privileges",
+          "operationId" : "PutSQLPrivileges",
+          "parameters": [{
+            "name":"SQLPrivilege",
+            "in":"body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SecuritySQLPrivileges"
+            }
+          }],
+          "responses": {
+            "201": {
+              "description": "Privileges added."
+            }
+          }
+        }
+      },
+      "/library/sqlconnection": {
+        "post": {
+          "summary":"Create a new sqlconnection.",
+          "description":"Create a new sqlconnection.",
+          "tags":["Security"],
+          "operationId": "PostSQLConnection",
+          "parameters": [
+            {
+              "name":"model",
+              "in":"body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/LibrarySQLConnection"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "OK",
+              "headers":{
+                "Location":{
+                  "type":"string"
+                }
+              }
+            }
+          }
+        },
+        "get": {
+          "summary": "Get list of existing SQLConnections.",
+          "description": "Get list of existing SQLConnections.",
+          "tags":["Security"],
+          "operationId": "GetListOfSQLConnection",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/ListOfLibrarySQLConnection"
+              }
+            }
+          }
+        }
+      },
+      "/library/sqlconnection/${name}": {
+        "get": {
+          "summary": "Get SQLConnection detail.",
+          "description": "Get SQLConnection detail.",
+          "tags":["Security"],
+          "operationId": "GetSQLConnection",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "SQLConnection name",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/ListOfLibrarySQLConnection"
+              }
+            }
+          }
+        },
+        "put": {
+          "summary": "Update SQLConnection.",
+          "description": "Update SQLConnection.",
+          "tags":["Security"],
+          "operationId": "PutSQLConnection",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "SQLConnection name.",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            },
+            {
+              "name":"model",
+              "in":"body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/LibrarySQLConnection"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete SQLConnection.",
+          "description": "Delete SQLConnection.",
+          "tags":["Security"],
+          "operationId": "DeleteSQLConnection",
+          "parameters": [
+            {
+              "name":"name",
+              "description": "SQLConnection name.",
+              "required": true,
+              "type": "string",
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "SQLConnection Deleted."
+            },
+            "404": {
+              "description" : "SQLConnection not found."
+            }
+          }
+        }
+      },
       "/sys/databases": {
         "get":{
           "tags": ["Databases"],
@@ -636,8 +1392,8 @@
           }
         },
         "get": {
-          "summary": "Get list of existings web applications.",
-          "description": "Get list of existings web applications.",
+          "summary": "Get list of existing web applications.",
+          "description": "Get list of existing web applications.",
           "tags":["WebApplication"],
           "operationId": "GetListOfWebApps",
           "parameters": [],
@@ -651,7 +1407,7 @@
           }
         }
       },
-      "/security/applications/${name}": {
+      "/security/applications/{name}": {
         "get": {
           "summary": "Get Web application.",
           "description": "Get Web application.",
@@ -4340,207 +5096,6 @@
           "Name":"RoleName"
         }
       },
-      "Users":{
-        "type":"object",
-        "properties":{
-          "AccountNeverExpires":{
-            "type":"boolean",
-            "default":0,
-            "description":"Account Expiration behavior.<br>\r\n0 - Account expires normally.<br>\r\n1 - Account will never expire.<br>"
-          },
-          "Attributes":{
-            "type":"string",
-            "default":"",
-            "description":"Attributes to apply to user when they log in."
-          },
-          "AutheEnabled":{
-            "type":"integer",
-            "default":0,
-            "description":"Two factor Authentication options which are enabled for this user.<br>\r\nOptions are:<br>\r\n$$$AutheTwoFactorSMS - SMS Text authentication<br>\r\n$$$AutheTwoFactorPW\t- Time-based One-time Password<br>"
-          },
-          "ChangePassword":{
-            "type":"boolean",
-            "default":0,
-            "description":"Change password on next login.<br>\r\n0 - Password change not required.<br>\r\n1 - Password change required before next login.<br>"
-          },
-          "Comment":{
-            "type":"string",
-            "default":"",
-            "description":"Comment.<br>"
-          },
-          "CreateDateTime":{
-            "type":"string",
-            "default":"65835,66258.97237",
-            "description":"Account creation date and time.<br>\r\n$H format in utc.<br>"
-          },
-          "CreateUsername":{
-            "type":"string",
-            "default":"irisowner",
-            "description":"$username of user who created the account.<br>"
-          },
-          "EmailAddress":{
-            "type":"string",
-            "default":"",
-            "description":"Email address of the user.<br>"
-          },
-          "Enabled":{
-            "type":"boolean",
-            "default":1,
-            "description":"Allow user to log in.<br>\r\n0 - Disable login.<br>\r\n1 - Enable login.<br>"
-          },
-          "ExpirationDate":{
-            "type":"string",
-            "default":"",
-            "description":"Last date an account can be used.<br>\r\n$H date value of when an account becomes disabled.<br>"
-          },
-          "Flags":{
-            "type":"integer",
-            "default":1,
-            "description":"Flags associated with user.<br>\r\nBit 0 - User created via normal security mechanisms (InterSystems IRIS Password User).<br>\r\nBit 1 - User created via LDAP.<br>\r\nBit 2 - User created via Delegated Authentication.<br>"
-          },
-          "FullName":{
-            "type":"string",
-            "default":"",
-            "description":"Full name of the user.<br>"
-          },
-          "HOTPKey":{
-            "type":"string",
-            "default":"H!\u001F^\u000BÛ¢£ã|8'û\u000BH\u0010Î",
-            "description":"Time-based One-time Password key.<br>\r\nThis property is automatically generated when the user is created using the \r\n$System.Encryption.GenCryptRand() method.<br>"
-          },
-          "HOTPKeyDisplay":{
-            "type":"boolean",
-            "default":0,
-            "description":"Display the Time-based One-time Password QR code or key on next login for the\r\nuser to scan with their authentication device.<br>"
-          },
-          "HOTPKeyGenerate":{
-            "type":"boolean",
-            "default":0,
-            "description":"0 - Do not generate a new Time-based One-time Password key when user is saved.<br>\r\n1 - Generate a new Time-based One-time Password key when user is saved.<br>"
-          },
-          "InvalidLoginAttempts":{
-            "type":"integer",
-            "default":0,
-            "description":"Number of invalid login attempts since last successful one.<br>"
-          },
-          "InvalidLoginDateTime":{
-            "type":"string",
-            "default":0,
-            "description":"Last invalid login date and time"
-          },
-          "InvalidLoginDevice":{
-            "type":"string",
-            "default":"",
-            "description":"Last invalid login device"
-          },
-          "InvalidLoginService":{
-            "type":"string",
-            "default":"",
-            "description":"Last invalid login Service"
-          },
-          "InvalidLoginStatus":{
-            "type":"string",
-            "default":1,
-            "description":"Last login error"
-          },
-          "LastModifiedDateTime":{
-            "type":"string",
-            "default":"65835,66258.972375",
-            "description":"Account modified date and time.<br>\r\n$H format in utc.<br>"
-          },
-          "LastModifiedInfo":{
-            "type":"string",
-            "default":"",
-            "description":"Information describing last modification of the user.<br>"
-          },
-          "LastModifiedUsername":{
-            "type":"string",
-            "default":"irisowner",
-            "description":"$username of the person who last modified it.<br>"
-          },
-          "LoginDateTime":{
-            "type":"string",
-            "default":0,
-            "description":"Last Successful login date and time.<br>\r\n$H format in utc."
-          },
-          "LoginDevice":{
-            "type":"string",
-            "default":"",
-            "description":"Last Successful login device"
-          },
-          "LoginService":{
-            "type":"string",
-            "default":"",
-            "description":"Last Successful login Service.<br>"
-          },
-          "Name":{
-            "type":"string",
-            "default":"",
-            "description":"User Name.<br>\r\nIncludes domain if multiple domains are enabled in the\r\nformat username@domain."
-          },
-          "NameSpace":{
-            "type":"string",
-            "default":"",
-            "description":"NameSpace to run in only if a terminal session.<br>"
-          },
-          "Password":{
-            "type":"string",
-            "default":"",
-            "description":"PBKDF2 hashed password for InterSystems IRIS Authentication.<br>\r\nThis is used with a salt function obtained from \r\n$System.Encryption.GenCryptRand. This property is set by the class when the\r\nPasswordExternal property is modified. Do not set this property directly.<br>\r\nTo modify the password for a user using objects, get an instance of the object and\r\nmodify the PasswordExternal property:<br>\r\ni '..Exists(Username,.User,.Status) q Status<br>\r\ns User.PasswordExternal=Password<br>\r\ns Status=User.%Save()<br>\r\nWhen using the Modify() class method to change a user's password, you can either set\r\nProperties(\"Password\")=NewPassword, or Properties(\"ExternalPassword\")=NewPassword.<br>"
-          },
-          "PasswordChangedDateTime":{
-            "type":"string",
-            "default":"65835,66258.972376",
-            "description":"Last password change date and time.<br>\r\n$H format in utc.<br>"
-          },
-          "PasswordExternal":{
-            "type":"string",
-            "default":"\u0000",
-            "description":"Clear text password.<br>\r\nThis property is not stored in permanent storage. It is initially set to\r\nthe value of $c(0). When it is modified, the Password property is updated\r\nto the PBKDF2 salted hashed value."
-          },
-          "PasswordNeverExpires":{
-            "type":"boolean",
-            "default":0,
-            "description":"Password expires behavior.<br>\r\n0 - Password expires normally.<br>\r\n1 - Password never expires.<br>"
-          },
-          "PhoneNumber":{
-            "type":"string",
-            "default":"",
-            "description":"Phone number for two-factor authentication"
-          },
-          "PhoneProvider":{
-            "type":"string",
-            "default":"",
-            "description":"Mobile phone service provider for two-factor authentication"
-          },
-          "Roles":{
-            "type":"string",
-            "default":"",
-            "description":"Roles assigned to the user.<br>"
-          },
-          "Routine":{
-            "type":"string",
-            "default":"",
-            "description":"Routine to run only if terminal session, \"\"=Programmer mode.<br>"
-          },
-          "Salt":{
-            "type":"string",
-            "default":"",
-            "description":"Salt value for Hashed password from $System.Encryption.GenCryptRand.<br>"
-          },
-          "SuperUser":{
-            "type":"boolean",
-            "default":0,
-            "description":"User holds the %All role.<br>"
-          }
-        },
-        "required":[
-          "Name"
-        ],
-        "example":{
-          "Name":""
-        }
-      },
       "Resources":{
         "type":"object",
         "properties":{
@@ -4563,92 +5118,6 @@
             "type":"string",
             "default":0,
             "description":"Type - Bitmap describing the type of resource.<br>\r\nBit 0 = System initialized resource<br>\r\nBit 1 = Database resource<br>\r\nBit 2 = Service resource<br>\r\nBit 3 - Application resource<br>\r\nBit 4 - DeepSee resource<br>\r\nBits 5-30 reserved<br>\r\nBit 31 = User defined Resource<br>\r\nBits 31-64 user defined <Reserved for future use><br>\r\nNote that this property is set automatically by the filer and should\r\nnot be set for user defined resources.<br>\r\nDo not modify this field directly except on initialization of system defaults."
-          }
-        },
-        "required":[
-          "Name"
-        ],
-        "example":{
-          "Name":""
-        }
-      },
-      "SSLConfigs":{
-        "type":"object",
-        "properties":{
-          "CAFile":{
-            "type":"string",
-            "default":"",
-            "description":"File containing X.509 certificate(s) of trusted Certificate Authorities.<br>\r\nCan be an absolute pathname, a pathname relative to the manager's directory, or a special value \"%OSCertificateStore\" for OS-provided trusted CA certificate stores.<br>\r\nClients:  Specify CAFile and/or CAPath<br>\r\nServers:  Specify CAFile and/or CAServer if VerifyPeer > 0"
-          },
-          "CAPath":{
-            "type":"string",
-            "default":"",
-            "description":"Directory containing file(s) with X.509 certificate(s) of trusted Certificate Authorities.<br>\r\nCan be an absolute pathname or a pathname relative to the manager's directory.<br>\r\nClients:  Specify CAFile and/or CAPath<br>\r\nServers:  Specify CAFile and/or CAServer if VerifyPeer > 0"
-          },
-          "CertificateFile":{
-            "type":"string",
-            "default":"",
-            "description":"File containing this configuration's X.509 certificate.<br>\r\nCan be an absolute pathname or a pathname relative to the manager's directory.\r\nIf not null, PrivateKeyFile must also be specified."
-          },
-          "CipherList":{
-            "type":"string",
-            "default":"ALL:!aNULL:!eNULL:!EXP:!SSLv2",
-            "description":"Colon-delimited list of enabled ciphersuites.<br>\r\nBy default, disable anonymous, unencrypted, and SSLv2 ciphersuites."
-          },
-          "Description":{
-            "type":"string",
-            "default":"",
-            "description":"Description of the SSL configuration.<br>"
-          },
-          "Enabled":{
-            "type":"boolean",
-            "default":1,
-            "description":"Configuration is enabled.<br>"
-          },
-          "Name":{
-            "type":"string",
-            "default":"",
-            "description":"SSL configuration name.<br>"
-          },
-          "PrivateKeyFile":{
-            "type":"string",
-            "default":"",
-            "description":"File containing this configuration's private key.<br>\r\nCan be an absolute pathname or a pathname relative to the manager's directory.\r\nIf not null, CertificateFile must also be specified."
-          },
-          "PrivateKeyPassword":{
-            "type":"string",
-            "default":"",
-            "description":"Optional password used to decrypt this configuration's private key.<br>\r\nIf not null, PrivateKeyFile and CertificateFile must also be specified."
-          },
-          "PrivateKeyType":{
-            "type":"string",
-            "default":2,
-            "description":"Private key type, one of:<br>\r\n1 = DSA<br>\r\n2 = RSA"
-          },
-          "Protocols":{
-            "type":"string",
-            "default":24,
-            "description":"Protocols enabled.<br>\r\nBit 0 - SSLv2<br>\r\nBit 1 - SSLv3<br>\r\nBit 2 - TLSv1.0<br>\r\nBit 3 - TLSv1.1<br>\r\nBit 4 - TLSv1.2<br>\r\nDefault is TLSv1.1+TLSv1.2"
-          },
-          "SNIName":{
-            "type":"string",
-            "default":"",
-            "description":"The fully qualified DNS hostname of the server for use with the Subject Name Indication (SNI)\r\nTLS extension"
-          },
-          "Type":{
-            "type":"string",
-            "default":0,
-            "description":"Intended type for this configuration.<br>\r\n0 = client<br>\r\n1 = server<br>\r\nDefault is client (0)"
-          },
-          "VerifyDepth":{
-            "type":"integer",
-            "default":9,
-            "description":"Maximum number of CA certificates allowed in peer certificate chain.<br>"
-          },
-          "VerifyPeer":{
-            "type":"integer",
-            "default":0,
-            "description":"Peer certificate verification level.<br>\r\n<br>\r\nClients:<br>\r\n0 = None (continue even if certificate verification fails)<br>\r\n1 = Require server certificate (continue only if certificate verification succeeds)<br>\r\n<br>\r\nServers:<br>\r\n0 = None (do not request client certificate)<br>\r\n1 = Request client certificate (terminate if certificate is provided and verification fails)<br>\r\n3 = Require client certificate (continue only if certificate is provided and verification succeeds)<br>"
           }
         },
         "required":[
@@ -7320,6 +7789,761 @@
             "targwijsz": 0,
             "udevtabsiz": 24576,
             "wijdir": ""
+        }
+      },
+      "SecurityUsers":{
+        "type":"object",
+        "properties":{
+          "AccountNeverExpires":{
+            "type":"boolean",
+            "default":0,
+            "description":"Account Expiration behavior.<br>\r\n0 - Account expires normally.<br>\r\n1 - Account will never expire.<br>"
+          },
+          "Attributes":{
+            "type":"string",
+            "default":"",
+            "description":"Attributes to apply to user when they log in."
+          },
+          "AutheEnabled":{
+            "type":"integer",
+            "default":0,
+            "description":"Two factor Authentication options which are enabled for this user.<br>\r\nOptions are:<br>\r\n$$$AutheTwoFactorSMS - SMS Text authentication<br>\r\n$$$AutheTwoFactorPW\t- Time-based One-time Password<br>"
+          },
+          "ChangePassword":{
+            "type":"boolean",
+            "default":0,
+            "description":"Change password on next login.<br>\r\n0 - Password change not required.<br>\r\n1 - Password change required before next login.<br>"
+          },
+          "Comment":{
+            "type":"string",
+            "default":"",
+            "description":"Comment.<br>"
+          },
+          "CreateDateTime":{
+            "type":"string",
+            "default":"65838,66352.34806",
+            "description":"Account creation date and time.<br>\r\n$H format in utc.<br>"
+          },
+          "CreateUsername":{
+            "type":"string",
+            "default":"irisowner",
+            "description":"$username of user who created the account.<br>"
+          },
+          "EmailAddress":{
+            "type":"string",
+            "default":"",
+            "description":"Email address of the user.<br>"
+          },
+          "Enabled":{
+            "type":"boolean",
+            "default":1,
+            "description":"Allow user to log in.<br>\r\n0 - Disable login.<br>\r\n1 - Enable login.<br>"
+          },
+          "ExpirationDate":{
+            "type":"string",
+            "default":"",
+            "description":"Last date an account can be used.<br>\r\n$H date value of when an account becomes disabled.<br>"
+          },
+          "Flags":{
+            "type":"integer",
+            "default":1,
+            "description":"Flags associated with user.<br>\r\nBit 0 - User created via normal security mechanisms (InterSystems IRIS Password User).<br>\r\nBit 1 - User created via LDAP.<br>\r\nBit 2 - User created via Delegated Authentication.<br>"
+          },
+          "FullName":{
+            "type":"string",
+            "default":"",
+            "description":"Full name of the user.<br>"
+          },
+          "HOTPKey":{
+            "type":"string",
+            "default":"]9:-ñ\u001BÓÖ\u001E\u0004_H\u00043Ûo",
+            "description":"Time-based One-time Password key.<br>\r\nThis property is automatically generated when the user is created using the \r\n$System.Encryption.GenCryptRand() method.<br>"
+          },
+          "HOTPKeyDisplay":{
+            "type":"boolean",
+            "default":0,
+            "description":"Display the Time-based One-time Password QR code or key on next login for the\r\nuser to scan with their authentication device.<br>"
+          },
+          "HOTPKeyGenerate":{
+            "type":"boolean",
+            "default":0,
+            "description":"0 - Do not generate a new Time-based One-time Password key when user is saved.<br>\r\n1 - Generate a new Time-based One-time Password key when user is saved.<br>"
+          },
+          "InvalidLoginAttempts":{
+            "type":"integer",
+            "default":0,
+            "description":"Number of invalid login attempts since last successful one.<br>"
+          },
+          "InvalidLoginDateTime":{
+            "type":"string",
+            "default":0,
+            "description":"Last invalid login date and time"
+          },
+          "InvalidLoginDevice":{
+            "type":"string",
+            "default":"",
+            "description":"Last invalid login device"
+          },
+          "InvalidLoginService":{
+            "type":"string",
+            "default":"",
+            "description":"Last invalid login Service"
+          },
+          "InvalidLoginStatus":{
+            "type":"string",
+            "default":1,
+            "description":"Last login error"
+          },
+          "LastModifiedDateTime":{
+            "type":"string",
+            "default":"65838,66352.348077",
+            "description":"Account modified date and time.<br>\r\n$H format in utc.<br>"
+          },
+          "LastModifiedInfo":{
+            "type":"string",
+            "default":"",
+            "description":"Information describing last modification of the user.<br>"
+          },
+          "LastModifiedUsername":{
+            "type":"string",
+            "default":"irisowner",
+            "description":"$username of the person who last modified it.<br>"
+          },
+          "LoginDateTime":{
+            "type":"string",
+            "default":0,
+            "description":"Last Successful login date and time.<br>\r\n$H format in utc."
+          },
+          "LoginDevice":{
+            "type":"string",
+            "default":"",
+            "description":"Last Successful login device"
+          },
+          "LoginService":{
+            "type":"string",
+            "default":"",
+            "description":"Last Successful login Service.<br>"
+          },
+          "Name":{
+            "type":"string",
+            "default":"",
+            "description":"User Name.<br>\r\nIncludes domain if multiple domains are enabled in the\r\nformat username@domain."
+          },
+          "NameSpace":{
+            "type":"string",
+            "default":"",
+            "description":"NameSpace to run in only if a terminal session.<br>"
+          },
+          "Password":{
+            "type":"string",
+            "default":"",
+            "description":"PBKDF2 hashed password for InterSystems IRIS Authentication.<br>\r\nThis is used with a salt function obtained from \r\n$System.Encryption.GenCryptRand. This property is set by the class when the\r\nPasswordExternal property is modified. Do not set this property directly.<br>\r\nTo modify the password for a user using objects, get an instance of the object and\r\nmodify the PasswordExternal property:<br>\r\ni '..Exists(Username,.User,.Status) q Status<br>\r\ns User.PasswordExternal=Password<br>\r\ns Status=User.%Save()<br>\r\nWhen using the Modify() class method to change a user's method, you can either set\r\nProperties(\"Password\")=NewPassword, or Properties(\"ExternalPassword\")=NewPassword.<br>"
+          },
+          "PasswordChangedDateTime":{
+            "type":"string",
+            "default":"65838,66352.348078",
+            "description":"Last password change date and time.<br>\r\n$H format in utc.<br>"
+          },
+          "PasswordExternal":{
+            "type":"string",
+            "default":"\u0000",
+            "description":"Clear text password.<br>\r\nThis property is not stored in permanent storage. It is initially set to\r\nthe value of $c(0). When it is modified, the Password property is updated\r\nto the PBKDF2 salted hashed value."
+          },
+          "PasswordHashAlgorithm":{
+            "type":"string",
+            "default":"",
+            "description":"Algorithm used to calculate user's current PBKDF2 password hash.\r\n\r\nIrrelevant for users without passwords."
+          },
+          "PasswordHashWorkFactor":{
+            "type":"integer",
+            "default":"",
+            "description":"Work Factor used to calculate user's current PBKDF2 password hash.\r\n\r\nIrrelevant for users without passwords."
+          },
+          "PasswordNeverExpires":{
+            "type":"boolean",
+            "default":0,
+            "description":"Password expires behavior.<br>\r\n0 - Password expires normally.<br>\r\n1 - Password never expires.<br>"
+          },
+          "PhoneNumber":{
+            "type":"string",
+            "default":"",
+            "description":"Phone number for two-factor authentication"
+          },
+          "PhoneProvider":{
+            "type":"string",
+            "default":"",
+            "description":"Mobile phone service provider for two-factor authentication"
+          },
+          "Roles":{
+            "type":"string",
+            "default":"",
+            "description":"Roles assigned to the user.<br>"
+          },
+          "Routine":{
+            "type":"string",
+            "default":"",
+            "description":"Routine to run only if terminal session, \"\"=Programmer mode.<br>"
+          },
+          "Salt":{
+            "type":"string",
+            "default":"",
+            "description":"Salt value for Hashed password from $System.Encryption.GenCryptRand.<br>"
+          },
+          "SuperUser":{
+            "type":"boolean",
+            "default":0,
+            "description":"User holds the %All role.<br>"
+          }
+        },
+        "required":[
+          "Name",
+          "PasswordHashAlgorithm",
+          "PasswordHashWorkFactor"
+        ],
+        "example":{
+          "Name":"",
+          "PasswordHashAlgorithm":"",
+          "PasswordHashWorkFactor":0
+        }
+      },
+      "ListOfSecurityUsers":{
+        "type":"object",
+        "properties":{
+          "list":{
+            "type":"array",
+            "items":{
+              "$ref":"#/definitions/SecurityUsers"
+            }
+          }
+        }
+      },
+      "SecurityRoles":{
+        "type":"object",
+        "properties":{
+          "Description":{
+            "type":"string",
+            "default":"",
+            "description":"Description of the role."
+          },
+          "GrantedRoles":{
+            "type":"string",
+            "default":"",
+            "description":"Roles assigned to the Role."
+          },
+          "Name":{
+            "type":"string",
+            "default":"",
+            "description":"Role Name"
+          },
+          "Resources":{
+            "type":"string",
+            "default":"",
+            "description":"Resource/Permission pairs the role holds"
+          }
+        },
+        "required":[
+          "Name"
+        ],
+        "example":{
+          "Name":""
+        }
+      },
+      "ListOfSecurityRoles":{
+        "type":"object",
+        "properties":{
+          "list":{
+            "type":"array",
+            "items":{
+              "$ref":"#/definitions/SecurityRoles"
+            }
+          }
+        }
+      },
+      "SecurityResources":{
+        "type":"object",
+        "properties":{
+          "Description":{
+            "type":"string",
+            "default":"",
+            "description":"Description of the resource.<br>\r\nDescription cannot be modified if a system defined resource.<br>"
+          },
+          "Name":{
+            "type":"string",
+            "default":"",
+            "description":"Name of the resource.<br>"
+          },
+          "PublicPermission":{
+            "type":"string",
+            "default":0,
+            "description":"Public permissions on the resource.<br>\r\nBit 0 - Read<br>\r\nBit 1 - Write<br>\r\nBit 2 - Use<br><br>\r\nAlternatively, you can set to this any of \"RWU\" or \"READ,WRITE,USE\"<br>"
+          },
+          "Type":{
+            "type":"string",
+            "default":0,
+            "description":"Type - Bitmap describing the type of resource.<br>\r\nBit 0 = System initialized resource<br>\r\nBit 1 = Database resource<br>\r\nBit 2 = Service resource<br>\r\nBit 3 - Application resource<br>\r\nBit 4 - DeepSee resource<br>\r\nBits 5-30 reserved<br>\r\nBit 31 = User defined Resource<br>\r\nBits 31-64 user defined <Reserved for future use><br>\r\nNote that this property is set automatically by the filer and should\r\nnot be set for user defined resources.<br>\r\nDo not modify this field directly except on initialization of system defaults."
+          }
+        },
+        "required":[
+          "Name"
+        ],
+        "example":{
+          "Name":""
+        }
+      },
+      "ListOfSecurityResources":{
+        "type":"object",
+        "properties":{
+          "list":{
+            "type":"array",
+            "items":{
+              "$ref":"#/definitions/SecurityResources"
+            }
+          }
+        }
+      },
+      "SecuritySSLConfigs":{
+        "type":"object",
+        "properties":{
+          "CAFile":{
+            "type":"string",
+            "default":"",
+            "description":"File containing X.509 certificate(s) of trusted Certificate Authorities.<br>\r\nCan be an absolute pathname, a pathname relative to the manager's directory, or a special value \"%OSCertificateStore\" for OS-provided trusted CA certificate stores.<br>\r\nClients:  Specify CAFile and/or CAPath<br>\r\nServers:  Specify CAFile and/or CAServer if VerifyPeer > 0"
+          },
+          "CAPath":{
+            "type":"string",
+            "default":"",
+            "description":"Directory containing file(s) with X.509 certificate(s) of trusted Certificate Authorities.<br>\r\nCan be an absolute pathname or a pathname relative to the manager's directory.<br>\r\nClients:  Specify CAFile and/or CAPath<br>\r\nServers:  Specify CAFile and/or CAServer if VerifyPeer > 0"
+          },
+          "CertificateFile":{
+            "type":"string",
+            "default":"",
+            "description":"File containing this configuration's X.509 certificate.<br>\r\nCan be an absolute pathname or a pathname relative to the manager's directory.\r\nIf not null, PrivateKeyFile must also be specified."
+          },
+          "CipherList":{
+            "type":"string",
+            "default":"ALL:!aNULL:!eNULL:!EXP:!SSLv2",
+            "description":"Colon-delimited list of enabled ciphersuites for TLSv1.2 and below.<br>\r\nBy default, disable anonymous, unencrypted, export, and SSLv2 ciphersuites."
+          },
+          "Ciphersuites":{
+            "type":"string",
+            "default":"TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256",
+            "description":"Colon-delimited lists of enabled ciphersuites for TLSv1.3."
+          },
+          "Description":{
+            "type":"string",
+            "default":"",
+            "description":"Description of the SSL configuration.<br>"
+          },
+          "Enabled":{
+            "type":"boolean",
+            "default":1,
+            "description":"Configuration is enabled.<br>"
+          },
+          "Name":{
+            "type":"string",
+            "default":"",
+            "description":"SSL configuration name.<br>"
+          },
+          "PrivateKeyFile":{
+            "type":"string",
+            "default":"",
+            "description":"File containing this configuration's private key.<br>\r\nCan be an absolute pathname or a pathname relative to the manager's directory.\r\nIf not null, CertificateFile must also be specified."
+          },
+          "PrivateKeyPassword":{
+            "type":"string",
+            "default":"",
+            "description":"Optional password used to decrypt this configuration's private key.<br>\r\nIf not null, PrivateKeyFile and CertificateFile must also be specified."
+          },
+          "PrivateKeyType":{
+            "type":"string",
+            "default":2,
+            "description":"Private key type, one of:<br>\r\n1 = DSA<br>\r\n2 = RSA"
+          },
+          "Protocols":{
+            "type":"string",
+            "default":"",
+            "description":"Protocols enabled.<br>\r\nBit 2 - TLSv1.0<br>\r\nBit 3 - TLSv1.1<br>\r\nBit 4 - TLSv1.2<br>\r\nBit 5 - TLSv1.3<br>\r\nDEPRECATED.  Use TLSMinVersion and TLSMaxVersion instead."
+          },
+          "SNIName":{
+            "type":"string",
+            "default":"",
+            "description":"The fully qualified DNS hostname of the server for use with the Subject Name Indication (SNI)\r\nTLS extension\r\nDEPRECATED."
+          },
+          "TLSMaxVersion":{
+            "type":"string",
+            "default":32,
+            "description":"Maximum TLS protocol version enabled.<br>\r\n4 - TLSv1.0\r\n8 - TLSv1.1\r\n16 - TLSv1.2\r\n32 - TLSv1.3\r\nDefault = TLSv1.3\r\nRequirement is TLSMaxVersion >= TLSMinVersion"
+          },
+          "TLSMinVersion":{
+            "type":"string",
+            "default":16,
+            "description":"Minimum TLS protocol version enabled.<br>\r\n4 - TLSv1.0\r\n8 - TLSv1.1\r\n16 - TLSv1.2\r\n32 - TLSv1.3\r\nDefault is TLSv1.2<br>\r\nRequirement is TLSMinVersion <= TLSMaxVersion"
+          },
+          "Type":{
+            "type":"string",
+            "default":0,
+            "description":"Intended type for this configuration.<br>\r\n0 = client<br>\r\n1 = server<br>\r\nDefault is client (0)"
+          },
+          "VerifyDepth":{
+            "type":"integer",
+            "default":9,
+            "description":"Maximum number of CA certificates allowed in peer certificate chain.<br>"
+          },
+          "VerifyPeer":{
+            "type":"integer",
+            "default":0,
+            "description":"Peer certificate verification level.<br>\r\n<br>\r\nClients:<br>\r\n0 = None (continue even if certificate verification fails)<br>\r\n1 = Require server certificate (continue only if certificate verification succeeds)<br>\r\n<br>\r\nServers:<br>\r\n0 = None (do not request client certificate)<br>\r\n1 = Request client certificate (terminate if certificate is provided and verification fails)<br>\r\n3 = Require client certificate (continue only if certificate is provided and verification succeeds)<br>"
+          }
+        },
+        "required":[
+          "Name"
+        ],
+        "example":{
+          "Name":""
+        }
+      },
+      "ListOfSecuritySSLConfigs":{
+        "type":"object",
+        "properties":{
+          "list":{
+            "type":"array",
+            "items":{
+              "$ref":"#/definitions/SecuritySSLConfigs"
+            }
+          }
+        }
+      },
+      "SecuritySQLAdminPrivilegeSet":{
+        "type":"object",
+        "properties":{
+          "AlterTable":{
+            "type":"string",
+            "default":"",
+            "description":"AlterTable - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "AlterView":{
+            "type":"string",
+            "default":"",
+            "description":"AlterView - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "BuildIndex":{
+            "type":"string",
+            "default":"",
+            "description":"BuildIndex - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "CreateFunction":{
+            "type":"string",
+            "default":"",
+            "description":"CreateFunction - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "CreateMethod":{
+            "type":"string",
+            "default":"",
+            "description":"CreateMethod - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "CreateProcedure":{
+            "type":"string",
+            "default":"",
+            "description":"CreateProcedure - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "CreateQuery":{
+            "type":"string",
+            "default":"",
+            "description":"CreateQuery - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "CreateTable":{
+            "type":"string",
+            "default":"",
+            "description":"CreateTable - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "CreateTrigger":{
+            "type":"string",
+            "default":"",
+            "description":"CreateTrigger - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "CreateView":{
+            "type":"string",
+            "default":"",
+            "description":"CreateView - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "DropFunction":{
+            "type":"string",
+            "default":"",
+            "description":"DropFunction - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "DropMethod":{
+            "type":"string",
+            "default":"",
+            "description":"DropMethod - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "DropProcedure":{
+            "type":"string",
+            "default":"",
+            "description":"DropProcedure - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "DropQuery":{
+            "type":"string",
+            "default":"",
+            "description":"DropQuery - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "DropTable":{
+            "type":"string",
+            "default":"",
+            "description":"DropTable - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "DropTrigger":{
+            "type":"string",
+            "default":"",
+            "description":"DropTrigger - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "DropView":{
+            "type":"string",
+            "default":"",
+            "description":"DropView - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "Grantee":{
+            "type":"string",
+            "default":"",
+            "description":"Grantee - user/role the privilege was granted to"
+          },
+          "Namespace":{
+            "type":"string",
+            "default":"",
+            "description":"Namespace the privilege is defined in"
+          },
+          "NoCheck":{
+            "type":"string",
+            "default":"",
+            "description":"NoCheck - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "NoIndex":{
+            "type":"string",
+            "default":"",
+            "description":"NoIndex - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "NoLock":{
+            "type":"string",
+            "default":"",
+            "description":"NoLock - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          },
+          "NoTrigger":{
+            "type":"string",
+            "default":"",
+            "description":"NoTrigger - 0/1/2, can this privilege be granted by the user 0 - No, 1 - Yes, 2 - Yes and grantable"
+          }
+        },
+        "required":[
+          "Grantee",
+          "Namespace"
+        ],
+        "example":{
+          "Grantee":"",
+          "Namespace":""
+        }
+      },
+      "ListOfSecuritySQLAdminPrivilegeSet":{
+        "type":"object",
+        "properties":{
+          "list":{
+            "type":"array",
+            "items":{
+              "$ref":"#/definitions/SecuritySQLAdminPrivilegeSet"
+            }
+          }
+        }
+      },
+      "LibrarySQLConnection":{
+        "type":"object",
+        "properties":{
+          "DSN":{
+            "type":"string",
+            "default":"",
+            "description":""
+          },
+          "Name":{
+            "type":"string",
+            "default":"",
+            "description":""
+          },
+          "OnConnectStatement":{
+            "type":"string",
+            "default":"",
+            "description":"Statement to execute on remote system immediately after connection.\r\nThis is only for a Gateway conenction through %Library.GTWConnection.Connect() method.\r\nAn example usage of this would be to set a session parameter on an Oracle connection:\r\n   ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF6'"
+          },
+          "ReverseOJ":{
+            "type":"boolean",
+            "default":"",
+            "description":""
+          },
+          "URL":{
+            "type":"string",
+            "default":"",
+            "description":""
+          },
+          "Usr":{
+            "type":"string",
+            "default":"",
+            "description":""
+          },
+          "bUnicodeStream":{
+            "type":"boolean",
+            "default":1,
+            "description":""
+          },
+          "bindTSasString":{
+            "type":"boolean",
+            "default":0,
+            "description":"Bind TIMESTAMP type parmaters as VARCHAR.\r\nWhen binding parameter values via the GateWay, some remote systems consider TIMESTAMP as a special structure that does not\r\nmatch the the %TimeStamp datatype format of YYYY-MM-DD HH24:MI;SS[.ssssss].\r\nSetting this property to 1 will bind TIMESTAMP parameters as VARCHARs instead of TIMESTAMP.\r\nYou might need this setting when binding TIMESTAMP parameters to Oracle, depending on the Oracle driver used."
+          },
+          "classpath":{
+            "type":"string",
+            "default":"",
+            "description":""
+          },
+          "driver":{
+            "type":"string",
+            "default":"",
+            "description":""
+          },
+          "isJDBC":{
+            "type":"boolean",
+            "default":"",
+            "description":""
+          },
+          "needlongdatalen":{
+            "type":"boolean",
+            "default":"",
+            "description":""
+          },
+          "noconcat":{
+            "type":"boolean",
+            "default":"",
+            "description":""
+          },
+          "nodefq":{
+            "type":"boolean",
+            "default":"",
+            "description":""
+          },
+          "nofnconv":{
+            "type":"boolean",
+            "default":"",
+            "description":""
+          },
+          "nvl":{
+            "type":"boolean",
+            "default":"",
+            "description":""
+          },
+          "properties":{
+            "type":"string",
+            "default":"",
+            "description":""
+          },
+          "pwd":{
+            "type":"string",
+            "default":"",
+            "description":""
+          },
+          "useCAST":{
+            "type":"boolean",
+            "default":"",
+            "description":""
+          },
+          "useCASTCHAR":{
+            "type":"boolean",
+            "default":"",
+            "description":""
+          },
+          "useCOALESCE":{
+            "type":"boolean",
+            "default":1,
+            "description":""
+          },
+          "xadriver":{
+            "type":"string",
+            "default":"",
+            "description":""
+          }
+        },
+        "required":[
+          "Name"
+        ],
+        "example":{
+          "Name":""
+        }
+      },
+      "ListOfLibrarySQLConnection":{
+        "type":"object",
+        "properties":{
+          "list":{
+            "type":"array",
+            "items":{
+              "$ref":"#/definitions/LibrarySQLConnection"
+            }
+          }
+        }
+      },
+      "SecuritySQLPrivileges":{
+        "type":"object",
+        "properties":{
+          "Grantable":{
+            "type":"string",
+            "default":"",
+            "description":"Grantable - 1/0, can this privilege be granted by the user"
+          },
+          "Grantee":{
+            "type":"string",
+            "default":"",
+            "description":"Grantee - user/role the privilege was granted to"
+          },
+          "Grantor":{
+            "type":"string",
+            "default":"",
+            "description":"Grantor - user/role that granted the privilege"
+          },
+          "Namespace":{
+            "type":"string",
+            "default":"",
+            "description":"Namespace the privilege is defined in"
+          },
+          "Privilege":{
+            "type":"string",
+            "default":"",
+            "description":"Privilege assigned to the user/role"
+          },
+          "SQLObject":{
+            "type":"string",
+            "default":"",
+            "description":"ObjectType,ObjectName e.g. \"1,Sample.Person\" or \"3,Sample.PersonView\""
+          }
+        },
+        "required":[
+          "Grantable",
+          "Grantee",
+          "Grantor",
+          "Namespace",
+          "Privilege",
+          "SQLObject"
+        ],
+        "example":{
+          "Grantable":"",
+          "Grantee":"",
+          "Grantor":"",
+          "Namespace":"",
+          "Privilege":"",
+          "SQLObject":""
+        }
+      },
+      "ListOfSecuritySQLPrivileges":{
+        "type":"object",
+        "properties":{
+          "list":{
+            "type":"array",
+            "items":{
+              "$ref":"#/definitions/SecuritySQLPrivileges"
+            }
+          }
         }
       }
     }

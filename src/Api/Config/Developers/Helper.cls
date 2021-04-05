@@ -2,6 +2,7 @@
 /// zw ##class(Api.Config.Developers.Helper).GenCommonMethod("","")
 /// zw ##class(Api.Config.Developers.Helper).GenObjectToArray("","")
 /// zw ##class(Api.Config.Developers.Helper).GenToDynamic("","")
+/// do ##class(Api.Config.Developers.Helper).ShowSwaggerDef("")
 Class Api.Config.Developers.Helper [ System = 2 ]
 {
 
@@ -182,10 +183,29 @@ ClassMethod ShowSwaggerDef(className As %String) As %DynamicObject
     }
     
     Set $NAMESPACE = ns
-    Set formatter=##class(%JSON.Formatter).%New()
-    Set swaggerString = ""
-    Do formatter.FormatToString(swaggerDef, .swaggerString)
-    w !,swaggerString
+    
+    Set defObj = {}
+    Set pName = $tr(className,"%.")
+    Do defObj.%Set(pName,swaggerDef)
+
+    Set isSingle = ''$PARAMETER("Api.Config.Services."_$tr(className,"%"),"ISSINGLE")
+    If 'isSingle {
+        Do defObj.%Set("ListOf"_pName,{
+            "type":"object",
+            "properties":{
+                "list" : {
+                    "type":"array",
+                    "items": {
+                        "$ref": ("#/definitions/" _ pName)
+                    }
+                }
+            }
+        })
+    }
+    
+    Do ##class(Api.Config.Developers.Utils).FormatJSON(defObj,.formatted)
+
+    w !,formatted
     Quit swaggerDef
 }
 
