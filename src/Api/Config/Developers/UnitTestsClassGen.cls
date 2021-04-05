@@ -17,19 +17,19 @@ ClassMethod Gen(className As %String, Output unitTestClass As %String) As %Statu
     Set class.Super = "%UnitTest.TestCase"
 
     If $$$METHODEXISTS("Get") {
-        Do class.Methods.Insert(..GetMethod(className,unitTestClass))
+        Do class.Methods.Insert(..GetMethod(className))
     }
 
     If $$$METHODEXISTS("Update") {
-        Do class.Methods.Insert(..UpdateMethod(className,unitTestClass))
+        Do class.Methods.Insert(..UpdateMethod(className))
     }
 
     If $$$METHODEXISTS("Create") {
-        Do class.Methods.Insert(..CreateMethod(className,unitTestClass))
+        Do class.Methods.Insert(..CreateMethod(className))
     }
 
     If $$$METHODEXISTS("List") {
-        Do class.Methods.Insert(..ListMethod(className,unitTestClass))
+        Do class.Methods.Insert(..ListMethod(className))
     }
 
 
@@ -37,7 +37,7 @@ ClassMethod Gen(className As %String, Output unitTestClass As %String) As %Statu
     Quit class.%Save()
 }
 
-ClassMethod ListMethod(className As %String, unitTestClass As %String) As %Dictionary.MethodDefinition
+ClassMethod ListMethod(className As %String) As %Dictionary.MethodDefinition
 {
     #dim method As %Dictionary.MethodDefinition = ##class(%Dictionary.MethodDefinition).%New()
     Set method.Name = "TestList"
@@ -65,7 +65,7 @@ ClassMethod ListMethod(className As %String, unitTestClass As %String) As %Dicti
     Quit method
 }
 
-ClassMethod CreateMethod(className As %String, unitTestClass As %String) As %Dictionary.MethodDefinition
+ClassMethod CreateMethod(className As %String) As %Dictionary.MethodDefinition
 {
     #dim method As %Dictionary.MethodDefinition = ##class(%Dictionary.MethodDefinition).%New()
     Set method.Name = "TestCreateAndDelete"
@@ -104,7 +104,7 @@ ClassMethod CreateMethod(className As %String, unitTestClass As %String) As %Dic
     Quit method
 }
 
-ClassMethod UpdateMethod(className As %String, unitTestClass As %String) As %Dictionary.MethodDefinition
+ClassMethod UpdateMethod(className As %String) As %Dictionary.MethodDefinition
 {
     #dim method As %Dictionary.MethodDefinition = ##class(%Dictionary.MethodDefinition).%New()
     Set method.Name = "TestUpdate"
@@ -123,7 +123,7 @@ ClassMethod UpdateMethod(className As %String, unitTestClass As %String) As %Dic
     Quit method
 }
 
-ClassMethod GetMethod(className As %String, unitTestClass As %String) As %Dictionary.MethodDefinition
+ClassMethod GetMethod(className As %String) As %Dictionary.MethodDefinition
 {
     #dim method As %Dictionary.MethodDefinition = ##class(%Dictionary.MethodDefinition).%New()
     Set method.Name = "TestGet"

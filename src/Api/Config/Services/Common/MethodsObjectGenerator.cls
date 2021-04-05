@@ -15,8 +15,8 @@ ClassMethod ObjectToArray(ByRef pObj, Output properties As %Binary) [ CodeMode =
     For  {
         Set property = class.Properties.GetNext(.key)
         Quit:key="" 
-		Set $NAMESPACE = ns, continue = ##class(Api.Config.Developers.Helper).skipProperty(property), $NAMESPACE = "%SYS"
-		CONTINUE:continue
+		Set $NAMESPACE = ns, canContinue = ##class(Api.Config.Developers.Helper).skipProperty(property), $NAMESPACE = "%SYS"
+		CONTINUE:canContinue
         Do %code.WriteLine($CHAR(9)_$$$FormatText("Set properties(""%1"") = pObj.%1",property.Name))
     }
 	Set $NAMESPACE = ns
@@ -37,8 +37,8 @@ ClassMethod ToArray(model As %Library.DynamicObject, Output properties As %Binar
     For  {
         Set property = class.Properties.GetNext(.key)
         Quit:key="" 
-        Set $NAMESPACE = ns, continue = ##class(Api.Config.Developers.Helper).skipProperty(property), $NAMESPACE = "%SYS"
-		CONTINUE:continue
+        Set $NAMESPACE = ns, canContinue = ##class(Api.Config.Developers.Helper).skipProperty(property), $NAMESPACE = "%SYS"
+		CONTINUE:canContinue
         Set line = $CHAR(9) _ $$$FormatText("Set:$$$CanSetProperty(model,""%1"") properties(""%1"") = model.%1", property.Name)
         Do %code.WriteLine(line)
     }
@@ -64,8 +64,8 @@ ClassMethod ToDynamic(ByRef properties As %Binary) As %Library.DynamicObject [ C
     For  {
         Set property = class.Properties.GetNext(.key)
         Quit:key="" 
-        Set $NAMESPACE = ns, continue = ##class(Api.Config.Developers.Helper).skipProperty(property), $NAMESPACE = "%SYS"
-		CONTINUE:continue
+        Set $NAMESPACE = ns, canContinue = ##class(Api.Config.Developers.Helper).skipProperty(property), $NAMESPACE = "%SYS"
+		CONTINUE:canContinue
         Set jsonType = $$$GETTYPE($Replace(property.Type, "Library.",""))
         Do %code.WriteLine($CHAR(9) _ $$$FormatText("Do:$Data(properties(""%1"")) model.%Set(""%1"", properties(""%1""), ""%2"")", property.Name, jsonType))
     }

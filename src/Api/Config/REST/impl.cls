@@ -2450,7 +2450,7 @@ ClassMethod DeleteSQLPrivileges(namespace As %String, grantee As %String) As %Dy
 ///     SQLPrivilege<br/>
 ClassMethod PutSQLPrivileges(SQLPrivilege As %Stream.Object) As %DynamicObject
 {
-    Set dModel = {}.%FromJSON(.model)
+    Set dModel = {}.%FromJSON(.SQLPrivilege)
 	Set resp = ..DefaultPutImpl("Security.SQLPrivileges", dModel, , $$$NO)
 	Quit resp
 }

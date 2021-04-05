@@ -18,8 +18,10 @@ ClassMethod FormatJSON(model As %DynamicObject, Output formatted)
     Quit
 }
 
+/// zw ##class(Api.Config.Developers.Utils).buildXmlRelease()
 ClassMethod buildXmlRelease(filename As %String = "/irisrun/repo/dist/config-api_with_dependencies.xml") As %Status
 {
+
     Do:##class(%File).Exists(filename) ##class(%File).Delete(filename)
     Set items = ""
     Set items("Api.Config.inc.INC")=""

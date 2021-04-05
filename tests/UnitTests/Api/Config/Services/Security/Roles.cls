@@ -22,8 +22,8 @@ Method TestCreateAndDelete() As %Status
 Method TestGet() As %Status
 {
 	Set sc = $$$OK
-	Set Name = ""
-	Set model = ##class(Api.Config.Services.Security.Roles).Get("%ALL")
+	Set Name = "%ALL"
+	Set model = ##class(Api.Config.Services.Security.Roles).Get(Name)
 	Set expected = "Name"
 	Do $$$AssertTrue(model.%IsDefined(expected),$replace("Check if property %1 is defined","%1",expected))
 	Set expected = "Description"

@@ -38,7 +38,7 @@ ClassMethod Update(model As %DynamicObject) As %Status
         Set tResult = tStatement.%Execute(arg)
         If (tResult.%SQLCODE'=0)&&(tResult.%SQLCODE'=100) $$$ThrowStatus($$$ERROR($$$SQLError, tResult.%SQLCODE, tResult.%Message)) 
         While tResult.%Next() {
-            Set tObj = tResult.%Get("SqlQualifiedNameQ")
+            
             Set copyModel = {}.%FromJSON(model.%ToJSON())
             If model.%IsDefined("PrivList"), model.PrivList'="" {
                 For i=1:1:$LENGTH(model.PrivList) {
@@ -73,7 +73,7 @@ ClassMethod Update(model As %DynamicObject) As %Status
         
         Set namespace = value.Namespace, sqlobject=value.SQLObject, privilege=value.Privilege, grantee = value.Grantee
         &SQL(DELETE Security.SQLPrivileges WHERE Namespace=:namespace AND SQLObject=:sqlobject AND Privilege=:privilege and Grantee=:grantee)
-            
+        If (SQLCODE'=0)&&(SQLCODE'=100) $$$ThrowStatus($$$ERROR($$$SQLError, SQLCODE)) 
         Set sp = ##class(Security.SQLPrivileges).%New()
         Set:value.%IsDefined("Grantable") sp.Grantable = value.Grantable
         Set sp.Grantee = value.Grantee
