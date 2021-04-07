@@ -1,3 +1,4 @@
+/// DON'T USE.  (class used for first code generation.)
 /// Generator for 
 /// - Swagger spec.
 /// - REST Service implementation.

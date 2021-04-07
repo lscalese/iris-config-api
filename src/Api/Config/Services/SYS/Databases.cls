@@ -123,4 +123,9 @@ ClassMethod GetMountState(Directory As %String) As %DynamicObject
     Quit mountState
 }
 
+ClassMethod CheckModel(model As %Library.DynamicObject) As %Status
+{
+	Quit $$$OK
+}
+
 }

@@ -24,10 +24,7 @@ ClassMethod GetSpecification() As %DynamicObject
 /// Get Cluster.
 ClassMethod GetCluster() As %DynamicObject
 {
-	Set model = ##class(Api.Config.Services.Cluster).Get()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("Cluster")
 }
 
 /// Update Cluster.<br/>
@@ -82,15 +79,7 @@ ClassMethod PutConfigFile(model As %Stream.Object) As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod GetDatabases(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.Databases).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.Databases).Get(name)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("Databases", name)
 }
 
 /// Update Databases.<br/>
@@ -124,22 +113,9 @@ ClassMethod PutDatabases(name As %String, model As %Stream.Object) As %DynamicOb
 ClassMethod PostDatabases(model As %Stream.Object) As %DynamicObject
 {
 	Set dModel = {}.%FromJSON(.model)
-	Set sc =##class(Api.Config.Services.Databases).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.Databases).Exists(dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.Databases).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/databases/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("Databases", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"databases/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete Databases.<br/>
@@ -213,22 +189,9 @@ ClassMethod PutDebug(name As %String, model As %Stream.Object) As %DynamicObject
 ClassMethod PostDebug(model As %Stream.Object) As %DynamicObject
 {
 	Set dModel = {}.%FromJSON(.model)
-	Set sc =##class(Api.Config.Services.Debug).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.Debug).Exists(dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.Debug).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/debug/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("Debug", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"debug/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete Debug.<br/>
@@ -260,15 +223,7 @@ ClassMethod GetListDebug() As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod GetDeviceSubTypes(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.DeviceSubTypes).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.DeviceSubTypes).Get(name)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("DeviceSubTypes", name)
 }
 
 /// Update DeviceSubTypes.<br/>
@@ -302,22 +257,9 @@ ClassMethod PutDeviceSubTypes(name As %String, model As %Stream.Object) As %Dyna
 ClassMethod PostDeviceSubTypes(model As %Stream.Object) As %DynamicObject
 {
 	Set dModel = {}.%FromJSON(.model)
-	Set sc =##class(Api.Config.Services.DeviceSubTypes).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.DeviceSubTypes).Exists(dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.DeviceSubTypes).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/devicesubtypes/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("DeviceSubTypes", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"devicesubtypes/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete DeviceSubTypes.<br/>
@@ -349,15 +291,7 @@ ClassMethod GetListDeviceSubTypes() As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod GetDevices(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.Devices).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.Devices).Get(name)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("Devices", name)
 }
 
 /// Update Devices.<br/>
@@ -388,10 +322,7 @@ ClassMethod PutDevices(name As %String, model As %Stream.Object) As %DynamicObje
 /// Get ECP.
 ClassMethod GetECP() As %DynamicObject
 {
-	Set model = ##class(Api.Config.Services.ECP).Get()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("ECP")
 }
 
 /// Create Devices.<br/>
@@ -400,22 +331,9 @@ ClassMethod GetECP() As %DynamicObject
 ClassMethod PostDevices(model As %Stream.Object) As %DynamicObject
 {
 	Set dModel = {}.%FromJSON(.model)
-	Set sc =##class(Api.Config.Services.Devices).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.Devices).Exists(dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.Devices).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/devices/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("Devices", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"devices/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete Devices.<br/>
@@ -466,15 +384,7 @@ ClassMethod GetListDevices() As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod GetECPServers(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.ECPServers).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.ECPServers).Get(name)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("ECPServers", name)
 }
 
 /// Update ECPServers.<br/>
@@ -505,10 +415,7 @@ ClassMethod PutECPServers(name As %String, model As %Stream.Object) As %DynamicO
 /// Get IO.
 ClassMethod GetIO() As %DynamicObject
 {
-	Set model = ##class(Api.Config.Services.IO).Get()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("IO")
 }
 
 /// Create ECPServers.<br/>
@@ -517,22 +424,9 @@ ClassMethod GetIO() As %DynamicObject
 ClassMethod PostECPServers(model As %Stream.Object) As %DynamicObject
 {
 	Set dModel = {}.%FromJSON(.model)
-	Set sc =##class(Api.Config.Services.ECPServers).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.ECPServers).Exists(dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.ECPServers).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/ecpservers/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("ECPServers", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"ecpservers/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete ECPServers.<br/>
@@ -572,10 +466,7 @@ ClassMethod PutIO(model As %Stream.Object) As %DynamicObject
 /// Get Journal.
 ClassMethod GetJournal() As %DynamicObject
 {
-	Set model = ##class(Api.Config.Services.Journal).Get()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("Journal")
 }
 
 /// Get List Of ECPServers.
@@ -611,15 +502,7 @@ ClassMethod PutJournal(model As %Stream.Object) As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod GetLicenseServers(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.LicenseServers).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.LicenseServers).Get(name)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("LicenseServers", name)
 }
 
 /// Update LicenseServers.<br/>
@@ -653,22 +536,9 @@ ClassMethod PutLicenseServers(name As %String, model As %Stream.Object) As %Dyna
 ClassMethod PostLicenseServers(model As %Stream.Object) As %DynamicObject
 {
 	Set dModel = {}.%FromJSON(.model)
-	Set sc =##class(Api.Config.Services.LicenseServers).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.LicenseServers).Exists(dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.LicenseServers).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/licenseservers/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("LicenseServers", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"licenseservers/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete LicenseServers.<br/>
@@ -700,15 +570,7 @@ ClassMethod GetListLicenseServers() As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod GetMagTapes(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.MagTapes).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.MagTapes).Get(name)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("MagTapes", name)
 }
 
 /// Update MagTapes.<br/>
@@ -742,22 +604,9 @@ ClassMethod PutMagTapes(name As %String, model As %Stream.Object) As %DynamicObj
 ClassMethod PostMagTapes(model As %Stream.Object) As %DynamicObject
 {
 	Set dModel = {}.%FromJSON(.model)
-	Set sc =##class(Api.Config.Services.MagTapes).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.MagTapes).Exists(dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.MagTapes).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/magtapes/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("MagTapes", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"magtapes/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete MagTapes.<br/>
@@ -790,15 +639,7 @@ ClassMethod GetListMagTapes() As %DynamicObject
 ///     name, Name of the mapping.<br><br/>
 ClassMethod GetMapGlobals(namespace As %String, name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.MapGlobals).Exists(namespace,name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.MapGlobals).Get(namespace,name)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("MapGlobals", namespace, name)
 }
 
 /// Update MapGlobals.<br/>
@@ -835,22 +676,9 @@ ClassMethod PostMapGlobals(namespace As %String, model As %Stream.Object) As %Dy
 {
 	Set dModel = {}.%FromJSON(.model)
 	Set dModel.Namespace = namespace
-	Set sc =##class(Api.Config.Services.MapGlobals).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.MapGlobals).Exists(namespace,dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.MapGlobals).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/mapglobals/"_namespace_"/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("MapGlobals", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"mapglobals/"_namespace_"/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete MapGlobals.<br/>
@@ -895,15 +723,7 @@ ClassMethod GetListMapGlobals(namespace As %String) As %DynamicObject
 /// saving.<br/>
 ClassMethod GetMapMirrors(id As %String, name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.MapMirrors).Exists(id,name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.MapMirrors).Get(id,name)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("MapMirrors", id, name)
 }
 
 /// Update MapMirrors.<br/>
@@ -949,22 +769,9 @@ ClassMethod PostMapMirrors(id As %String, model As %Stream.Object) As %DynamicOb
 {
 	Set dModel = {}.%FromJSON(.model)
 	Set dModel.Id = id
-	Set sc =##class(Api.Config.Services.MapMirrors).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.MapMirrors).Exists(id,dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.MapMirrors).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/mapmirrors/"_id_"/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("MapMirrors", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"mapmirrors/"_id_"/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete MapMirrors.<br/>
@@ -1009,15 +816,7 @@ ClassMethod GetListMapMirrors(id As %String) As %DynamicObject
 ///     name, Name of the mapping.<br><br/>
 ClassMethod GetMapPackages(namespace As %String, name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.MapPackages).Exists(namespace,name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.MapPackages).Get(namespace,name)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("MapPackages", namespace, name)
 }
 
 /// Update MapPackages.<br/>
@@ -1054,22 +853,9 @@ ClassMethod PostMapPackages(namespace As %String, model As %Stream.Object) As %D
 {
 	Set dModel = {}.%FromJSON(.model)
 	Set dModel.Namespace = namespace
-	Set sc =##class(Api.Config.Services.MapPackages).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.MapPackages).Exists(namespace,dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.MapPackages).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/mappackages/"_namespace_"/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("MapPackages", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"mappackages/"_namespace_"/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete MapPackages.<br/>
@@ -1105,15 +891,7 @@ ClassMethod GetListMapPackages(namespace As %String) As %DynamicObject
 ///     name, Name of the mapping.<br><br/>
 ClassMethod GetMapRoutines(namespace As %String, name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.MapRoutines).Exists(namespace,name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.MapRoutines).Get(namespace,name)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("MapRoutines", namespace, name)
 }
 
 /// Update MapRoutines.<br/>
@@ -1150,22 +928,9 @@ ClassMethod PostMapRoutines(namespace As %String, model As %Stream.Object) As %D
 {
 	Set dModel = {}.%FromJSON(.model)
 	Set dModel.Namespace = namespace
-	Set sc =##class(Api.Config.Services.MapRoutines).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.MapRoutines).Exists(namespace,dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.MapRoutines).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/maproutines/"_namespace_"/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("MapRoutines", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"maproutines/"_namespace_"/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete MapRoutines.<br/>
@@ -1241,10 +1006,7 @@ ClassMethod PutMapShadows(id As %String, name As %String, model As %Stream.Objec
 /// Get MirrorMember.
 ClassMethod GetMirrorMember() As %DynamicObject
 {
-	Set model = ##class(Api.Config.Services.MirrorMember).Get()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("MirrorMember")
 }
 
 /// Create MapShadows.<br/>
@@ -1255,22 +1017,9 @@ ClassMethod PostMapShadows(id As %String, model As %Stream.Object) As %DynamicOb
 {
 	Set dModel = {}.%FromJSON(.model)
 	Set dModel.Id = id
-	Set sc =##class(Api.Config.Services.MapShadows).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.MapShadows).Exists(id,dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.MapShadows).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/mapshadows/"_id_"/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("MapShadows", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"mapshadows/"_id_"/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete MapShadows.<br/>
@@ -1326,15 +1075,7 @@ ClassMethod GetListMapShadows(id As %String) As %DynamicObject
 /// Must be unique across the mirrors managed by the EMS<br/>
 ClassMethod GetMirrors(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.Mirrors).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.Mirrors).Get(name)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("Mirrors",name)
 }
 
 /// Update Mirrors.<br/>
@@ -1367,10 +1108,7 @@ ClassMethod PutMirrors(name As %String, model As %Stream.Object) As %DynamicObje
 /// Get Miscellaneous.
 ClassMethod GetMiscellaneous() As %DynamicObject
 {
-	Set model = ##class(Api.Config.Services.Miscellaneous).Get()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("Miscellaneous")
 }
 
 /// Create Mirrors.<br/>
@@ -1379,22 +1117,9 @@ ClassMethod GetMiscellaneous() As %DynamicObject
 ClassMethod PostMirrors(model As %Stream.Object) As %DynamicObject
 {
 	Set dModel = {}.%FromJSON(.model)
-	Set sc =##class(Api.Config.Services.Mirrors).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.Mirrors).Exists(dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.Mirrors).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/mirrors/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("Mirrors", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"mirrors/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete Mirrors.<br/>
@@ -1445,10 +1170,7 @@ ClassMethod GetListMirrors() As %DynamicObject
 /// Get Monitor.
 ClassMethod GetMonitor() As %DynamicObject
 {
-	Set model = ##class(Api.Config.Services.Monitor).Get()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("Monitor")
 }
 
 /// Update Monitor.<br/>
@@ -1492,10 +1214,7 @@ ClassMethod PutNamespaces(name As %String, model As %Stream.Object) As %DynamicO
 /// Get SQL.
 ClassMethod GetSQL() As %DynamicObject
 {
-	Set model = ##class(Api.Config.Services.SQL).Get()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("SQL")
 }
 
 /// Create Namespaces.<br/>
@@ -1514,14 +1233,6 @@ ClassMethod PostNamespaces(model As %Stream.Object) As %DynamicObject
 ClassMethod DeleteNamespaces(name As %String) As %DynamicObject
 {
 	Quit ..DefaultDelImpl("Namespaces", name)
-	/*If '##class(Api.Config.Services.Namespaces).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.Namespaces).Delete(name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""*/
 }
 
 /// Update SQL.<br/>
@@ -1557,15 +1268,7 @@ ClassMethod GetListNamespaces() As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod GetShadows(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.Shadows).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.Shadows).Get(name)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("Shadows",name)
 }
 
 /// Update Shadows.<br/>
@@ -1599,22 +1302,9 @@ ClassMethod PutShadows(name As %String, model As %Stream.Object) As %DynamicObje
 ClassMethod PostShadows(model As %Stream.Object) As %DynamicObject
 {
 	Set dModel = {}.%FromJSON(.model)
-	Set sc =##class(Api.Config.Services.Shadows).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.Shadows).Exists(dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.Shadows).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/shadows/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("Shadows", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"shadows/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete Shadows.<br/>
@@ -1646,15 +1336,7 @@ ClassMethod GetListShadows() As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod GetSqlSysDatatypes(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.SqlSysDatatypes).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.SqlSysDatatypes).Get(name)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("SqlSysDatatypes",name)
 }
 
 /// Update SqlSysDatatypes.<br/>
@@ -1688,22 +1370,9 @@ ClassMethod PutSqlSysDatatypes(name As %String, model As %Stream.Object) As %Dyn
 ClassMethod PostSqlSysDatatypes(model As %Stream.Object) As %DynamicObject
 {
 	Set dModel = {}.%FromJSON(.model)
-	Set sc =##class(Api.Config.Services.SqlSysDatatypes).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.SqlSysDatatypes).Exists(dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.SqlSysDatatypes).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/sqlsysdatatypes/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("SqlSysDatatypes", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"sqlsysdatatypes/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete SqlSysDatatypes.<br/>
@@ -1735,15 +1404,7 @@ ClassMethod GetListSqlSysDatatypes() As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod GetSqlUserDatatypes(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.SqlUserDatatypes).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.SqlUserDatatypes).Get(name)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("SqlUserDatatypes",name)
 }
 
 /// Update SqlUserDatatypes.<br/>
@@ -1774,10 +1435,7 @@ ClassMethod PutSqlUserDatatypes(name As %String, model As %Stream.Object) As %Dy
 /// Get Startup.
 ClassMethod GetStartup() As %DynamicObject
 {
-	Set model = ##class(Api.Config.Services.Startup).Get()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("Startup")
 }
 
 /// Create SqlUserDatatypes.<br/>
@@ -1786,22 +1444,9 @@ ClassMethod GetStartup() As %DynamicObject
 ClassMethod PostSqlUserDatatypes(model As %Stream.Object) As %DynamicObject
 {
 	Set dModel = {}.%FromJSON(.model)
-	Set sc =##class(Api.Config.Services.SqlUserDatatypes).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	If ##class(Api.Config.Services.SqlUserDatatypes).Exists(dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.SqlUserDatatypes).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"/sqluserdatatypes/"_dModel.Name)
-	Quit ""
+	Set resp = ..DefaultPostImpl("SqlUserDatatypes", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"sqluserdatatypes/"_dModel.Name)
+	Quit resp
 }
 
 /// Delete SqlUserDatatypes.<br/>
@@ -1850,10 +1495,7 @@ ClassMethod GetListSqlUserDatatypes() As %DynamicObject
 /// Get Telnet.
 ClassMethod GetTelnet() As %DynamicObject
 {
-	Set model = ##class(Api.Config.Services.Telnet).Get()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("Telnet")
 }
 
 /// Update Telnet.<br/>
@@ -1878,10 +1520,7 @@ ClassMethod PutTelnet(model As %Stream.Object) As %DynamicObject
 /// Get config.
 ClassMethod Getconfig() As %DynamicObject
 {
-	Set model = ##class(Api.Config.Services.config).Get()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("config")
 }
 
 /// Update config.<br/>
@@ -1917,17 +1556,7 @@ ClassMethod GetListOfDirectory() As %DynamicObject
 ///     directory, Database directory ex: /usr/irissys/mgr/user/ don't forget to escape -> %2Fusr%2Firissys%2Fmgr%2Fuser%2F.<br/>
 ClassMethod GetDirectory(directory As %String) As %DynamicObject
 {
-	Set directory = ##class(%CSP.Page).UnescapeURL(directory)
-	
-    If '##class(Api.Config.Services.SYS.Databases).Exists(directory) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Set model = ##class(Api.Config.Services.SYS.Databases).Get(directory)
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit model
+	Quit ..DefaultGetImpl("SYS.Databases",directory)
 }
 
 /// Create a new database directory.<br/>
@@ -1936,16 +1565,9 @@ ClassMethod GetDirectory(directory As %String) As %DynamicObject
 ClassMethod PostDirectory(directory As %Stream.Object) As %DynamicObject
 {
     Set dModel = {}.%FromJSON(.directory)
-	
-	If ##class(Api.Config.Services.Databases).Exists(dModel.Directory) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.Databases).Create(dModel))
-	Do ..%SetStatusCode($$$HTTP201)
-	Do ..%SetHeader("Location", %request.Application_"directory?directory="_##class(%CSP.Page).EscapeURL(dModel.Directory))
-	Quit ""
+	Set resp = ..DefaultPostImpl("SYS.Databases", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"sys/databases/"_##class(%CSP.Page).EscapeURL(dModel.Directory))
+	Quit resp
 }
 
 /// Update an existing database directory.<br/>
@@ -2021,13 +1643,7 @@ ClassMethod DeleteDirectoryMounted(directory As %String) As %DynamicObject
 ///     name, Web application url ex : /api/config don't forget to escape -> %2Fapi%2Fconfig<br/>
 ClassMethod GetWebApp(name As %String) As %DynamicObject
 {
-    Set name = ##class(%CSP.Page).UnescapeURL(name)
-	If '##class(Api.Config.Services.Security.Applications).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Quit ##class(Api.Config.Services.Security.Applications).Get(name)
+    Quit ..DefaultGetImpl("Security.Applications",name)
 }
 
 /// Update Web application.<br/>
@@ -2053,15 +1669,10 @@ ClassMethod PutWebApp(name As %String, model As %Stream.Object) As %DynamicObjec
 ///     model<br/>
 ClassMethod PostWebApp(model As %Stream.Object) As %DynamicObject
 {
-    Set dModel = {}.%FromJSON(model)
-	If '##class(Api.Config.Services.Security.Applications).Exists(dModel.Name) {
-		Do ..%SetStatusCode($$$HTTP409)
-		Quit ""
-	}
-
-	$$$ThrowOnError(##class(Api.Config.Services.Security.Applications).Update(dModel))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+    Set dModel = {}.%FromJSON(.model)
+	Set resp = ..DefaultPostImpl("Security.Applications", dModel, .created)
+	Do:created ..%SetHeader("Location", %request.Application_"security/applications/"_##class(%CSP.Page).EscapeURL(dModel.Name))
+	Quit resp
 }
 
 /// Get list of existing web applications.
@@ -2154,13 +1765,7 @@ ClassMethod GetListOfServices() As %DynamicObject
 ///     name<br/>
 ClassMethod GetService(name As %String) As %DynamicObject
 {
-    Set name = ##class(%CSP.Page).UnescapeURL(name)
-	If '##class(Api.Config.Services.Security.Services).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	Quit ##class(Api.Config.Services.Security.Services).Get(name)
+	Quit ..DefaultGetImpl("Security.Services",name)
 }
 
 /// Update service.  Set Enable property to 1/0 to activate/disable.<br/>
@@ -2221,7 +1826,7 @@ ClassMethod PostUsers(model As %Stream.Object) As %DynamicObject
 {
     Set dModel = {}.%FromJSON(.model)
 	Set resp = ..DefaultPostImpl("Security.Users", dModel, .created)
-	Do:created ..%SetHeader("Location", %request.Application_"/security/users/"_dModel.Name)
+	Do:created ..%SetHeader("Location", %request.Application_"security/users/"_dModel.Name)
 	Quit resp
 }
 
@@ -2522,7 +2127,7 @@ ClassMethod DefaultGetImpl(class As %String, ids...) As %DynamicObject [ Private
 
 	Set id2 = ##class(%CSP.Page).UnescapeURL(ids(2))
 
-	If $CLASSMETHOD(class, "Exists", id1, id2) {
+	If '$CLASSMETHOD(class, "Exists", id1, id2) {
 		Do ..%SetStatusCode($$$HTTP404)
 		Quit ""
 	}
