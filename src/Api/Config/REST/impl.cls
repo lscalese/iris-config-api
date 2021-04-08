@@ -123,23 +123,13 @@ ClassMethod PostDatabases(model As %Stream.Object) As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod DeleteDatabases(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.Databases).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.Databases).Delete(name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("Databases", name)
 }
 
 /// Get List Of Databases.
 ClassMethod GetListDatabases() As %DynamicObject
 {
-	Set lst = ##class(Api.Config.Services.Databases).List()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit {"ListOfDatabases":(lst)}
+	Quit ..DefaultListOf("Databases","ListOfDatabases")
 }
 
 /// Get Debug.<br/>
@@ -199,23 +189,13 @@ ClassMethod PostDebug(model As %Stream.Object) As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod DeleteDebug(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.Debug).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.Debug).Delete(name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("Debug", name)
 }
 
 /// Get List Of Debug.
 ClassMethod GetListDebug() As %DynamicObject
 {
-	Set lst = ##class(Api.Config.Services.Debug).List()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit {"ListOfDebug":(lst)}
+	Quit ..DefaultListOf("Debug","ListOfDebug")
 }
 
 /// Get DeviceSubTypes.<br/>
@@ -267,23 +247,13 @@ ClassMethod PostDeviceSubTypes(model As %Stream.Object) As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod DeleteDeviceSubTypes(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.DeviceSubTypes).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.DeviceSubTypes).Delete(name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("DeviceSubTypes", name)
 }
 
 /// Get List Of DeviceSubTypes.
 ClassMethod GetListDeviceSubTypes() As %DynamicObject
 {
-	Set lst = ##class(Api.Config.Services.DeviceSubTypes).List()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit {"ListOfDeviceSubTypes":(lst)}
+	Quit ..DefaultListOf("DeviceSubTypes","ListOfDeviceSubTypes")
 }
 
 /// Get Devices.<br/>
@@ -341,14 +311,7 @@ ClassMethod PostDevices(model As %Stream.Object) As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod DeleteDevices(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.Devices).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.Devices).Delete(name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("Devices", name)
 }
 
 /// Update ECP.<br/>
@@ -373,10 +336,7 @@ ClassMethod PutECP(model As %Stream.Object) As %DynamicObject
 /// Get List Of Devices.
 ClassMethod GetListDevices() As %DynamicObject
 {
-	Set lst = ##class(Api.Config.Services.Devices).List()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit {"ListOfDevices":(lst)}
+	Quit ..DefaultListOf("Devices","ListOfDevices")
 }
 
 /// Get ECPServers.<br/>
@@ -434,14 +394,7 @@ ClassMethod PostECPServers(model As %Stream.Object) As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod DeleteECPServers(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.ECPServers).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.ECPServers).Delete(name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("ECPServers", name)
 }
 
 /// Update IO.<br/>
@@ -472,10 +425,7 @@ ClassMethod GetJournal() As %DynamicObject
 /// Get List Of ECPServers.
 ClassMethod GetListECPServers() As %DynamicObject
 {
-	Set lst = ##class(Api.Config.Services.ECPServers).List()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit {"ListOfECPServers":(lst)}
+	Quit ..DefaultListOf("ECPServers","ListOfECPServers")
 }
 
 /// Update Journal.<br/>
@@ -546,23 +496,13 @@ ClassMethod PostLicenseServers(model As %Stream.Object) As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod DeleteLicenseServers(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.LicenseServers).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.LicenseServers).Delete(name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("LicenseServers", name)
 }
 
 /// Get List Of LicenseServers.
 ClassMethod GetListLicenseServers() As %DynamicObject
 {
-	Set lst = ##class(Api.Config.Services.LicenseServers).List()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit {"ListOfLicenseServers":(lst)}
+	Quit ..DefaultListOf("LicenseServers","ListOfLicenseServers")
 }
 
 /// Get MagTapes.<br/>
@@ -614,23 +554,13 @@ ClassMethod PostMagTapes(model As %Stream.Object) As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod DeleteMagTapes(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.MagTapes).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.MagTapes).Delete(name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("MagTapes", name)
 }
 
 /// Get List Of MagTapes.
 ClassMethod GetListMagTapes() As %DynamicObject
 {
-	Set lst = ##class(Api.Config.Services.MagTapes).List()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit {"ListOfMagTapes":(lst)}
+	Quit ..DefaultListOf("MagTapes","ListOfMagTapes")
 }
 
 /// Get MapGlobals.<br/>
@@ -687,14 +617,7 @@ ClassMethod PostMapGlobals(namespace As %String, model As %Stream.Object) As %Dy
 ///     name, Name of the mapping.<br><br/>
 ClassMethod DeleteMapGlobals(namespace As %String, name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.MapGlobals).Exists(namespace,name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.MapGlobals).Delete(namespace,name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("MapGlobals", namespace, name)
 }
 
 /// Get List Of MapGlobals.<br/>
@@ -789,14 +712,7 @@ ClassMethod PostMapMirrors(id As %String, model As %Stream.Object) As %DynamicOb
 /// saving.<br/>
 ClassMethod DeleteMapMirrors(id As %String, name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.MapMirrors).Exists(id,name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.MapMirrors).Delete(id,name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("MapMirrors", id, name)
 }
 
 /// Get List Of MapMirrors.<br/>
@@ -864,14 +780,7 @@ ClassMethod PostMapPackages(namespace As %String, model As %Stream.Object) As %D
 ///     name, Name of the mapping.<br><br/>
 ClassMethod DeleteMapPackages(namespace As %String, name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.MapPackages).Exists(namespace,name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.MapPackages).Delete(namespace,name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("MapPackages", namespace, name)
 }
 
 /// Get List Of MapPackages.<br/>
@@ -939,14 +848,7 @@ ClassMethod PostMapRoutines(namespace As %String, model As %Stream.Object) As %D
 ///     name, Name of the mapping.<br><br/>
 ClassMethod DeleteMapRoutines(namespace As %String, name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.MapRoutines).Exists(namespace,name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.MapRoutines).Delete(namespace,name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("MapRoutines", namespace, name)
 }
 
 /// Get List Of MapRoutines.<br/>
@@ -1028,14 +930,7 @@ ClassMethod PostMapShadows(id As %String, model As %Stream.Object) As %DynamicOb
 ///     name, Name of the mapping.<br><br/>
 ClassMethod DeleteMapShadows(id As %String, name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.MapShadows).Exists(id,name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.MapShadows).Delete(id,name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("MapShadows", id, name)
 }
 
 /// Update MirrorMember.<br/>
@@ -1129,14 +1024,7 @@ ClassMethod PostMirrors(model As %Stream.Object) As %DynamicObject
 /// Must be unique across the mirrors managed by the EMS<br/>
 ClassMethod DeleteMirrors(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.Mirrors).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.Mirrors).Delete(name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("Mirrors", name)
 }
 
 /// Update Miscellaneous.<br/>
@@ -1161,10 +1049,7 @@ ClassMethod PutMiscellaneous(model As %Stream.Object) As %DynamicObject
 /// Get List Of Mirrors.
 ClassMethod GetListMirrors() As %DynamicObject
 {
-	Set lst = ##class(Api.Config.Services.Mirrors).List()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit {"ListOfMirrors":(lst)}
+	Quit ..DefaultListOf("Mirrors","ListOfMirrors")
 }
 
 /// Get Monitor.
@@ -1257,10 +1142,7 @@ ClassMethod PutSQL(model As %Stream.Object) As %DynamicObject
 /// Get List Of Namespaces.
 ClassMethod GetListNamespaces() As %DynamicObject
 {
-	Set lst = ##class(Api.Config.Services.Namespaces).List()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit {"ListOfNamespaces":(lst)}
+	Quit ..DefaultListOf("Namespaces","ListOfNamespaces")
 }
 
 /// Get Shadows.<br/>
@@ -1312,23 +1194,13 @@ ClassMethod PostShadows(model As %Stream.Object) As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod DeleteShadows(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.Shadows).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.Shadows).Delete(name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("Shadows", name)
 }
 
 /// Get List Of Shadows.
 ClassMethod GetListShadows() As %DynamicObject
 {
-	Set lst = ##class(Api.Config.Services.Shadows).List()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit {"ListOfShadows":(lst)}
+	Quit ..DefaultListOf("Shadows","ListOfShadows")
 }
 
 /// Get SqlSysDatatypes.<br/>
@@ -1380,23 +1252,13 @@ ClassMethod PostSqlSysDatatypes(model As %Stream.Object) As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod DeleteSqlSysDatatypes(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.SqlSysDatatypes).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.SqlSysDatatypes).Delete(name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("SqlSysDatatypes", name)
 }
 
 /// Get List Of SqlSysDatatypes.
 ClassMethod GetListSqlSysDatatypes() As %DynamicObject
 {
-	Set lst = ##class(Api.Config.Services.SqlSysDatatypes).List()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit {"ListOfSqlSysDatatypes":(lst)}
+	Quit ..DefaultListOf("SqlSysDatatypes","ListOfSqlSysDatatypes")
 }
 
 /// Get SqlUserDatatypes.<br/>
@@ -1454,14 +1316,7 @@ ClassMethod PostSqlUserDatatypes(model As %Stream.Object) As %DynamicObject
 ///     name, Name of the object instance.<br><br/>
 ClassMethod DeleteSqlUserDatatypes(name As %String) As %DynamicObject
 {
-	If '##class(Api.Config.Services.SqlUserDatatypes).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.SqlUserDatatypes).Delete(name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("SqlUserDatatypes", name)
 }
 
 /// Update Startup.<br/>
@@ -1486,10 +1341,7 @@ ClassMethod PutStartup(model As %Stream.Object) As %DynamicObject
 /// Get List Of SqlUserDatatypes.
 ClassMethod GetListSqlUserDatatypes() As %DynamicObject
 {
-	Set lst = ##class(Api.Config.Services.SqlUserDatatypes).List()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit {"ListOfSqlUserDatatypes":(lst)}
+	Quit ..DefaultListOf("SqlUserDatatypes","ListOfSqlUserDatatypes")
 }
 
 /// Get Telnet.
@@ -1545,10 +1397,7 @@ ClassMethod Putconfig(model As %Stream.Object) As %DynamicObject
 /// Get list of databases directory.
 ClassMethod GetListOfDirectory() As %DynamicObject
 {
-    Set lst = ##class(Api.Config.Services.SYS.Databases).List()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit {"ListOfDirectory":(lst)}
+    Quit ..DefaultListOf("SYS.Databases","ListOfDirectory")
 }
 
 /// Get database directory details.<br/>
@@ -1593,15 +1442,7 @@ ClassMethod PutDirectory(directory As %String, DirectoryModel As %Stream.Object)
 ///     directory, Database directory ex: /usr/irissys/mgr/user/ don't forget to escape -> %2Fusr%2Firissys%2Fmgr%2Fuser%2F.<br/>
 ClassMethod DeleteDirectory(directory As %String) As %DynamicObject
 {
-	Set directory = ##class(%CSP.Page).UnescapeURL(directory)
-    If '##class(Api.Config.Services.SYS.Databases).Exists(directory) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.SYS.Databases).Delete(directory))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("SYS.Databases",  ##class(%CSP.Page).UnescapeURL(directory))
 }
 
 /// Mount database.<br/>
@@ -1678,10 +1519,7 @@ ClassMethod PostWebApp(model As %Stream.Object) As %DynamicObject
 /// Get list of existing web applications.
 ClassMethod GetListOfWebApps() As %DynamicObject
 {
-    Set lst = ##class(Api.Config.Services.Security.Applications).List()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit {"ListOfWebApps":(lst)}
+    Quit ..DefaultListOf("Security.Applications","ListOfWebApps")
 }
 
 /// Delete Web application.<br/>
@@ -1689,15 +1527,7 @@ ClassMethod GetListOfWebApps() As %DynamicObject
 ///     name, Web application url ex : /api/config don't forget to escape -> %2Fapi%2Fconfig<br/>
 ClassMethod DeleteWebApp(name As %String) As %DynamicObject
 {
-	Set name = ##class(%CSP.Page).UnescapeURL(name)
-    If '##class(Api.Config.Services.Security.Applications).Exists(name) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-
-	$$$ThrowOnError(##class(Api.Config.Services.Security.Applications).Delete(name))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Quit ..DefaultDelImpl("Security.Applications",  name)
 }
 
 /// Load configuration.<br/>
@@ -1754,10 +1584,7 @@ ClassMethod DeleteConfiguration(model As %Stream.Object) As %Stream.Object
 /// Get list of services.
 ClassMethod GetListOfServices() As %DynamicObject
 {
-    Set lst = ##class(Api.Config.Services.Security.Services).List()
-	Do ..%SetStatusCode($$$HTTP200)
-	Do ..%SetContentType("application/json")
-	Quit {"ListOfServices":(lst)}
+    Quit ..DefaultListOf("Security.Services","ListOfServices")
 }
 
 /// Get service detail by name<br/>
