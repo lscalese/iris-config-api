@@ -424,38 +424,46 @@ For example `Api.Config.Services.Namespaces` allow all of the operations listed 
  
 | Service classes       | List  | Get   | Update    | Create    | Delete    | Exists    |
 |-      |-      |-      |-      |-      |-      |-      |
-| Api.Config.Services.Cluster | no | yes | yes | no | no | no |
-| Api.Config.Services.ConfigFile | no | yes | yes | no | no | no |
-| Api.Config.Services.Databases | yes | yes | yes | yes | yes | yes |
-| Api.Config.Services.Debug | yes | yes | yes | yes | yes | yes |
-| Api.Config.Services.DeviceSubTypes | yes | yes | yes | yes | yes | yes |
-| Api.Config.Services.Devices | yes | yes | yes | yes | yes | yes |
-| Api.Config.Services.ECP | no | yes | yes | no | no | no |
-| Api.Config.Services.ECPServers | yes | yes | yes | yes | yes | yes |
-| Api.Config.Services.IO | no | yes | yes | no | no | no |
-| Api.Config.Services.Journal | no | yes | yes | no | no | no |
-| Api.Config.Services.LicenseServers | yes | yes | yes | yes | yes | yes |
-| Api.Config.Services.MagTapes | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.Cluster | no | no | no | no | no | no |
+| Api.Config.Services.ConfigFile | no | no | no | no | no | no |
+| Api.Config.Services.Databases | no | no | no | no | no | no |
+| Api.Config.Services.Debug | no | no | no | no | no | no |
+| Api.Config.Services.DeviceSubTypes | no | no | no | no | no | no |
+| Api.Config.Services.Devices | no | no | no | no | no | no |
+| Api.Config.Services.ECP | no | no | no | no | no | no |
+| Api.Config.Services.ECPServers | no | no | no | no | no | no |
+| Api.Config.Services.IO | no | no | no | no | no | no |
+| Api.Config.Services.Journal | no | no | no | no | no | no |
+| Api.Config.Services.Library.SQLConnection | no | yes | yes | yes | yes | yes |
+| Api.Config.Services.LicenseServers | no | no | no | no | no | no |
+| Api.Config.Services.MagTapes | no | no | no | no | no | no |
 | Api.Config.Services.MapGlobals | yes | yes | yes | yes | yes | yes |
 | Api.Config.Services.MapMirrors | yes | yes | yes | yes | yes | yes |
 | Api.Config.Services.MapPackages | yes | yes | yes | yes | yes | yes |
 | Api.Config.Services.MapRoutines | yes | yes | yes | yes | yes | yes |
 | Api.Config.Services.MapShadows | yes | yes | yes | yes | yes | yes |
-| Api.Config.Services.MirrorMember | no | yes | yes | no | no | no |
-| Api.Config.Services.Mirrors | yes | yes | yes | yes | yes | yes |
-| Api.Config.Services.Miscellaneous | no | yes | yes | no | no | no |
-| Api.Config.Services.Monitor | no | yes | yes | no | no | no |
-| Api.Config.Services.Namespaces | yes | yes | yes | yes | yes | yes |
-| Api.Config.Services.SQL | no | yes | yes | no | no | no |
+| Api.Config.Services.MirrorMember | no | no | no | no | no | no |
+| Api.Config.Services.Mirrors | no | no | no | no | no | no |
+| Api.Config.Services.Miscellaneous | no | no | no | no | no | no |
+| Api.Config.Services.Monitor | no | no | no | no | no | no |
+| Api.Config.Services.Namespaces | no | no | no | no | no | no |
+| Api.Config.Services.SQL | no | no | no | no | no | no |
 | Api.Config.Services.SYS.Databases | yes | yes | yes | yes | yes | yes |
-| Api.Config.Services.Security.Applications | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.Security.Applications | no | no | no | no | no | no |
+| Api.Config.Services.Security.LDAPConfigs | no | no | no | no | no | no |
+| Api.Config.Services.Security.Resources | no | no | no | yes | no | no |
+| Api.Config.Services.Security.Roles | no | no | no | yes | no | no |
+| Api.Config.Services.Security.SQLAdminPrivilegeSet | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.Security.SQLPrivileges | yes | yes | yes | yes | yes | yes |
+| Api.Config.Services.Security.SSLConfigs | no | no | no | no | no | no |
 | Api.Config.Services.Security.Services | yes | yes | yes | no | no | yes |
-| Api.Config.Services.Shadows | yes | yes | yes | yes | yes | yes |
-| Api.Config.Services.SqlSysDatatypes | yes | yes | yes | yes | yes | yes |
-| Api.Config.Services.SqlUserDatatypes | yes | yes | yes | yes | yes | yes |
-| Api.Config.Services.Startup | no | yes | yes | no | no | no |
-| Api.Config.Services.Telnet | no | yes | yes | no | no | no |
-| Api.Config.Services.config | no | yes | yes | no | no | no |
+| Api.Config.Services.Security.Users | no | no | no | yes | no | no |
+| Api.Config.Services.Shadows | no | no | no | no | no | no |
+| Api.Config.Services.SqlSysDatatypes | no | no | no | no | no | no |
+| Api.Config.Services.SqlUserDatatypes | no | no | no | no | no | no |
+| Api.Config.Services.Startup | no | no | no | no | no | no |
+| Api.Config.Services.Telnet | no | no | no | no | no | no |
+| Api.Config.Services.config | no | no | no | no | no | no |
  
 </details>
  
