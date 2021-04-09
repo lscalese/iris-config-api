@@ -7,6 +7,8 @@ Parameter SYSCLASS = "SYS.Database";
 
 Parameter PNAME = "Directory";
 
+Parameter PIDENTIFIER = "Directory";
+
 ClassMethod Create(model As %Library.DynamicObject) As %Status
 {
 	$$$switchNSSys

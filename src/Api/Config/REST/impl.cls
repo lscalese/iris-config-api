@@ -32,18 +32,8 @@ ClassMethod GetCluster() As %DynamicObject
 ///     model, Cluster to update.<br/>
 ClassMethod PutCluster(model As %Stream.Object) As %DynamicObject
 {
-	Set dModel = {}.%FromJSON(.model)
-	Set sc =##class(Api.Config.Services.Cluster).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	
-	$$$ThrowOnError(##class(Api.Config.Services.Cluster).Update(dModel))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Set dModel = {}.%FromJSON(.model), resp = ..DefaultPutImpl("Cluster", dModel,,$$$NO)
+	Quit resp
 }
 
 /// Get ConfigFile.
@@ -1380,18 +1370,8 @@ ClassMethod Getconfig() As %DynamicObject
 ///     model, config to update.<br/>
 ClassMethod Putconfig(model As %Stream.Object) As %DynamicObject
 {
-	Set dModel = {}.%FromJSON(.model)
-	Set sc =##class(Api.Config.Services.config).CheckModel(dModel)
-	If $$$ISERR(sc) {
-		Do ..%SetStatusCode($$$HTTP400)
-		Do ##class(%CSP.REST).StatusToJSON(sc,.jsonSC)
-		Quit jsonSC
-	}
-	
-	
-	$$$ThrowOnError(##class(Api.Config.Services.config).Update(dModel))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Set dModel = {}.%FromJSON(.model), resp = ..DefaultPutImpl("config", dModel,,$$$NO)
+	Quit resp
 }
 
 /// Get list of databases directory.
@@ -1425,16 +1405,9 @@ ClassMethod PostDirectory(directory As %Stream.Object) As %DynamicObject
 ///     DirectoryModel, Database to update.<br/>
 ClassMethod PutDirectory(directory As %String, DirectoryModel As %Stream.Object) As %DynamicObject
 {
-	Set dModel = {}.%FromJSON(.DirectoryModel)
-	Set dModel.Directory = directory
-	If '##class(Api.Config.Services.SYS.Databases).Exists(dModel.Directory) {
-		Do ..%SetStatusCode($$$HTTP404)
-		Quit ""
-	}
-	
-	$$$ThrowOnError(##class(Api.Config.Services.SYS.Databases).Update(dModel))
-	Do ..%SetStatusCode($$$HTTP204)
-	Quit ""
+	Set dModel = {}.%FromJSON(.DirectoryModel), dModel.Directory = ##class(%CSP.Page).UnescapeURL(directory)
+	Set resp = ..DefaultPutImpl("SYS.Databases", dModel,,$$$YES)
+	Quit resp
 }
 
 /// Delete database directory.<br/>
@@ -2040,7 +2013,7 @@ ClassMethod DefaultPutImpl(class As %String, dModel As %DynamicObject, Output up
 		Set id1 = $Piece(ids,",",1)
 		Set:id1="" id1="Name"
 		Set id2 = $Piece(ids,",",2)
-		s ^lsc=id1
+		s ^lsc=id1 _ dModel.%Get(id1)
 		If id2 = "" {
 			If '$CLASSMETHOD(class, "Exists", dModel.%Get(id1)) {
 				Do ..%SetStatusCode($$$HTTP404)

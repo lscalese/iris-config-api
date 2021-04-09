@@ -10,6 +10,8 @@ Features :
 * Import configuration from JSON document. 
 * Export configuration to JSON document. 
 * RESTfull application. 
+
+Also, It could be combine with ZPM client (see this [article](https://community.intersystems.com/post/combine-config-api-zpm-client) and [repository](https://github.com/lscalese/objectscript-docker-template-with-config-api) )
  
 ## Table of contents
  
@@ -680,7 +682,7 @@ Note: If you use the docker template in this repository the web application /api
  
 ## Available REST operations
  
-We don't list all available operations in this document, but you can load the (swagger file)[https://github.com/lscalese/iris-config-api/blob/master/swagger.json] into your favorite software like :
+We don't list all available operations in this document, but you can load the [swagger file](https://github.com/lscalese/iris-config-api/blob/master/swagger.json) into your favorite software like :
  
 * [swagger-ui modue](https://openexchange.intersystems.com/package/iris-web-swagger-ui)
 * [swagger editor](https://editor.swagger.io)
