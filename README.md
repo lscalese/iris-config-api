@@ -6,7 +6,7 @@ It allows you to prepare your environment before deploying your application code
  
 Features :
  
-* Create databases, namespaces, mappings, system settings, and more ... 
+* Create databases, namespaces, mappings, system settings, security settings, and more ... 
 * Import configuration from JSON document. 
 * Export configuration to JSON document. 
 * RESTfull application. 
@@ -555,9 +555,7 @@ Write $SYSTEM.Status.GetOneErrorText(sc)
  
 ## Export configuration
  
-This is an important feature to export existing configurations. 
-It's useful to generate a JSON document from an existing installation to create an automation script for further installation. 
- 
+This is an important feature to export existing configurations. It could be useful to generate a configuration document and create a script for a further install.  
  
 Firstable, create a filter as follow and then call `export` method.: 
  
@@ -590,9 +588,7 @@ Set config = ##class(Api.Config.Services.Loader).export(filter,OnlyNotDefaultVal
 `OnlyNotDefaultValue` allows export parameters has a value different from the "default value". 
 It's very interesting to identify modified parameters and also to keep a configuration document clear with only relevant properties. 
  
-<details>
- <summary>Exported configuration (click to expand) : </summary>
- 
+Exported configuration :  
  
 ```json
 {
@@ -663,11 +659,10 @@ It's very interesting to identify modified parameters and also to keep a configu
  }
 }
 ```
-</details>
  
 # REST application
  
-A REST API is also available allowing CRUD operation overall implemented config services, load configuration JSON document, export ... 
+A REST API is also available allowing CRUD operation overall implemented config services, load configuration JSON document, create namespaces, databases, ...  
 Configuration using a simple `curl` command line became possible. 
  
 ## Install WEB Application
@@ -678,23 +673,189 @@ Execute the following script to install web application /csp/config :
 Do ##class(Api.Config.Developers.Install).installRESTApp()
 ```
  
-Note: If you use the docker template in this repository the web application /api/config is automatically installed. 
+Note: If you use the docker template in this repository the web application /api/config is automatically installed.  
  
-## Available REST operations
+## REST operations
  
-We don't list all available operations in this document, but you can load the [swagger file](https://github.com/lscalese/iris-config-api/blob/master/swagger.json) into your favorite software like :
+The [swagger file](https://github.com/lscalese/iris-config-api/blob/master/swagger.json) is available at `http://localhost:32773/api/config/`, load into your favorite software like :
  
 * [swagger-ui modue](https://openexchange.intersystems.com/package/iris-web-swagger-ui)
 * [swagger editor](https://editor.swagger.io)
 * [Postman](https://www.postman.com/)
  
 By default, the swagger specification's available at this location: `http://localhost:32773/api/config/` (adapt with your port number). 
- 
- 
+
 Note: with this docker template, the [swagger-ui module](https://openexchange.intersystems.com/package/iris-web-swagger-ui) is automatically installed and available at `http://localhost:32773/swagger-ui/index.html`
  
-![swagger-ui](https://github.com/lscalese/iris-config-api/blob/master/img/swagger-ui.png?raw=true)
+![swagger-ui](https://github.com/lscalese/iris-config-api/blob/master/img/swagger-ui.png?raw=true)  
+
+
+| Method        | Request       | Summary  |
+|-      |-      |- |
+| get | / | Swagger 2.0 specification |
+| put | /loader | Load configuration. |
+| delete | /loader | WARNING Delete all namespaces, databases, webapps,... defined in configuration object. |
+| post | /export | Export a part of IRIS configuration. |
+| get | /export/{id} | Get an existing configuration export. |
+| get | /security/users | Get list of existing users. |
+| post | /security/users | Create a new user. |
+| get | /security/users/${name} | Get user detail. |
+| put | /security/users/${name} | Update user. |
+| delete | /security/users/${name} | Delete a user. |
+| get | /security/roles | Get list of existing roles. |
+| post | /security/roles | Create a new role. |
+| get | /security/roles/${name} | Get role detail. |
+| put | /security/roles/${name} | Update role. |
+| delete | /security/roles/${name} | Delete a role. |
+| get | /security/resources | Get list of existing resources. |
+| post | /security/resources | Create a new resource. |
+| get | /security/resources/${name} | Get resource detail. |
+| put | /security/resources/${name} | Update resource. |
+| delete | /security/resources/${name} | Delete a resource. |
+| get | /security/sslconfigs | Get list of existing sslconfigs. |
+| post | /security/sslconfigs | Create a new sslconfig. |
+| get | /security/sslconfigs/${name} | Get sslconfig detail. |
+| put | /security/sslconfigs/${name} | Update sslconfig. |
+| delete | /security/sslconfigs/${name} | Delete a sslconfig. |
+| get | /security/sqladminprivilegeset | Get list of SQLAdminPrivilegeSet. |
+| put | /security/sqladminprivilegeset | Set SQLAdminPrivilegeSet. |
+| get | /security/sqladminprivilegeset/{namespace}/{grantee} | Get SQLAdminPrivilegeSet detail. |
+| delete | /security/sqladminprivilegeset/{namespace}/{grantee} | Delete SQLAdminPrivilegeSet. |
+| get | /security/sqlprivileges/{namespace}/{grantee} | Get list of privilege for namespace and grantee. |
+| delete | /security/sqlprivileges/{namespace}/{grantee} | Delete privileges for namespace and grantee. |
+| put | /security/sqlprivileges | Set SQL Privileges. |
+| get | /library/sqlconnection | Get list of existing SQLConnections. |
+| post | /library/sqlconnection | Create a new sqlconnection. |
+| get | /library/sqlconnection/${name} | Get SQLConnection detail. |
+| put | /library/sqlconnection/${name} | Update SQLConnection. |
+| delete | /library/sqlconnection/${name} | Delete SQLConnection. |
+| get | /sys/databases | Get list of databases directory. |
+| post | /sys/databases | Create a new database directory. |
+| put | /sys/databases/{directory}/mounted | Mount database. |
+| delete | /sys/databases/{directory}/mounted | Dismount database. |
+| get | /sys/databases/{directory} | Get database directory details |
+| put | /sys/databases/{directory} | Update details of an existing database directory. |
+| delete | /sys/databases/{directory} |  |
+| get | /databases/{name} |  |
+| put | /databases/{name} |  |
+| delete | /databases/{name} |  |
+| get | /databases |  |
+| post | /databases |  |
+| get | /namespaces/{name} |  |
+| put | /namespaces/{name} |  |
+| delete | /namespaces/{name} |  |
+| get | /namespaces |  |
+| post | /namespaces |  |
+| get | /security/applications | Get list of existing web applications. |
+| post | /security/applications | Create a new web applications. |
+| get | /security/applications/{name} | Get Web application. |
+| put | /security/applications/{name} | Update Web application. |
+| delete | /security/applications/{name} | Delete Web application. |
+| get | /configfile |  |
+| put | /configfile |  |
+| get | /journal |  |
+| put | /journal |  |
+| get | /config |  |
+| put | /config |  |
+| get | /security/services | Get list of services. |
+| get | /security/services/{name} | Get service detail by name |
+| put | /security/services/{name} | Update service. |
+| get | /cluster |  |
+| put | /cluster |  |
+| get | /debug/{name} |  |
+| put | /debug/{name} |  |
+| delete | /debug/{name} |  |
+| get | /debug |  |
+| post | /debug |  |
+| get | /devicesubtypes/{name} |  |
+| put | /devicesubtypes/{name} |  |
+| delete | /devicesubtypes/{name} |  |
+| get | /devicesubtypes |  |
+| post | /devicesubtypes |  |
+| get | /devices/{name} |  |
+| put | /devices/{name} |  |
+| delete | /devices/{name} |  |
+| get | /devices |  |
+| post | /devices |  |
+| get | /ecp |  |
+| put | /ecp |  |
+| get | /ecpservers/{name} |  |
+| put | /ecpservers/{name} |  |
+| delete | /ecpservers/{name} |  |
+| get | /ecpservers |  |
+| post | /ecpservers |  |
+| get | /io |  |
+| put | /io |  |
+| get | /licenseservers/{name} |  |
+| put | /licenseservers/{name} |  |
+| delete | /licenseservers/{name} |  |
+| get | /licenseservers |  |
+| post | /licenseservers |  |
+| get | /magtapes/{name} |  |
+| put | /magtapes/{name} |  |
+| delete | /magtapes/{name} |  |
+| get | /magtapes |  |
+| post | /magtapes |  |
+| get | /mapglobals/{namespace}/{name} |  |
+| put | /mapglobals/{namespace}/{name} |  |
+| delete | /mapglobals/{namespace}/{name} |  |
+| get | /mapglobals/{namespace} |  |
+| post | /mapglobals/{namespace} |  |
+| get | /mapmirrors/{id}/{name} |  |
+| put | /mapmirrors/{id}/{name} |  |
+| delete | /mapmirrors/{id}/{name} |  |
+| get | /mapmirrors/{id} |  |
+| post | /mapmirrors/{id} |  |
+| get | /mappackages/{namespace}/{name} |  |
+| put | /mappackages/{namespace}/{name} |  |
+| delete | /mappackages/{namespace}/{name} |  |
+| get | /mappackages/{namespace} |  |
+| post | /mappackages/{namespace} |  |
+| get | /maproutines/{namespace}/{name} |  |
+| put | /maproutines/{namespace}/{name} |  |
+| delete | /maproutines/{namespace}/{name} |  |
+| get | /maproutines/{namespace} |  |
+| post | /maproutines/{namespace} |  |
+| get | /mapshadows/{id}/{name} |  |
+| put | /mapshadows/{id}/{name} |  |
+| delete | /mapshadows/{id}/{name} |  |
+| get | /mapshadows/{id} |  |
+| post | /mapshadows/{id} |  |
+| get | /mirrormember |  |
+| put | /mirrormember |  |
+| get | /mirrors/{name} |  |
+| put | /mirrors/{name} |  |
+| delete | /mirrors/{name} |  |
+| get | /mirrors |  |
+| post | /mirrors |  |
+| get | /miscellaneous |  |
+| put | /miscellaneous |  |
+| get | /monitor |  |
+| put | /monitor |  |
+| get | /sql |  |
+| put | /sql |  |
+| get | /shadows/{name} |  |
+| put | /shadows/{name} |  |
+| delete | /shadows/{name} |  |
+| get | /shadows |  |
+| post | /shadows |  |
+| get | /sqlsysdatatypes/{name} |  |
+| put | /sqlsysdatatypes/{name} |  |
+| delete | /sqlsysdatatypes/{name} |  |
+| get | /sqlsysdatatypes |  |
+| post | /sqlsysdatatypes |  |
+| get | /sqluserdatatypes/{name} |  |
+| put | /sqluserdatatypes/{name} |  |
+| delete | /sqluserdatatypes/{name} |  |
+| get | /sqluserdatatypes |  |
+| post | /sqluserdatatypes |  |
+| get | /startup |  |
+| put | /startup |  |
+| get | /telnet |  |
+| put | /telnet |  |
  
+ 
+
  
  
 

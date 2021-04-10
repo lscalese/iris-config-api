@@ -251,4 +251,20 @@ ClassMethod MDListServices()
     }
 }
 
+ClassMethod MDListRequest(swagger As %DynamicObject)
+{
+    s swagger = {}.%FromJSON(##class(%Dictionary.CompiledXData).%OpenId("Api.Config.REST.spec||OpenAPI").Data)
+    ; d ##class(Api.Config.Developers.Helper).MDListRequest()
+    Write !,"| Method 	| Request 	| Summary  |"
+    Write !,"|-	|-	|- |"
+    Set iter = swagger.paths.%GetIterator()
+    While iter.%GetNext(.key,.value) {
+        For method = "get", "post", "put", "delete" {
+            CONTINUE:'value.%IsDefined(method)
+            Write !, $$$FormatText("| %1 | %2 | %3 |", method, key, $PROPERTY($PROPERTY(value,method),"summary"))
+        }
+        
+    }
+}
+
 }
