@@ -18,16 +18,19 @@ ClassMethod ExecQry(Names, ByRef tmp)
 {
 	$$$switchNSSys
 	Try{
-		Set rs=##class(%Library.ResultSet).%New(..#SYSCLASS_":List")
-		Do rs.Execute(Names)
-		While rs.Next() {
-			Set tmp($i(tmp))=rs.Data("Namespace")
+		Set tStatement = ##class(%SQL.Statement).%New()
+		Set sc = tStatement.%PrepareClassQuery(..#SYSCLASS,"List")
+		If $$$ISERR(sc) $$$ThrowStatus(sc)
+		Set tResult = tStatement.%Execute(Names)
+		If (tResult.%SQLCODE'=0)&&(tResult.%SQLCODE'=100) $$$ThrowStatus($$$ERROR($$$SQLError, tResult.%SQLCODE, tResult.%Message)) 
+		While tResult.%Next() {
+			Set tmp($i(tmp))=tResult.%Get("Namespace")
 		}
-		Do rs.Close()
-	}Catch(ex) {
+		Kill tResult,tStatement
+	} Catch(ex) {
 		Throw ex
 	}
-	Kill rs
+
 	Quit
 }
 

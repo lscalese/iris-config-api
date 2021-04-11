@@ -150,6 +150,34 @@ ClassMethod ExecQry(Namespace, Grantee, ByRef tmp)
             }
 		}
 		Do rs.Close()
+
+        /*Set tStatement = ##class(%SQL.Statement).%New()
+        Set sc = tStatement.%PrepareClassQuery(..#SYSCLASS,"List")
+        If $$$ISERR(sc) $$$ThrowStatus(sc)
+        Set tResult = tStatement.%Execute()
+        If (tResult.%SQLCODE'=0)&&(tResult.%SQLCODE'=100) $$$ThrowStatus($$$ERROR($$$SQLError, tResult.%SQLCODE, tResult.%Message)) 
+
+		While tResult.%Next() {
+            Set tNS = $$$LOWER(tResult.%Get("Namespace")), tGrantee = $$$LOWER(tResult.%Get("Grantee"))
+            
+            If Namespace '= "*" && (tNS '= Namespace) {
+                CONTINUE
+            }
+            If Grantee '= "*" && (tGrantee '= Grantee) {
+                CONTINUE
+            }
+            
+			Set tmp($i(tmp))= {
+                "Grantable" : (tResult.%Get("Grantable")),
+                "Grantee" : (tResult.%Get("Grantee")),
+                "Grantor" : (tResult.%Get("Grantor")),
+                "Namespace" : (tResult.%Get("Namespace")),
+                "Privilege" : (tResult.%Get("Privilege")),
+                "SQLObject" : (tResult.%Get("SQLObject"))
+            }
+		}
+		Kill tResult,tStatement*/
+
 	}Catch(ex) {
 		Throw ex
 	}

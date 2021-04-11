@@ -112,4 +112,23 @@ ClassMethod ExecQry(ByRef tmp)
 	Quit
 }
 
+/*ClassMethod ExecQry(ByRef tmp)
+{
+	$$$switchNSSys
+	Try{
+		Set tStatement = ##class(%SQL.Statement).%New()
+		Set sc = tStatement.%PrepareClassQuery(..#SYSCLASS,"List")
+		If $$$ISERR(sc) $$$ThrowStatus(sc)
+		Set tResult = tStatement.%Execute()
+		If (tResult.%SQLCODE'=0)&&(tResult.%SQLCODE'=100) $$$ThrowStatus($$$ERROR($$$SQLError, tResult.%SQLCODE, tResult.%Message)) 
+		While tResult.%Next() {
+			Set tmp($i(tmp))=$lb(tResult.%Get("Namespace"),tResult.%Get("Grantee"))
+		}
+		Kill tResult,tStatement
+	} Catch(ex) {
+		Throw ex
+	}
+
+	Quit
+}*/
 }

@@ -49,17 +49,20 @@ ClassMethod Get(ID As %String, Name As %String) As %Library.DynamicObject
 	Quit ..ToDynamic(.properties)
 }
 
-ClassMethod List(ID As %String, Names As %String = "*", CPFFile As %String = "", Flags As %Integer = 0, Format As %Integer = 0) As %DynamicArray
+ClassMethod List(ID As %String, Names As %String = "*") As %DynamicArray
 {
 	$$$switchNSSys
 	Set list = []
 	Try{
-		Set rs=##class(%Library.ResultSet).%New("Config.MapMirrors:List")
-		Do rs.Execute(ID,Names,CPFFile,Flags,Format)
-		While rs.Next() {
-			Do list.%Push(..Get(ID, rs.Data("Name")))
+		Set tStatement = ##class(%SQL.Statement).%New()
+		Set sc = tStatement.%PrepareClassQuery(..#SYSCLASS,"List")
+		If $$$ISERR(sc) $$$ThrowStatus(sc)
+		Set tResult = tStatement.%Execute(ID,Names)
+		If (tResult.%SQLCODE'=0)&&(tResult.%SQLCODE'=100) $$$ThrowStatus($$$ERROR($$$SQLError, tResult.%SQLCODE, tResult.%Message)) 
+		While tResult.%Next() {
+			Do list.%Push(..Get(ID, tResult.%Get("Name")))
 		}
-		Do rs.Close()
+		Kill tResult,tStatement
 		$$$restoreNS
 	}Catch(ex) {
 		$$$restoreNS

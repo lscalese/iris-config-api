@@ -54,13 +54,16 @@ ClassMethod List(mask As %String = "*") As %DynamicArray
     $$$switchNSSys
     Set dbList = []
 	Try{
-		Set rs=##class(%Library.ResultSet).%New("SYS.Database:CompactLocalList")
-		Do rs.Execute(mask)
-		While rs.Next() {
-			Do dbList.%Push(..Get(rs.Data("Directory")))
-		}
-		Do rs.Close()
-		$$$restoreNS
+        Set tStatement = ##class(%SQL.Statement).%New()
+        Set sc = tStatement.%PrepareClassQuery(..#SYSCLASS,"CompactLocalList")
+        If $$$ISERR(sc) $$$ThrowStatus(sc)
+        Set tResult = tStatement.%Execute(mask)
+        If (tResult.%SQLCODE'=0)&&(tResult.%SQLCODE'=100) $$$ThrowStatus($$$ERROR($$$SQLError, tResult.%SQLCODE, tResult.%Message)) 
+		While tResult.%Next() {
+            Do dbList.%Push(..Get(tResult.%Get("Directory")))
+        }
+		kill tStatement, tResult
+        $$$restoreNS
 
 	}Catch(ex) {
 		$$$restoreNS

@@ -46,17 +46,20 @@ ClassMethod Get(Namespace As %String, Name As %String) As %Library.DynamicObject
 	Quit ..ToDynamic(.properties)
 }
 
-ClassMethod List(Namespace As %String, Names As %String = "*", CPFFile As %String = "", Flags As %Integer = 0) As %DynamicArray
+ClassMethod List(Namespace As %String, Names As %String = "*") As %DynamicArray
 {
 	$$$switchNSSys
 	Set list = []
 	Try{
-		Set rs=##class(%Library.ResultSet).%New("Config.MapRoutines:List")
-		Do rs.Execute(Namespace,Names,CPFFile,Flags)
-		While rs.Next() {
-			Do list.%Push(..Get(Namespace, rs.Data("Name")))
+		Set tStatement = ##class(%SQL.Statement).%New()
+		Set sc = tStatement.%PrepareClassQuery(..#SYSCLASS,"List")
+		If $$$ISERR(sc) $$$ThrowStatus(sc)
+		Set tResult = tStatement.%Execute(Namespace,Names)
+		If (tResult.%SQLCODE'=0)&&(tResult.%SQLCODE'=100) $$$ThrowStatus($$$ERROR($$$SQLError, tResult.%SQLCODE, tResult.%Message)) 
+		While tResult.%Next() {
+			Do list.%Push(..Get(Namespace, tResult.%Get("Name")))
 		}
-		Do rs.Close()
+		Kill tResult,tStatement
 		$$$restoreNS
 	}Catch(ex) {
 		$$$restoreNS
