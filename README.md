@@ -9,7 +9,7 @@ Features :
 * Create databases, namespaces, mappings, system settings, security settings, and more ... 
 * Import configuration from JSON document. 
 * Export configuration to JSON document. 
-* RESTfull application. 
+* RESTful application. 
 
 Also, It could be combine with ZPM client (see this [article](https://community.intersystems.com/post/combine-config-api-zpm-client) and [repository](https://github.com/lscalese/objectscript-docker-template-with-config-api) )
  
