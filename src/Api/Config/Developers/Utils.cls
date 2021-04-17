@@ -27,6 +27,7 @@ ClassMethod buildXmlRelease(filename As %String = "/irisrun/repo/dist/config-api
     Set items("Api.Config.inc.INC")=""
     Set items("IORedirect.INC")=""
     Set items("Api.Config.*.CLS")=""
+    Set items("IORedirect.*.CLS")=""
     Quit $SYSTEM.OBJ.Export(.items,filename)
 }
 
