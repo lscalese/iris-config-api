@@ -110,7 +110,14 @@ ClassMethod Load(model As %DynamicObject, ByRef params) As %Status
 {
     Set params=""
     Set:'$d(params("IFEXISTS")) params("IFEXISTS")="Update"
-    Set sc = ..commonLoad(model, "Create",.params)
+    Try {
+        Set sc = ..commonLoad(model, "Create",.params)
+    } Catch(ex) {
+        Set sc = ex.AsStatus()
+        Do $SYSTEM.Status.DecomposeStatus(sc,.err)
+        Zw err
+    }
+    
     Return sc
 }
 
@@ -123,7 +130,14 @@ ClassMethod LoadFromInvoke(model As %DynamicObject, args...) As %Status
         }
     }
     ;Set:'$d(params("IFEXISTS")) params("IFEXISTS")="Update"
-    Set sc = ..commonLoad(model, "Create",.params)
+    Try {
+        Set sc = ..commonLoad(model, "Create",.params)
+    } Catch(ex) {
+        Set sc = ex.AsStatus()
+        Do $SYSTEM.Status.DecomposeStatus(sc,.err)
+        Zw err
+    }
+    
     Return sc
 }
 
@@ -143,6 +157,7 @@ ClassMethod commonLoad(model As %DynamicObject, action As %String, ByRef params 
 {
     #def1arg    log(%arg)       Do ..log(%arg)
     #define     CFGCLASS(%cls)  "Api.Config.Services."_%cls    
+    New $NAMESPACE
     Set sc = $$$OK, sc2 = $$$OK
 
     If '$ISOBJECT(model) {  ; filename
@@ -179,6 +194,35 @@ ClassMethod commonLoad(model As %DynamicObject, action As %String, ByRef params 
             $$$log(" Class not found (skipped)",0)
             CONTINUE
         }
+        
+        If $$$LOWER(key) = "zpm" {
+            Set iterLvl2 = value.%GetIterator()
+            While iterLvl2.%GetNext(.keyLvl2,.valueLvl2) {
+                Try {
+                    Set iterLvl3 = valueLvl2.%GetIterator()
+                    While iterLvl3.%GetNext(.keyLvl3,.valueLvl3) { 
+                        If $ISOBJECT(valueLvl3) {
+                            Set iterLvl4 = valueLvl3.%GetIterator()
+                            While iterLvl4.%GetNext(.keyLvl4,.valueLvl4) {
+                                $$$log("   + Execute "_keyLvl4 _" "_valueLvl4_" ... ")
+                                Set sc2 = ##class(Api.Config.Services.ZPM).Execute(keyLvl2, keyLvl4, valueLvl4, $Get(args("pTerminateOnError"),0))
+                                Set:$$$ISERR(sc2) sc = $$$ADDSC(sc,sc2)
+                            }
+                        } Else {
+                            $$$log("   + Execute "_valueLvl3_" ... ")
+                            Set sc2 = ##class(Api.Config.Services.ZPM).Execute(keyLvl2,"",valueLvl3, $Get(args("pTerminateOnError"), 0))
+                        }
+                        
+                        Set:$$$ISERR(sc2) sc = $$$ADDSC(sc,sc2)
+                    }
+
+                } Catch(ex) {
+                    Set sc = $$$ADDSC(sc,ex.AsStatus())
+                }
+                
+            }
+            CONTINUE
+        }
 
         Set rAction = action
         Set isSingle = $PARAMETER($$$CFGCLASS(key),"ISSINGLE")=1
@@ -210,7 +254,7 @@ ClassMethod commonLoad(model As %DynamicObject, action As %String, ByRef params 
                 } Else {
                     Set sc2 = $CLASSMETHOD($$$CFGCLASS(key), rAction, valueLvl2)
                 }
-                
+                Set sc = $$$ADDSC(sc,sc2)
                 $$$log($SYSTEM.Status.GetOneErrorText(sc2),0)
             }
             CONTINUE
@@ -264,6 +308,7 @@ ClassMethod commonLoad(model As %DynamicObject, action As %String, ByRef params 
                     } Else {
                         Set sc2 = $CLASSMETHOD($$$CFGCLASS(key), rAction, valueLvl3)
                     }
+                    Set sc = $$$ADDSC(sc,sc2)
                     $$$log($SYSTEM.Status.GetOneErrorText(sc2),0)
                    
                 }
@@ -295,7 +340,7 @@ ClassMethod commonLoad(model As %DynamicObject, action As %String, ByRef params 
             } Else {
                 Set sc2 = $CLASSMETHOD($$$CFGCLASS(key), rAction, valueLvl2)
             }
-
+            Set sc = $$$ADDSC(sc,sc2)
             $$$log($SYSTEM.Status.GetOneErrorText(sc2),0)
         }
     }

@@ -290,4 +290,21 @@ ClassMethod TestExport2()
     Do ##class(Api.Config.Developers.Utils).Show(config)
 }
 
+ClassMethod TestZPM()
+{
+    Set config = {
+        "ZPM": {
+            "${namespace}": [
+                {
+                    "install":"sslclient"
+                }
+            ]
+        }
+    }
+
+    Set sc = ##class(Api.Config.Services.Loader).Load(config)
+    W "sc ",$SYSTEM.Status.GetOneErrorText(sc)
+    Quit
+}
+
 }
