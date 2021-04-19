@@ -1,5 +1,5 @@
-#  IRIS-Config-API
- 
+# IRIS-Config-API
+
 A library to ease IRIS configuration. 
 Typically this library could be used in your application installer module. 
 It allows you to prepare your environment before deploying your application code. 
@@ -21,10 +21,11 @@ Also, It could be combine with ZPM client (see this [article](https://community.
 4. [Installation by XML](#Installation-By-XML)
 5. [Run Unit Tests](#Run-Unit-Tests)
 6. [Basic example](#Basic-example)
-7. [Advanced](#Basic-example)
-8. [Service classes usage](#Service-classes-usage)
-9. [Export configuration](#Export-configuration)
-10. [REST application](#REST-application)
+7. [Advanced](#Advanced)
+8. [Chain with ZPM](#Chain-With-ZPM)
+9. [Service classes usage](#Service-classes-usage)
+10. [Export configuration](#Export-configuration)
+11. [REST application](#REST-application)
  
  
  
@@ -407,7 +408,43 @@ Take a look at the output, you can notice a dump of the configuration document w
 2021-03-28 08:28:45    + Update Startup ... OK
 ```
 </details>
- 
+
+## Chain With ZPM
+
+** Experimental feature subject to modification or removal. **
+
+In version 1.0.2, you can add a "ZPM" section to call directly zpm client command, ex : 
+
+```json
+{
+    "Defaults":{
+        "DBDATA" : "${MGRDIR}irisapp/",
+        "APPNS" : "IRISAPP"
+    },
+    "SYS.Databases":{
+        "${DBDATA}" : {}
+    },
+    "Databases":{
+        "${APPNS}" : {
+            "Directory" : "${DBDATA}"
+        }
+    },
+    "Namespaces":{
+        "${APPNS}": {
+            "Globals":"${APPNS}"
+        }
+    },
+    "ZPM":{
+        "${APPNS}" : [{
+            "load":"/opt/irisbuild/ -v"
+        }]
+    }
+}
+```
+
+This configuration document create database and namespace nammed `IRISAPP` and execute `zpm "/opt/irisbuild/ -v"` on `IRISAPP` namespace.  
+See a a fork of [intersystems-iris-dev-template](https://github.com/lscalese/intersystems-iris-dev-template) using Config-API to initialize application.  
+
 ## Service classes usage
  
 For each service class there is a list of operations available depending on the type :
