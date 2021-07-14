@@ -13,9 +13,9 @@ ClassMethod Show(model As %DynamicObject)
 ClassMethod FormatJSON(model As %DynamicObject, Output formatted)
 {
     If '##class(%Dictionary.CompiledClass).%ExistsId("%JSON.Formatter") { ; hs 2018 compatibility ...
-		Set formatted = model.%ToJSON()
-		Quit
-	}
+	Set formatted = model.%ToJSON()
+	Quit
+    }
     Set formatter=##class(%JSON.Formatter).%New()
     Set formatted = ""
     Do formatter.FormatToString(model, .formatted)
