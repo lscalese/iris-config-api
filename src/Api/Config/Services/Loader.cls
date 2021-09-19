@@ -517,6 +517,8 @@ ClassMethod processConfig(config As %DynamicObject, ByRef params) As %DynamicObj
     Set replaceString("${NAMESPACE}") = $NAMESPACE
     Set replaceString("${USERNAME}") = $USERNAME
     Set replaceString("${ROLES}") = $ROLES
+    Set replaceString("${SYSTEM}") = $SYSTEM
+    
 
     Set replaceString("${mgrdir}") = $SYSTEM.Util.ManagerDirectory()
 	Set replaceString("${cspdir}") = ##class(%File).NormalizeDirectory("csp", installDir)
@@ -525,6 +527,7 @@ ClassMethod processConfig(config As %DynamicObject, ByRef params) As %DynamicObj
     Set replaceString("${namespace}") = $NAMESPACE
     Set replaceString("${username}") = $USERNAME
     Set replaceString("${roles}") = $ROLES
+    Set replaceString("${system}") = $SYSTEM
 
     Set k = ""
     For  {
