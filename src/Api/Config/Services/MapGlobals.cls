@@ -77,4 +77,17 @@ ClassMethod List(Namespace As %String, Names As %String = "*") As %DynamicArray
 	Return list
 }
 
+ClassMethod ListKey1() As %List
+{
+	Set l = ""
+	Do ##class(Api.Config.Services.Namespaces).ExecQry("*",.tmp)
+	Set key = ""
+	For  {
+		Set key = $Order(tmp(key),1,k1)
+		Quit:key=""
+		Set $list(l,key)=k1
+	}
+	Return l
+}
+
 }

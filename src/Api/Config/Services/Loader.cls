@@ -407,14 +407,23 @@ ClassMethod export(filter As %DynamicObject = {{}}, OnlyNotDefaultValue As %Bool
 
         If isMap {
             Set lvl2keyProp = $PIECE($PARAMETER($$$CFGCLASS(key),"PIDENTIFIER"),",",1)
-            CONTINUE:'$ISOBJECT(value)
             
-            Set iterList = value.%GetIterator(), lst = []
-            While iterList.%GetNext(.keylist,.vl) {
-                Set lst = $CLASSMETHOD($$$CFGCLASS(key),"List",keylist) 
-                Do tmpObj.%Set(keylist, lst)
-            }
+            If '$ISOBJECT(value) {
+                Set listKey1 = $CLASSMETHOD($$$CFGCLASS(key),"ListKey1")
+                Set ptr = 0
+                While $LISTNEXT(listKey1,ptr,vlKey1)  {
+                    Set lst = $CLASSMETHOD($$$CFGCLASS(key),"List",vlKey1) 
+                    Do tmpObj.%Set(vlKey1, lst)
+                }
+            } Else {
 
+                Set iterList = value.%GetIterator(), lst = []
+                While iterList.%GetNext(.keylist,.vl) {
+                    Set lst = $CLASSMETHOD($$$CFGCLASS(key),"List",keylist) 
+                        Do tmpObj.%Set(keylist, lst)
+                    
+                }
+            }
             CONTINUE
         }
 
@@ -430,7 +439,6 @@ ClassMethod export(filter As %DynamicObject = {{}}, OnlyNotDefaultValue As %Bool
                 If $CLASSMETHOD($$$CFGCLASS(key),"Exists",keylist) {
                     Do lst.%Push($CLASSMETHOD($$$CFGCLASS(key),"Get",keylist))
                 }
-                
             }
 
         } Else {
@@ -474,13 +482,14 @@ ClassMethod ApplyFilter(filter As %DynamicObject, ByRef model As %DynamicObject)
 ClassMethod removeDefaultValue(key As %String, model As %DynamicObject) As %Status
 {
     Set sc = $$$OK
-    If key [ "." {
+    /*If key [ "." {
         Set className = key
         Set:$PIECE(className,".")="Library" $PIECE(className,".")="%Library"
     } Else {
         Set className = "Config."_key
-    }
+    }*/
 
+    Set className = $CLASSMETHOD("Api.Config.Services."_key,"%GetParameter","SYSCLASS")
     New $NAMESPACE
     Set ns = $NAMESPACE, $NAMESPACE = "%SYS"
     Set obj = $CLASSMETHOD(className,"%New")

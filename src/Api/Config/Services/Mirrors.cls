@@ -12,4 +12,23 @@ ClassMethod CheckModel(model As %Library.DynamicObject) As %Status
 	Quit sc
 }
 
+ClassMethod ExecQry(Names, ByRef tmp)
+{
+	$$$switchNSSys
+	Try{
+		Set rs = ##class(%ResultSet).%New(..#SYSCLASS_":List")
+		Set sc = rs.Execute(Names)
+		If $$$ISERR(sc) $$$ThrowStatus(sc)
+		While rs.Next() {
+			Set tmp($i(tmp))=rs.Get("Name")
+		}
+		Do rs.Close()
+		Kill rs
+	} Catch(ex) {
+		Throw ex
+	}
+
+	Quit
+}
+
 }

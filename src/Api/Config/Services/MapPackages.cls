@@ -75,4 +75,10 @@ ClassMethod Update(model As %Library.DynamicObject) As %Status
 	Quit ##class(Config.MapPackages).Modify(model.Namespace,model.Name,.properties)
 }
 
+/// Description
+ClassMethod ListKey1() As %Status
+{
+	Return ##class(Api.Config.Services.MapGlobals).ListKey1()
+}
+
 }
