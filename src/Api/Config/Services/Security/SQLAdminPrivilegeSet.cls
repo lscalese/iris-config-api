@@ -112,6 +112,11 @@ ClassMethod ExecQry(ByRef tmp)
 	Quit
 }
 
+ClassMethod ListKey1() As %Status
+{
+	Return ##class(Api.Config.Services.MapGlobals).ListKey1()
+}
+
 /*ClassMethod ExecQry(ByRef tmp)
 {
 	$$$switchNSSys

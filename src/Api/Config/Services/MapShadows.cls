@@ -75,4 +75,17 @@ ClassMethod Update(model As %Library.DynamicObject) As %Status
 	Quit ##class(Config.MapShadows).Modify(model.ID,model.Name,.properties)
 }
 
+ClassMethod ListKey1() As %List
+{
+	Set l = ""
+	Do ##class(Api.Config.Services.Shadows).ExecQry("*",.tmp)
+	Set key = ""
+	For  {
+		Set key = $Order(tmp(key),1,k1)
+		Quit:key=""
+		Set $list(l,key)=k1
+	}
+	Return l
+}
+
 }
