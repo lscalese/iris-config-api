@@ -576,9 +576,9 @@ ClassMethod toFile(object As %DynamicObject, filename As %String) As %Status
         Quit:'created $$$ERROR(5001, "Fail to create directory chain")
     }
 
-    Set configString = object.%ToJSON()
-    Set formatter=##class(%JSON.Formatter).%New()
-    Do formatter.FormatToString(object, .configString)
+    Set configString = ""
+   
+    Do ##class(Api.Config.Developers.Utils).FormatJSON(object, .configString)
 
     #dim file As %Stream.FileCharacter = ##class(%Stream.FileCharacter).%New()
     $$$QuitOnError(file.LinkToFile(filename))
