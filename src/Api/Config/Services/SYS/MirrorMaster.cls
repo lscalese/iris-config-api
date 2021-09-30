@@ -22,7 +22,7 @@ ClassMethod CreateNewMirrorSet(model As %Library.DynamicObject, SSLConfig As %Li
     $$$switchNSSys
     set sc = ##class(SYS.Mirror).CreateNewMirrorSet(model.Name, model.SystemName, .properties, .SSLInfo)
     
-    Return:$$$ISERR(sc)
+    Return:$$$ISERR(sc) sc
 
     $$$restoreNS
 
