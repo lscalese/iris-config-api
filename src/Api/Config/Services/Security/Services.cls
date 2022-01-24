@@ -6,6 +6,8 @@ Class Api.Config.Services.Security.Services
 
 Parameter UPDATEONLY = 1;
 
+Parameter SYSCLASS = "Security.Services";
+
 ClassMethod Exists(Name As %String) As %Boolean
 {
 	$$$switchNSSys
