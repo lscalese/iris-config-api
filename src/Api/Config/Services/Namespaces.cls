@@ -34,4 +34,30 @@ ClassMethod ExecQry(Names, ByRef tmp)
 	Quit
 }
 
+ClassMethod Create(model As %Library.DynamicObject) As %Status
+{
+	Do ..ToArray(model,.properties)
+	$$$switchNSSys
+	Set sc = $CLASSMETHOD(..#SYSCLASS, "Create",model.Name,.properties)
+	
+	If $$$ISOK(sc), model.Ensemble {
+		Do ##class(%Library.EnsembleMgr).EnableNamespace(model.Name)
+	}
+
+	Quit sc
+}
+
+ClassMethod Update(model As %Library.DynamicObject) As %Status
+{
+	Do ..ToArray(model,.properties)
+	$$$switchNSSys
+	Set sc = $CLASSMETHOD(..#SYSCLASS, "Modify", model.Name,.properties)
+	
+	If $$$ISOK(sc), model.Ensemble {
+		Do ##class(%Library.EnsembleMgr).EnableNamespace(model.Name)
+	}
+
+	Quit sc
+}
+
 }
