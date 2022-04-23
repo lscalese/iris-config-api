@@ -227,6 +227,7 @@ ClassMethod commonLoad(model As %DynamicObject, action As %String, ByRef params 
         Set rAction = action
         Set isSingle = $PARAMETER($$$CFGCLASS(key),"ISSINGLE")=1
         Set isMap = $PARAMETER($$$CFGCLASS(key),"ISMAP")=1
+        Set isClassMethodMode = $PARAMETER($$$CFGCLASS(key),"CLASSMETHODMODE")=1
 
         If isSingle { ; singleton params (only update allowed)
             
@@ -245,6 +246,7 @@ ClassMethod commonLoad(model As %DynamicObject, action As %String, ByRef params 
             CONTINUE
         }
 
+        
         If value.%IsA("%DynamicArray") {
             Set iterLvl2 = value.%GetIterator()
             While iterLvl2.%GetNext(.keyLvl3,.valueLvl2) {
@@ -271,6 +273,16 @@ ClassMethod commonLoad(model As %DynamicObject, action As %String, ByRef params 
                      CONTINUE
                 }
                
+            }
+
+            If isClassMethodMode {
+                If '##class(%Dictionary.CompiledMethod).%ExistsId($$$CFGCLASS(key) _ "||" _ keyLvl2) {
+                    $$$log("ClassMethod "_ $$$CFGCLASS(key) _ "." _ keyLvl2 _ " Does not exists (skipping")
+                    Continue
+                }
+
+                Set sc2 = $CLASSMETHOD($$$CFGCLASS(key), keyLvl2, valueLvl2)
+                Continue
             }
             
 
@@ -384,8 +396,12 @@ ClassMethod export(filter As %DynamicObject = {{}}, OnlyNotDefaultValue As %Bool
 
     While iter.%GetNext(.key,.value) {
         $$$log(" * "_key)
+        
         If '##class(%Dictionary.CompiledClass).%ExistsId($$$CFGCLASS(key)) {
             $$$log(" class not found (skipped)",0)
+            CONTINUE
+        } ElseIf '$PARAMETER($$$CFGCLASS(key),"CLASSMETHODMODE") {
+            $$$log(" Not applicable",0)
             CONTINUE
         }
         
