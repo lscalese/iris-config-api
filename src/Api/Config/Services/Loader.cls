@@ -468,9 +468,9 @@ ClassMethod export(filter As %DynamicObject = {{}}, OnlyNotDefaultValue As %Bool
         }
     }
 
-    Set formatter=##class(%JSON.Formatter).%New()
+    /*Set formatter=##class(%JSON.Formatter).%New()
     Set exportStr = ""
-    Do formatter.FormatToString(export, .exportStr)
+    Do formatter.FormatToString(export, .exportStr)*/
     
     If toFile '= "" {
         Do ..toFile(export, toFile)
