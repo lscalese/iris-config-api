@@ -40,4 +40,23 @@ ClassMethod SetSwaggerUIDefaultPath(specUrl As %String = "/api/config/", toRepla
     Quit file.%Save()
 }
 
+ClassMethod installMainRESTApp() As %Status
+{
+    Set cfg = {
+        "Security.Applications" : {
+            "/config-api": {
+                "NameSpace" : ($NAMESPACE),
+                "Enabled" : 1,
+                "DispatchClass" : "Api.Config.REST.Main",
+                "CSPZENEnabled" : 1,
+                "AutheEnabled": 32
+            }
+        }
+    }
+
+    Set sc = ##class(Api.Config.Services.Loader).Load(cfg)
+
+    Quit sc
+}
+
 }

@@ -15,7 +15,6 @@ WORKDIR /opt/irisbuild
 RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /opt/irisbuild
 USER ${ISC_PACKAGE_MGRUSER}
 
-#COPY  Installer.cls .
 COPY  src src
 COPY  tests tests
 COPY module.xml module.xml
