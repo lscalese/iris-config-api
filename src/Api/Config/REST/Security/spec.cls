@@ -32,7 +32,7 @@ XData OpenAPI [ MimeType = application/json ]
       "get": {
         "summary": "Swagger 2.0 specification",
         "tags": [
-          "Z-Developer"
+          "Developer"
         ],
         "operationId": "GetSpecification",
         "description": "Swagger 2.0 specification",
@@ -819,12 +819,33 @@ XData OpenAPI [ MimeType = application/json ]
         }
       }
     },
+    "/sqlhelper": {
+      "put": {
+        "summary": "Helper service to add a set of privileges to tables\/views\/sqlproc.",
+        "description": "Allow to add privilege to tables\/views/sqlproc by list of schemas and\/or names.",
+        "tags": ["SQL"],
+        "operationId": "PutSqlHelper",
+        "parameters": [{
+          "name": "model",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/SQLHelper"
+          }
+        }],
+        "responses": {
+          "204": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/sqladminprivilegeset": {
       "get": {
         "summary": "Get list of SQLAdminPrivilegeSet.",
         "description": "Get list of SQLAdminPrivilegeSet.",
         "tags": [
-          "Security"
+          "SQL"
         ],
         "operationId": "GetListOfSQLAdminPrivilegeSet",
         "parameters": [],
@@ -841,7 +862,7 @@ XData OpenAPI [ MimeType = application/json ]
         "summary": "Set SQLAdminPrivilegeSet.",
         "description": "Set SQLAdminPrivilegeSet.",
         "tags": [
-          "Security"
+          "SQL"
         ],
         "operationId": "PutSQLAdminPrivilegeSet",
         "parameters": [
@@ -866,7 +887,7 @@ XData OpenAPI [ MimeType = application/json ]
         "summary": "Get SQLAdminPrivilegeSet detail.",
         "description": "Get SQLAdminPrivilegeSet detail.",
         "tags": [
-          "Security"
+          "SQL"
         ],
         "operationId": "GetSQLAdminPrivilegeSet",
         "parameters": [
@@ -898,7 +919,7 @@ XData OpenAPI [ MimeType = application/json ]
         "summary": "Delete SQLAdminPrivilegeSet.",
         "description": "Delete SQLAdminPrivilegeSet.",
         "tags": [
-          "Security"
+          "SQL"
         ],
         "operationId": "DeleteSQLAdminPrivilegeSet",
         "parameters": [
@@ -930,7 +951,7 @@ XData OpenAPI [ MimeType = application/json ]
     "/sqlprivileges/{namespace}/{grantee}": {
       "get": {
         "tags": [
-          "Security"
+          "SQL"
         ],
         "summary": "Get list of privilege for namespace and grantee.",
         "description": "Get list of privilege for namespace and grantee.",
@@ -957,39 +978,39 @@ XData OpenAPI [ MimeType = application/json ]
             }
           }
         }
-      },
+      }
+    },
+    "/sqlprivileges/{id}":{
       "delete": {
         "tags": [
-          "Security"
+          "SQL"
         ],
-        "summary": "Delete privileges for namespace and grantee.",
-        "description": "Delete privileges for namespace and grantee.",
+        "summary": "Delete privileges.",
+        "description": "Delete privileges.",
         "operationId": "DeleteSQLPrivileges",
         "parameters": [
           {
-            "name": "namespace",
+            "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "grantee",
-            "in": "path",
-            "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The structure of the id is namespace||sqlobject||privilege||grantee||grantor"
           }
         ],
         "responses": {
           "204": {
             "description": "Privileges deleted."
+          },
+          "404": {
+            "description": "Not found."
           }
         }
       }
     },
     "/sqlprivileges": {
-      "put": {
+      "post": {
         "tags": [
-          "Security"
+          "SQL"
         ],
         "summary": "Set SQL Privileges.",
         "description": "Set SQL Privileges",
@@ -2059,6 +2080,75 @@ XData OpenAPI [ MimeType = application/json ]
         "Name":""
       }
     },
+    "SQLHelper":{
+      "type":"object",
+      "properties": {
+        "Grantable": {
+          "type": "string",
+          "default": "",
+          "description": "Grantable - 1/0, can this privilege be granted by the user"
+        },
+        "Grantee": {
+          "type": "string",
+          "default": "",
+          "description": "Grantee - user/role the privilege was granted to"
+        },
+        "Grantor": {
+          "type": "string",
+          "default": "",
+          "description": "Grantor - user/role that granted the privilege"
+        },
+        "Namespace": {
+          "type": "string",
+          "default": "",
+          "description": "Namespace the privilege is defined in"
+        },
+        "Table": {
+          "type": "object"
+        },
+        "View": {
+          "type": "object"
+        },
+        "SQLProc": {
+          "type": "object"
+        }
+      },
+      "required": ["Namespace","Grantee"],
+      "example": {
+        "Grantable" : "1",
+        "Grantee": "MyNewRole",
+        "Grantor": "_system",
+        "Namespace": "USER",
+        "Table":{
+          "Schemas":["Api_Config"],
+          "Privileges":["S","I","U","D"]
+        },
+        "View":{
+
+        },
+        "SQLProc":{
+
+        }
+      }
+    },
+    "PrivilegesHelper" : {
+      "type": "object",
+      "properties": {
+        "Schemas": {
+          "type": "array",
+          "description": "List of schema names to add privileges.  Allow to add privilege to all table/view/sqlproc of schemas."
+        },
+        "Names": {
+          "type": "array",
+          "description": "List of table name to add privilege."
+        },
+        "Privileges": {
+          "type":"array",
+          "description": "Privilege (a)ALTER, (i)INSERT, (u)UPDATE,(d)DELETE, (s)SELECT, (r)REFERENCES,(e)EXECUTE, (l)USE"
+        }
+      },
+      "required": ["Privileges"]
+    },
     "SecuritySystem":{
       "type":"object",
       "properties":{
@@ -2224,6 +2314,38 @@ XData OpenAPI [ MimeType = application/json ]
         }
       },
       "example":{
+        "AuditEnabled": true,
+        "AuditEncrypt": false,
+        "AuditFlags": 0,
+        "AutheEnabled": "2039",
+        "ConfigurationSecurityEnabled": false,
+        "DBEncDefaultKeyID": "",
+        "DBEncIRISTemp": false,
+        "DBEncJournal": false,
+        "DBEncJournalKeyID": "",
+        "DefaultSecurityDomain": "unknowndomain.com",
+        "DefaultSignatureHash": "SHA256",
+        "InactiveLimit": 90,
+        "InvalidLoginAction": 0,
+        "InvalidLoginLimit": 5,
+        "LoginCookieTimeout": 0,
+        "PasswordExpirationDays": 0,
+        "PasswordHashAlgorithm": "SHA512",
+        "PasswordHashWorkFactor": 10000,
+        "PasswordPattern": "3.128ANP",
+        "PasswordValidationRoutine": "",
+        "PercentGlobalWrite": 0,
+        "RequiredRole": "",
+        "SMTPPassword": "",
+        "SMTPServer": "",
+        "SMTPUsername": "",
+        "SSLECPServer": 0,
+        "SSLSuperServer": 0,
+        "SSLTelnetServer": 0,
+        "SecurityDomains": false,
+        "TwoFactorFrom": "",
+        "TwoFactorPWIssuer": "IRIS-a1a190f077e2-IRIS",
+        "TwoFactorTimeout": 180
       }
     }
   }

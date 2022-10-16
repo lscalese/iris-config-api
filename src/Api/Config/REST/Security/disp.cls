@@ -83,6 +83,8 @@ XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
   <Route Url="/system" Method="put" Call="PutSystem" />
   <!-- Get list of services. -->
   <Route Url="/services" Method="get" Call="GetListOfServices" />
+  <!-- Helper service to add a set of privileges to tables/views/sqlproc. -->
+  <Route Url="/sqlhelper" Method="put" Call="PutSqlHelper" />
   <!-- Get list of SQLAdminPrivilegeSet. -->
   <Route Url="/sqladminprivilegeset" Method="get" Call="GetListOfSQLAdminPrivilegeSet" />
   <!-- Set SQLAdminPrivilegeSet. -->
@@ -93,10 +95,10 @@ XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
   <Route Url="/sqladminprivilegeset/:namespace/:grantee" Method="delete" Call="DeleteSQLAdminPrivilegeSet" />
   <!-- Get list of privilege for namespace and grantee. -->
   <Route Url="/sqlprivileges/:namespace/:grantee" Method="get" Call="GetListOfSQLPrivileges" />
-  <!-- Delete privileges for namespace and grantee. -->
-  <Route Url="/sqlprivileges/:namespace/:grantee" Method="delete" Call="DeleteSQLPrivileges" />
+  <!-- Delete privileges. -->
+  <Route Url="/sqlprivileges/:id" Method="delete" Call="DeleteSQLPrivileges" />
   <!-- Set SQL Privileges. -->
-  <Route Url="/sqlprivileges" Method="put" Call="PutSQLPrivileges" />
+  <Route Url="/sqlprivileges" Method="post" Call="PutSQLPrivileges" />
 </Routes>
 }
 
@@ -558,6 +560,22 @@ ClassMethod GetListOfServices() As %Status
     Quit $$$OK
 }
 
+/// Helper service to add a set of privileges to tables/views/sqlproc.
+ClassMethod PutSqlHelper() As %Status
+{
+    Try {
+        Do ##class(%REST.Impl).%SetContentType("application/json")
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '$isobject(%request.Content) Do ##class(%REST.Impl).%ReportRESTError(..#HTTP400BADREQUEST,$$$ERROR($$$RESTRequired,"model")) Quit
+        Set pmodel=%request.Content
+        Set response=##class(Api.Config.REST.Security.impl).PutSqlHelper(pmodel)
+        Do ##class(Api.Config.REST.Security.impl).%WriteResponse(response)
+    } Catch (ex) {
+        Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.Security.impl","ExposeServerExceptions"))
+    }
+    Quit $$$OK
+}
+
 /// Get list of SQLAdminPrivilegeSet.
 ClassMethod GetListOfSQLAdminPrivilegeSet() As %Status
 {
@@ -630,13 +648,13 @@ ClassMethod GetListOfSQLPrivileges(pnamespace As %String, pgrantee As %String) A
     Quit $$$OK
 }
 
-/// Delete privileges for namespace and grantee.
-ClassMethod DeleteSQLPrivileges(pnamespace As %String, pgrantee As %String) As %Status
+/// Delete privileges.
+ClassMethod DeleteSQLPrivileges(pid As %String) As %Status
 {
     Try {
         Do ##class(%REST.Impl).%SetContentType("application/json")
         If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
-        Set response=##class(Api.Config.REST.Security.impl).DeleteSQLPrivileges(pnamespace,pgrantee)
+        Set response=##class(Api.Config.REST.Security.impl).DeleteSQLPrivileges(pid)
         Do ##class(Api.Config.REST.Security.impl).%WriteResponse(response)
     } Catch (ex) {
         Do ##class(%REST.Impl).%ReportRESTError(..#HTTP500INTERNALSERVERERROR,ex.AsStatus(),$parameter("Api.Config.REST.Security.impl","ExposeServerExceptions"))

@@ -18,6 +18,7 @@ ClassMethod Get(Namespace, SQLObject, Privilege, Grantee, Grantor) As %DynamicOb
     $$$switchNSSys
     Set obj = ##class(Security.SQLPrivileges).IDKeyOpen(Namespace, SQLObject, Privilege, Grantee, Grantor)
     Do ..ObjectToArray(.obj,.properties)
+    Set properties("id") = obj.%Id()
     Quit ..ToDynamic(.properties)
 }
 
@@ -141,6 +142,7 @@ ClassMethod ExecQry(Namespace, Grantee, ByRef tmp)
             }
             
 			Set tmp($i(tmp))= {
+                "id" : (rs.Data("Namespace") _ "||" _rs.Data("SQLObject") _ "||" _ rs.Data("Privilege") _ "||"_rs.Data("Grantee") _"||" _rs.Data("Grantor")),
                 "Grantable" : (rs.Data("Grantable")),
                 "Grantee" : (rs.Data("Grantee")),
                 "Grantor" : (rs.Data("Grantor")),

@@ -2,7 +2,7 @@ Include Api.Config.inc
 
 /// REST API to configure IRIS security setting of an IRIS instance.<br/>
 /// Business logic class defined by OpenAPI in Api.Config.REST.Security.spec<br/>
-/// Updated Oct 9, 2022 17:39:46
+/// Updated Oct 16, 2022 10:22:37
 Class Api.Config.REST.Security.impl Extends %REST.Impl [ ProcedureBlock ]
 {
 
@@ -250,10 +250,7 @@ ClassMethod GetListOfSSLConfigs() As %DynamicObject
 /// Get list of SQLAdminPrivilegeSet.
 ClassMethod GetListOfSQLAdminPrivilegeSet() As %DynamicObject
 {
-    //(Place business logic here)
-    //Do ..%SetStatusCode(<HTTP_status_code>)
-    //Do ..%SetHeader(<name>,<value>)
-    //Quit (Place response here) ; response may be a string, stream or dynamic object
+    Quit ..DefaultListOf("Security.SQLAdminPrivilegeSet")
 }
 
 /// Set SQLAdminPrivilegeSet.<br/>
@@ -261,10 +258,9 @@ ClassMethod GetListOfSQLAdminPrivilegeSet() As %DynamicObject
 ///     model<br/>
 ClassMethod PutSQLAdminPrivilegeSet(model As %Stream.Object) As %DynamicObject
 {
-    //(Place business logic here)
-    //Do ..%SetStatusCode(<HTTP_status_code>)
-    //Do ..%SetHeader(<name>,<value>)
-    //Quit (Place response here) ; response may be a string, stream or dynamic object
+    Set dModel = {}.%FromJSON(.model)
+	Set resp = ..DefaultPutImpl("Security.SQLAdminPrivilegeSet", dModel, , $$$NO)
+	Quit resp
 }
 
 /// Get SQLAdminPrivilegeSet detail.<br/>
@@ -273,10 +269,7 @@ ClassMethod PutSQLAdminPrivilegeSet(model As %Stream.Object) As %DynamicObject
 ///     grantee, grantee<br/>
 ClassMethod GetSQLAdminPrivilegeSet(namespace As %String, grantee As %String) As %DynamicObject
 {
-    //(Place business logic here)
-    //Do ..%SetStatusCode(<HTTP_status_code>)
-    //Do ..%SetHeader(<name>,<value>)
-    //Quit (Place response here) ; response may be a string, stream or dynamic object
+    Quit ..DefaultGetImpl("Security.SQLAdminPrivilegeSet", namespace, grantee)
 }
 
 /// Delete SQLAdminPrivilegeSet.<br/>
@@ -285,10 +278,7 @@ ClassMethod GetSQLAdminPrivilegeSet(namespace As %String, grantee As %String) As
 ///     grantee, grantee<br/>
 ClassMethod DeleteSQLAdminPrivilegeSet(namespace As %String, grantee As %String) As %DynamicObject
 {
-    //(Place business logic here)
-    //Do ..%SetStatusCode(<HTTP_status_code>)
-    //Do ..%SetHeader(<name>,<value>)
-    //Quit (Place response here) ; response may be a string, stream or dynamic object
+     Quit ..DefaultDelImpl("Security.SQLAdminPrivilegeSet", namespace, grantee)
 }
 
 /// Get list of privilege for namespace and grantee.<br/>
@@ -297,22 +287,26 @@ ClassMethod DeleteSQLAdminPrivilegeSet(namespace As %String, grantee As %String)
 ///     grantee<br/>
 ClassMethod GetListOfSQLPrivileges(namespace As %String, grantee As %String) As %DynamicObject
 {
-    //(Place business logic here)
-    //Do ..%SetStatusCode(<HTTP_status_code>)
-    //Do ..%SetHeader(<name>,<value>)
-    //Quit (Place response here) ; response may be a string, stream or dynamic object
+    Set lst = ##class(Api.Config.Services.Security.SQLPrivileges).List(namespace,grantee)
+	Do ..%SetStatusCode($$$HTTP200)
+	Do ..%SetContentType("application/json")
+	Quit {"list":(lst)}
 }
 
-/// Delete privileges for namespace and grantee.<br/>
+/// Delete privileges.<br/>
 /// The method arguments hold values for:<br/>
-///     namespace<br/>
-///     grantee<br/>
-ClassMethod DeleteSQLPrivileges(namespace As %String, grantee As %String) As %DynamicObject
+///     id, The structure of the id is namespace||sqlobject||privilege||grantee||grantor<br/>
+ClassMethod DeleteSQLPrivileges(id As %String) As %DynamicObject
 {
-    //(Place business logic here)
-    //Do ..%SetStatusCode(<HTTP_status_code>)
-    //Do ..%SetHeader(<name>,<value>)
-    //Quit (Place response here) ; response may be a string, stream or dynamic object
+	New $NAMESPACE
+	Set $NAMESPACE = "%SYS"
+	If ##class(Security.SQLPrivileges).%ExistsId(id) {
+		$$$ThrowOnError(##class(Security.SQLPrivileges).%DeleteId(id))
+		Do ..%SetStatusCode($$$HTTP204)
+	} Else {
+		Do ..%SetStatusCode($$$HTTP404)
+	}
+	Quit ""
 }
 
 /// Set SQL Privileges<br/>
@@ -320,10 +314,9 @@ ClassMethod DeleteSQLPrivileges(namespace As %String, grantee As %String) As %Dy
 ///     SQLPrivilege<br/>
 ClassMethod PutSQLPrivileges(SQLPrivilege As %Stream.Object) As %DynamicObject
 {
-    //(Place business logic here)
-    //Do ..%SetStatusCode(<HTTP_status_code>)
-    //Do ..%SetHeader(<name>,<value>)
-    //Quit (Place response here) ; response may be a string, stream or dynamic object
+    Set dModel = {}.%FromJSON(.SQLPrivilege)
+	Set resp = ..DefaultPutImpl("Security.SQLPrivileges", dModel, , $$$NO)
+	Quit resp
 }
 
 ClassMethod DefaultGetImpl(class As %String, ids...) As %DynamicObject [ Private ]
@@ -572,6 +565,17 @@ ClassMethod PutSystem(model As %Stream.Object) As %DynamicObject
 {
     Set dModel = {}.%FromJSON(model)
 	Quit ..DefaultPutImpl("Security.System",dModel, .updated, $$$NO)
+}
+
+/// Allow to add privilege to tables/views/sqlproc by list of schemas and/or names.<br/>
+/// The method arguments hold values for:<br/>
+///     model<br/>
+ClassMethod PutSqlHelper(model As %Stream.Object) As %DynamicObject
+{
+	Set dModel = {}.%FromJSON(model)
+	$$$ThrowOnError(##class(Api.Config.Services.Security.SQLHelper).AddByModelHelper(dModel))
+	Do ..%SetStatusCode($$$HTTP204)
+	Quit ""
 }
 
 }
