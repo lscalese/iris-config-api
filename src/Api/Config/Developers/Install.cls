@@ -49,7 +49,8 @@ ClassMethod installMainRESTApp() As %Status
                 "Enabled" : 1,
                 "DispatchClass" : "Api.Config.REST.Main",
                 "CSPZENEnabled" : 1,
-                "AutheEnabled": 32
+                "AutheEnabled": 32,
+                "Resource": "%Admin_Secure"
             }
         }
     }
